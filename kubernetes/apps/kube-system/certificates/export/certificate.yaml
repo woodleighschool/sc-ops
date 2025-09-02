@@ -1,0 +1,15 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/cert-manager.io/certificate_v1.json
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: woodleighschool-net
+spec:
+  secretName: woodleighschool-net-tls
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  commonName: woodleighschool.net
+  dnsNames:
+    - woodleighschool.net
+    - "*.woodleighschool.net"

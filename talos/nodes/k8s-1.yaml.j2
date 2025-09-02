@@ -1,0 +1,25 @@
+---
+machine:
+  install:
+    diskSelector:
+      wwid: naa.5002538c000d407d # MZ7KM960HMJP0D3
+    image: factory.talos.dev/metal-installer/292e18ead18d085ced96563e1c4d15645d5b5c7154c11d95e10074848b2730a8:v1.11.0
+  network:
+    hostname: k8s-1
+    interfaces:
+      - interface: bond0
+        addresses:
+          - 10.10.69.10/24
+        routes:
+          - network: 0.0.0.0/0
+            gateway: 10.10.69.1
+        bond:
+          interfaces: []
+          deviceSelectors:
+            - hardwareAddr: 24:6e:96:60:d7:c0
+              driver: ixgbe
+          mode: active-backup
+        dhcp: false
+        vip:
+          ip: 10.10.69.100
+  type: controlplane

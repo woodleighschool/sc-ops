@@ -1,0 +1,14 @@
+---
+endpoints:
+  - name: "${GATUS_APP:=${APP}}"
+    group: "${GATUS_GROUP:=guarded}"
+    url: 10.2.1.2
+    interval: 1m
+    ui:
+      hide-hostname: true
+      hide-url: true
+    dns:
+      query-name: "${GATUS_SUBDOMAIN:=${APP}}.${GATUS_DOMAIN:=woodleighschool.net}"
+      query-type: A
+    conditions:
+      - "len([BODY]) == 0"
