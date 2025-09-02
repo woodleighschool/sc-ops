@@ -15,4 +15,4 @@ resources:
   - ./loki/ks.yaml
   - ./silence-operator/ks.yaml
   - ./smartctl-exporter/ks.yaml
-  - ./spoodermon/ks.yaml
+#  - ./spoodermon/ks.yaml

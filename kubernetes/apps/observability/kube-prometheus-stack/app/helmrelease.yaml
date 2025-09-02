@@ -46,7 +46,7 @@ spec:
           parentRefs:
             - name: internal
               namespace: kube-system
-              sectionName: https-hs
+              sectionName: https-woodleighschool-net
       alertmanagerSpec:
         alertmanagerConfiguration:
           name: alertmanager
@@ -75,7 +75,7 @@ spec:
           parentRefs:
             - name: internal
               namespace: kube-system
-              sectionName: https-hs
+              sectionName: https-woodleighschool-net
       prometheusSpec:
         image:
           registry: docker.io

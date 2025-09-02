@@ -70,7 +70,7 @@ spec:
         parentRefs:
           - name: cloudflare
             namespace: kube-system
-            sectionName: https-hs
+            sectionName: https-woodleighschool-net
     persistence:
       config-file:
         type: configMap

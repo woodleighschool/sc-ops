@@ -46,7 +46,7 @@ spec:
         parentRefs:
           - name: internal
             namespace: kube-system
-            sectionName: https-hs
+            sectionName: https-woodleighschool-net
     cephClusterSpec:
       cephConfig:
         global:
