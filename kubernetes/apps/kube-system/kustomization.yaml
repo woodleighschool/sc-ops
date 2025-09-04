@@ -13,8 +13,6 @@ resources:
   - ./envoy-gateway/ks.yaml
   - ./gateway-api-crds/ks.yaml
   - ./metrics-server/ks.yaml
-  - ./node-feature-discovery/ks.yaml
-  - ./reflector/ks.yaml
-  - ./reloader/ks.yaml
   - ./snapshot-controller/ks.yaml
+  - ./reloader/ks.yaml
   - ./spegel/ks.yaml

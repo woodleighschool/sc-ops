@@ -1,11 +1,23 @@
 ---
-web:
-  port: ${GATUS_WEB_PORT}
-
 storage:
   type: sqlite
   path: /data/sqlite.db
   caching: true
+
+connectivity:
+  checker:
+    target: 1.1.1.1:53
+    interval: 1m
+
+endpoints:
+  - name: flux-webhook
+    group: external
+    url: https://flux-webhook.woodleighschool.net
+    interval: 1m
+    client:
+      dns-resolver: tcp://1.1.1.1:53
+    conditions:
+      - "[STATUS] == 404"
 
 metrics: true
 
@@ -20,20 +32,5 @@ ui:
     - name: Homelab
       link: https://github.com/woodleighschool/sc-ops
 
-connectivity:
-  checker:
-    target: 10.1.110.29:53
-    interval: 1m
-
-endpoints:
-  - name: flux-webhook
-    group: external
-    url: https://flux-webhook.woodleighschool.net
-    interval: 1m
-    ui:
-      hide-hostname: true
-      hide-url: true
-    client:
-      dns-resolver: tcp://10.1.110.29:53
-    conditions:
-      - "[STATUS] == 404"
+web:
+  port: ${GATUS_WEB_PORT}

@@ -15,3 +15,6 @@ spec:
             apiTokenSecretRef:
               name: cloudflare-issuer-secret
               key: CLOUDFLARE_DNS_TOKEN
+        selector:
+          dnsZones:
+            - woodleighschool.net

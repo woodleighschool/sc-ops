@@ -1,8 +1,8 @@
 ---
 endpoints:
-  - name: "${GATUS_APP:=${APP}}"
+  - name: "${APP}"
     group: "${GATUS_GROUP:=guarded}"
-    url: 10.2.1.2
+    url: 1.1.1.1
     interval: 1m
     ui:
       hide-hostname: true
@@ -11,4 +11,4 @@ endpoints:
       query-name: "${GATUS_SUBDOMAIN:=${APP}}.${GATUS_DOMAIN:=woodleighschool.net}"
       query-type: A
     conditions:
-      - "len([BODY]) == 0"
+      - len([BODY]) == 0
