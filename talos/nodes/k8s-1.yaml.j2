@@ -2,14 +2,14 @@
 machine:
   install:
     diskSelector:
-      wwid: naa.5002538c000d407d # MZ7KM960HMJP0D3
-    image: factory.talos.dev/metal-installer/292e18ead18d085ced96563e1c4d15645d5b5c7154c11d95e10074848b2730a8:v1.11.0
+      wwid: naa.5246930400bc0466 # SATADOM-SL 3IE3
+    image: factory.talos.dev/metal-installer/376567988ad370138ad8b2698212367b8edcb69b5fd68c80be1f2ec7d603b4ba:v1.11.0
   network:
     hostname: k8s-1
     interfaces:
       - interface: bond0
         addresses:
-          - 10.10.69.10/24
+          - 10.10.69.5/24
         routes:
           - network: 0.0.0.0/0
             gateway: 10.10.69.1
@@ -23,3 +23,10 @@ machine:
         vip:
           ip: 10.10.69.100
   type: controlplane
+---
+apiVersion: v1alpha1
+kind: VolumeConfig
+name: EPHEMERAL
+provisioning:
+  diskSelector:
+    match: disk.wwid == 'naa.5002538c000d407d'  # MZ7KM960HMJP0D3
