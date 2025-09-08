@@ -1,0 +1,32 @@
+---
+machine:
+  install:
+    diskSelector:
+      wwid: naa.5246930400bc0256 # SATADOM-SL 3IE3
+    image: factory.talos.dev/metal-installer/376567988ad370138ad8b2698212367b8edcb69b5fd68c80be1f2ec7d603b4ba:v1.11.0
+  network:
+    hostname: k8s-3
+    interfaces:
+      - interface: bond0
+        addresses:
+          - 10.10.69.7/24
+        routes:
+          - network: 0.0.0.0/0
+            gateway: 10.10.69.1
+        bond:
+          interfaces: []
+          deviceSelectors:
+            - hardwareAddr: 24:6e:96:60:c7:68
+              driver: ixgbe
+          mode: active-backup
+        dhcp: false
+        vip:
+          ip: 10.10.69.100
+  type: controlplane
+---
+apiVersion: v1alpha1
+kind: VolumeConfig
+name: EPHEMERAL
+provisioning:
+  diskSelector:
+    match: disk.wwid == 'naa.5002538c000d4087'  # MZ7KM960HMJP0D3
