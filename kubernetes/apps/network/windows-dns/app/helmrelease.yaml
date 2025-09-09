@@ -21,16 +21,16 @@ spec:
     provider:
       name: rfc2136
     env:
-      - name: AD_DOMAIN_USERNAME
+      - name: &username AD_DOMAIN_USERNAME
         valueFrom:
           secretKeyRef:
             name: &secret windows-dns-secret
-            key: AD_DOMAIN_USERNAME
-      - name: AD_DOMAIN_PASSWORD
+            key: *username
+      - name: &password AD_DOMAIN_PASSWORD
         valueFrom:
           secretKeyRef:
             name: *secret
-            key: AD_DOMAIN_PASSWORD
+            key: *password
     extraVolumes:
       - configMap:
           defaultMode: 420
@@ -61,4 +61,4 @@ spec:
     serviceMonitor:
       enabled: true
     podAnnotations:
-      secret.reloader.stakater.com/reload: *secret
+      reloader.stakater.com/auto: "true"
