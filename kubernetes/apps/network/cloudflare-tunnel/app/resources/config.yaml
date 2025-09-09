@@ -1,10 +1,10 @@
 ---
 originRequest:
-  originServerName: cloudflare.woodleighschool.net
+  originServerName: external.woodleighschool.net
 
 ingress:
   - hostname: woodleighschool.net
-    service: &svc https://envoy-kube-system-cloudflare-c4a673c0.kube-system.svc.cluster.local:443 # change once service is created
+    service: &service https://envoy-external.network.svc.cluster.local
   - hostname: "*.woodleighschool.net"
-    service: *svc
+    service: *service
   - service: http_status:404

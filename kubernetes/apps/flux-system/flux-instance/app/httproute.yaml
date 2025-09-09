@@ -8,8 +8,8 @@ spec:
   hostnames:
     - flux-webhook.woodleighschool.net
   parentRefs:
-    - name: cloudflare
-      namespace: kube-system
+    - name: envoy-external
+      namespace: network
       sectionName: https-woodleighschool-net
   rules:
     - backendRefs:

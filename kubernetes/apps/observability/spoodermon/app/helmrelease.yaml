@@ -68,8 +68,8 @@ spec:
         hostnames:
           - "{{ .Release.Name }}.woodleighschool.net"
         parentRefs:
-          - name: cloudflare
-            namespace: kube-system
+          - name: envoy-external
+            namespace: network
             sectionName: https-woodleighschool-net
     persistence:
       config-file:

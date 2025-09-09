@@ -245,8 +245,8 @@ spec:
         hostnames:
           - "{{ .Release.Name }}.woodleighschool.net"
         parentRefs:
-          - name: internal
-            namespace: kube-system
+          - name: envoy-internal
+            namespace: network
             sectionName: https-woodleighschool-net
     persistence:
       enabled: false
