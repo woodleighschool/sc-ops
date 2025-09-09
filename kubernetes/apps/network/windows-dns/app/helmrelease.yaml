@@ -21,16 +21,16 @@ spec:
     provider:
       name: rfc2136
     env:
-      - name: &name AD_DOMAIN_USERNAME
+      - name: AD_DOMAIN_USERNAME
         valueFrom:
           secretKeyRef:
             name: &secret windows-dns-secret
-            key: *name
-      - name: &name AD_DOMAIN_PASSWORD
+            key: AD_DOMAIN_USERNAME
+      - name: AD_DOMAIN_PASSWORD
         valueFrom:
           secretKeyRef:
             name: *secret
-            key: *name
+            key: AD_DOMAIN_PASSWORD
     extraVolumes:
       - configMap:
           defaultMode: 420
