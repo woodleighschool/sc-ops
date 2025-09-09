@@ -49,6 +49,7 @@ spec:
       - --rfc2136-kerberos-password=$(AD_DOMAIN_PASSWORD)
       - --rfc2136-kerberos-realm=WOODLEIGHSCHOOL.NET
       - --rfc2136-tsig-axfr
+    logLevel: debug
     triggerLoopOnEvent: true
     policy: sync
     sources:
