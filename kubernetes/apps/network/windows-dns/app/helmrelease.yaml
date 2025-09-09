@@ -1,0 +1,64 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app windows-dns
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: windows-dns
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    fullnameOverride: *app
+    provider:
+      name: rfc2136
+    env:
+      - name: &name AD_DOMAIN_USERNAME
+        valueFrom:
+          secretKeyRef:
+            name: &secret windows-dns-secret
+            key: *name
+      - name: &name AD_DOMAIN_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: *secret
+            key: *name
+    extraVolumes:
+      - configMap:
+          defaultMode: 420
+          name: kerberos-configmap
+        name: kerberos-config-volume
+    extraVolumeMounts:
+      - mountPath: /etc/krb5.conf
+        name: kerberos-config-volume
+        subPath: krb.conf
+    extraArgs:
+      - --rfc2136-gss-tsig
+      - --rfc2136-host=wdc01.woodleighschool.net
+      - --rfc2136-port=53
+      - --rfc2136-zone=woodleighschool.net
+      - --rfc2136-kerberos-username=$(AD_DOMAIN_USERNAME)
+      - --rfc2136-kerberos-password=$(AD_DOMAIN_PASSWORD)
+      - --rfc2136-kerberos-realm=woodleighschool.net
+      - --rfc2136-tsig-axfr
+    triggerLoopOnEvent: true
+    policy: sync
+    sources:
+      - crd
+      - gateway-httproute
+    txtOwnerId: default
+    txtPrefix: k8s.
+    domainFilters:
+      - woodleighschool.net
+    serviceMonitor:
+      enabled: true
+    podAnnotations:
+      secret.reloader.stakater.com/reload: *secret
