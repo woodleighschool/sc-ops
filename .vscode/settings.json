@@ -30,7 +30,6 @@
     "flux": "pipe",
     "talos": "linux",
     // namespaces
-    "actions-runner-system": "github",
     "cert-manager": "guard",
     "external-secrets": "secure",
     "flux-system": "pipe",

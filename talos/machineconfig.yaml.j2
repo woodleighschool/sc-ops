@@ -1,6 +1,6 @@
 ---
 version: v1alpha1
-#persist: true
+persist: true
 machine:
   ca:
     crt: op://Kubernetes/talos/MACHINE_CA_CRT
@@ -23,7 +23,6 @@ machine:
     {% if ENV.CONTROLLER %}
     kubernetesTalosAPIAccess:
       allowedKubernetesNamespaces:
-        - actions-runner-system
         - system-upgrade
       allowedRoles:
         - os:admin
@@ -79,10 +78,10 @@ machine:
     sunrpc.tcp_slot_table_entries: "128"
     user.max_user_namespaces: "11255"
     vm.nr_hugepages: "1024"
-  #network:
-  #  nameservers:
-  #    - 10.1.110.29
-  #    - 10.1.110.30
+  network:
+    nameservers:
+      - 10.1.110.29
+      - 10.1.110.30
   token: op://Kubernetes/talos/MACHINE_TOKEN
 cluster:
   ca:
