@@ -247,7 +247,7 @@ spec:
         parentRefs:
           - name: envoy-internal
             namespace: network
-            sectionName: https-woodleighschool-net
+            sectionName: https
     persistence:
       enabled: false
     testFramework:

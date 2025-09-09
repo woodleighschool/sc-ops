@@ -70,7 +70,7 @@ spec:
         parentRefs:
           - name: envoy-external
             namespace: network
-            sectionName: https-woodleighschool-net
+            sectionName: https
     persistence:
       config-file:
         type: configMap
