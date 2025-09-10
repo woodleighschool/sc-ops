@@ -31,23 +31,23 @@ gen-schematic-id:
 
 [doc('Reboot a node')]
 reboot-node node:
-    gum confirm "Reboot node {{ node }}?" && \
+    gum confirm "Reboot node {{ node }}?" --default="No" && \
         talosctl -n {{ node }} reboot -m powercycle || exit 0
 
 [doc('Render Talos config for a node')]
 render-config node:
-    export CONTROLLER="$(just talos machine-controller {{ node }})"; \
+    export IS_CONTROLLER="$(just talos machine-controller {{ node }})"; \
     talosctl machineconfig patch <(just template "{{ talos_dir }}/machineconfig.yaml.j2") \
         -p @<(just template "{{ talos_dir }}/nodes/{{ node }}.yaml.j2")
 
 [doc('Reset a node')]
 reset-node node:
-    gum confirm "Reset node {{ node }}?" && \
+    gum confirm "Reset node {{ node }}?" --default="No" && \
         talosctl -n "{{ node }}" reset --graceful=false || exit 0
 
 [doc('Shutdown a node')]
 shutdown-node node:
-    gum confirm "Shutdown node {{ node }}?" && \
+    gum confirm "Shutdown node {{ node }}?" --default="No" && \
         talosctl -n "{{ node }}" shutdown --force || exit 0
 
 [doc('Upgrade Kubernetes version on the cluster')]

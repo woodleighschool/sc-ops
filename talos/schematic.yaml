@@ -1,5 +1,7 @@
 ---
-# None needed as of now, but keeping here incase kernel args or system extensions are needed in the future
 customization:
-  extraKernelArgs: []
-  systemExtensions: []
+  extraKernelArgs:
+    - intel_iommu=on # PCI Passthrough
+    - iommu=pt # PCI Passthrough
+  systemExtensions:
+    officialExtensions: []
