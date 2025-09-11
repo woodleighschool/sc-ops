@@ -19,6 +19,15 @@ spec:
   values:
     controllers:
       updateuserinfo:
+        type: cronjob
+        cronjob:
+          schedule: "@daily"
+          suspend: true
+          backoffLimit: 0
+          concurrencyPolicy: Forbid
+          successfulJobsHistory: 1
+          failedJobsHistory: 1
+          timeZone: "Australia/Melbourne"
         annotations:
           reloader.stakater.com/auto: "true"
         containers:
