@@ -11,7 +11,7 @@ spec:
       - job
     groupInterval: 10m
     groupWait: 1m
-    receiver: pushover
+    receiver: msteams
     repeatInterval: 12h
     routes:
       - receiver: "null"
@@ -19,15 +19,7 @@ spec:
           - name: alertname
             value: InfoInhibitor
             matchType: =
-      - receiver: heartbeat
-        groupInterval: 5m
-        groupWait: 0s
-        repeatInterval: 5m
-        matchers:
-          - name: alertname
-            value: Watchdog
-            matchType: =
-      - receiver: pushover
+      - receiver: msteams
         matchers:
           - name: severity
             value: critical
@@ -46,19 +38,12 @@ spec:
           matchType: =
   receivers:
     - name: "null"
-    - name: heartbeat
-      webhookConfigs:
-        - httpConfig:
-            bearerTokenSecret:
-              name: &secret alertmanager-secret
-              key: SPOODERMON_HEARTBEAT_TOKEN
-          urlSecret:
+    - name: msteams
+      msteamsv2Configs:
+        - webhookURL:
             name: *secret
-            key: SPOODERMON_HEARTBEAT_URL
-    - name: pushover
-      pushoverConfigs:
-        - html: true
-          message: |-
+            key: ALERTMANAGER_TEAMS_WEBHOOK
+          text: |-
             {{- range .Alerts }}
               {{- if ne .Annotations.description "" }}
                 {{ .Annotations.description }}
@@ -77,17 +62,5 @@ spec:
                 </small>
               {{- end }}
             {{- end }}
-          priority: |-
-            {{ if eq .Status "firing" }}1{{ else }}0{{ end }}
-          sendResolved: true
-          sound: gamelan
           title: >-
             [{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] {{ .CommonLabels.alertname }}
-          ttl: 86400s
-          token:
-            name: *secret
-            key: ALERTMANAGER_PUSHOVER_TOKEN
-          userKey:
-            name: *secret
-            key: PUSHOVER_USER_KEY
-          urlTitle: View in Alertmanager
