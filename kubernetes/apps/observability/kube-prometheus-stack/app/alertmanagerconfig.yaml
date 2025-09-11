@@ -41,7 +41,7 @@ spec:
     - name: msteams
       msteamsv2Configs:
         - webhookURL:
-            name: *secret
+            name: alertmanager-secret
             key: ALERTMANAGER_TEAMS_WEBHOOK
           text: |-
             {{- range .Alerts }}
