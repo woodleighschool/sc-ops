@@ -35,6 +35,7 @@ spec:
               tag: 1.2.1@sha256:03fc54aac1053cd367af33eb65512fee0964e4b888dd1f175fb079b8e7ac15df
             env:
               JAMF_HOST: wdm.jamfcloud.com
+              LOG_LEVEL: debug
               UPDATE_NOW: true
             envFrom:
               - secretRef:
