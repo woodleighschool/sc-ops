@@ -6,6 +6,7 @@ SOPS_AGE_KEY_FILE = "{{config_root}}/age.key"
 TALOSCONFIG = "{{config_root}}/talosconfig"
 JUST_UNSTABLE = "1"
 LEFTHOOK_OUTPUT = "false"
+CA_CERT_PATH = "/opt/homebrew/etc/ca-certificates/cert.pem"
 
 _.file = [
   "{{config_root}}/.secrets.env",

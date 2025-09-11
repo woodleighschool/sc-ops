@@ -39,6 +39,7 @@ machine:
         [plugins."io.containerd.cri.v1.runtime"]
           device_ownership_from_security_context = true
   install:
+    image: factory.talos.dev/metal-installer/b4f89946a66f1ffdda1caf6d31f852c10b2b2b2c320d040baf863e9962065f02:v1.11.1
     wipe: false
   kubelet:
     defaultRuntimeSeccompProfileEnabled: true
@@ -96,7 +97,7 @@ cluster:
   network:
     cni:
       name: none
-    dnsDomain: woodleighschool.net
+    dnsDomain: cluster.local
     podSubnets:
       - 10.42.0.0/16
     serviceSubnets:
