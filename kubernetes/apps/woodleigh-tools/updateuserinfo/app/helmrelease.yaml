@@ -19,8 +19,6 @@ spec:
   values:
     controllers:
       updateuserinfo:
-        replicas: 2
-        strategy: RollingUpdate
         annotations:
           reloader.stakater.com/auto: "true"
         containers:
