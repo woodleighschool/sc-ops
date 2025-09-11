@@ -24,11 +24,6 @@ spec:
             image:
               repository: ghcr.io/woodleighschool/adoverseas
               tag: 1.0.1@sha256:dd98ca72a7bc1874eb6e617a7b852607b0a7fd01d5547b477477dcc3ce96c72f
-            command:
-              - sh
-              - -c
-              - |
-                sleep infinity
             env:
               LOG_LEVEL: debug
             envFrom:
