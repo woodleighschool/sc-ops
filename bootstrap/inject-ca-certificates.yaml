@@ -1,0 +1,89 @@
+---
+apiVersion: admissionregistration.k8s.io/v1beta1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: inject-ca-certificates
+spec:
+  policyName: inject-ca-certificates
+---
+apiVersion: admissionregistration.k8s.io/v1beta1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: inject-ca-certificates
+spec:
+  matchConstraints:
+    resourceRules:
+      - apiGroups: [""]
+        apiVersions: ["v1"]
+        operations: ["CREATE", "UPDATE"]
+        resources: ["pods"]
+  matchConditions: []
+  failurePolicy: Fail
+  reinvocationPolicy: IfNeeded
+  mutations:
+    # Add certificate configMap volume
+    - patchType: ApplyConfiguration
+      applyConfiguration:
+        expression: >
+          object.spec.volumes.exists(v, v.name == "cm-ssl-certs")
+          ? Object{}
+          : Object{
+              spec: Object.spec{
+                volumes: [
+                  Object.spec.volumes{
+                    name: "cm-ssl-certs",
+                    configMap: Object.spec.volumes.configMap{
+                      name: "ca-trust-bundle"
+                    }
+                  }
+                ]
+              }
+            }
+    # Mount the certificates to every container
+    - patchType: ApplyConfiguration
+      applyConfiguration:
+        expression: >
+          Object{
+            spec: Object.spec{
+              containers: object.spec.containers.map(c,
+                c.volumeMounts.exists(vm, vm.name == "cm-ssl-certs")
+                ? Object.spec.containers{name: c.name}
+                : Object.spec.containers{
+                    name: c.name,
+                    volumeMounts: [
+                      Object.spec.containers.volumeMounts{
+                        name: "cm-ssl-certs",
+                        mountPath: "/etc/ssl/certs/ca-certificates.crt",
+                        subPath: "ca-bundle.crt",
+                        readOnly: true
+                      }
+                    ]
+                  }
+              )
+            }
+          }
+    # Mount the certificates to every initContainer
+    - patchType: ApplyConfiguration
+      applyConfiguration:
+        expression: >-
+          has(object.spec.initContainers)
+          ? Object{
+              spec: Object.spec{
+                initContainers: object.spec.initContainers.map(ic,
+                  ic.volumeMounts.exists(vm, vm.name == "cm-ssl-certs")
+                  ? Object.spec.initContainers{name: ic.name}
+                  : Object.spec.initContainers{
+                      name: ic.name,
+                      volumeMounts: [
+                        Object.spec.initContainers.volumeMounts{
+                          name: "cm-ssl-certs",
+                          mountPath: "/etc/ssl/certs/ca-certificates.crt",
+                          subPath: "ca-bundle.crt",
+                          readOnly: true
+                        }
+                      ]
+                    }
+                )
+              }
+            }
+          : Object{}

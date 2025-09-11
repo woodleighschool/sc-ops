@@ -8,7 +8,7 @@ controller := `talosctl config info -o yaml | yq -e '.endpoints[0]'`
 nodes := `talosctl config info -o yaml | yq -e '.nodes | join (" ")'`
 
 [private]
-default: talos kubernetes controller-kubeconfig wait namespaces resources crds apps cilium-kubeconfig
+default: talos kubernetes controller-kubeconfig wait namespaces resources mutating-admission-policy crds apps cilium-kubeconfig
 
 [doc('Install Talos')]
 talos:
@@ -54,18 +54,30 @@ wait:
 [doc('Apply Kubernetes namespaces')]
 namespaces:
     just log info "Running stage..." "stage" "$0"
+    just bootstrap verify-ca-bundle
     find "{{ kubernetes_dir }}/apps" -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | while IFS= read -r ns; do \
         if ! kubectl create namespace "$ns" --dry-run=client -o yaml | kubectl apply --server-side -f -; then \
             just log fatal "Failed to apply namespace" "stage" "$0" "namespace" "$ns"; \
         fi; \
+        if ! kubectl create configmap ca-trust-bundle --from-file=ca-bundle.crt="${CA_CERT_PATH}" -n "$ns" --dry-run=client -o yaml | kubectl apply --server-side -f -; then \
+            just log fatal "Failed to create ca-trust-bundle ConfigMap in namespace" "stage" "$0" "namespace" "$ns"; \
+        fi; \
     done
 
-[doc('Apply Kubernetes resources')]
+[doc('Apply Kubernetes resources including CA trust bundle')]
 resources:
     just log info "Running stage..." "stage" "$0"
+    @just log info "Generating resources with CA bundle..." "stage" "$0"
     if ! just template "{{ bootstrap_dir }}/resources.yaml.j2" | kubectl apply --server-side -f -; then \
         just log fatal "Failed to apply resources" "stage" "$0"; \
-    fi;
+    fi
+
+[doc('Apply inject-ca-certificates MutatingAdmissionPolicy')]
+mutating-admission-policy:
+    just log info "Running stage..." "stage" "$0"
+    if ! kubectl apply --server-side -f "{{ bootstrap_dir }}/inject-ca-certificates.yaml"; then \
+        just log fatal "Failed to apply inject-ca-certificates MutatingAdmissionPolicy" "stage" "$0"; \
+    fi
 
 [doc('Apply Helmfile CRDs')]
 crds:
@@ -87,3 +99,13 @@ cilium-kubeconfig:
     if ! just talos gen-kubeconfig; then \
         just log fatal "Failed to fetch kubeconfig" "stage" "$0"; \
     fi
+
+[private]
+verify-ca-bundle:
+    just log info "Verifying CA bundle..." "stage" "$0"
+    @if ! openssl crl2pkcs7 -nocrl -certfile ${CA_CERT_PATH} \
+        | openssl pkcs7 -print_certs -noout \
+        | grep -Fq "CN=trust.woodleigh.vic.edu.au"; then \
+        just log fatal "Woodleigh CA not found in brew certificate bundle" "stage" "$0"; \
+    fi
+    @just log info "✓ Woodleigh CA found in ${CA_CERT_PATH}" "stage" "$0"
