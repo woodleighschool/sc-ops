@@ -7,3 +7,4 @@ components:
   - ../../components/common
 resources:
   - ./updateuserinfo/ks.yaml
+  - ./setrecoverypassword/ks.yaml
