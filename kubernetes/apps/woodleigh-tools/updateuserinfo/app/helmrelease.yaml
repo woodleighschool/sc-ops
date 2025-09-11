@@ -25,7 +25,7 @@ spec:
           app:
             image:
               repository: ghcr.io/woodleighschool/updateuserinfo
-              tag: 2.0.4@sha256:5cc8684570d2d794c4312494e91469dc1ee69bd1b0ec5cd3d088518774fe7121
+              tag: 2.0.4@sha256:ecb8d8c03537ddc32ab8a964d6eba8095a1e9bca3701b4117a103b8d8bff278d
             env:
               JAMF_HOST: wdm.jamfcloud.com
               LDAP_HOST: wdc01.woodleighschool.net
