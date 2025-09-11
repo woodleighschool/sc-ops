@@ -3,12 +3,12 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: updateuserinfo
+  name: &app setrecoverypassword
 spec:
   interval: 1h
   chartRef:
     kind: OCIRepository
-    name: updateuserinfo
+    name: setrecoverypassword
   install:
     remediation:
       retries: -1
@@ -18,23 +18,28 @@ spec:
       retries: 3
   values:
     controllers:
-      updateuserinfo:
-        type: cronjob
-        cronjob:
-          schedule: "@daily"
-          backoffLimit: 0
-          concurrencyPolicy: Forbid
-          successfulJobsHistory: 1
-          failedJobsHistory: 1
-          timeZone: "Australia/Melbourne"
+      setrecvoerypassword:
+        #type: cronjob
+        #cronjob:
+        #  schedule: "@daily"
+        #  suspend: true
+        #  backoffLimit: 0
+        #  concurrencyPolicy: Forbid
+        #  successfulJobsHistory: 1
+        #  failedJobsHistory: 1
+        #  timeZone: "Australia/Melbourne"
         containers:
           app:
             image:
-              repository: ghcr.io/woodleighschool/updateuserinfo
-              tag: 2.0.7@sha256:94b9ac71b224f6af4d01dea4738b0e7bb2a06a05105b38acb54c6493297c90fe
+              repository: ghcr.io/woodleighschool/setrecoverypassword
+              tag: 1.2.1@sha256:03fc54aac1053cd367af33eb65512fee0964e4b888dd1f175fb079b8e7ac15df
+            command:
+              - sh
+              - -c
+              - |
+                sleep infinity
             env:
               JAMF_HOST: wdm.jamfcloud.com
-              LDAP_HOST: wdc01.woodleighschool.net
               UPDATE_NOW: true
             envFrom:
               - secretRef:
@@ -53,7 +58,11 @@ spec:
         runAsNonRoot: true
         runAsUser: 1000
         runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
     persistence:
+      config:
+        existingClaim: *app
       tmpfs:
         type: emptyDir
         globalMounts:
