@@ -52,7 +52,7 @@ spec:
         type: emptyDir
         globalMounts:
           - path: /tmp
-            subPath: /tmp
+            subPath: tmp
           - path: /app
-            subPath: /app
+            subPath: app
 
