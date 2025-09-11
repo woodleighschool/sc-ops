@@ -11,10 +11,6 @@ spec:
       app.kubernetes.io/name: *app
   interval: 1h
   path: ./kubernetes/apps/woodleigh-tools/updateuserinfo/app
-  postBuild:
-    substituteFrom:
-      - kind: Secret
-        name: updateuserinfo-secret
   prune: true
   retryInterval: 2m
   sourceRef:
