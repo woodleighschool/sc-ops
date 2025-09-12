@@ -45,6 +45,19 @@ spec:
         runAsGroup: 1000
         fsGroup: 1000
         fsGroupChangePolicy: OnRootMismatch
+    service:
+      app:
+        ports:
+          http:
+            port: 5000
+    route:
+      app:
+        hostnames:
+          - "{{ .Release.Name }}.woodleighschool.net"
+        parentRefs:
+          - name: envoy-external
+            namespace: network
+            sectionName: https
     persistence:
       config:
         existingClaim: *app
@@ -55,4 +68,5 @@ spec:
             subPath: tmp
           - path: /app
             subPath: app
+
 
