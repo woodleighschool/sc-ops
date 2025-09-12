@@ -36,7 +36,7 @@ spec:
           secretKeyRef:
             name: snmp-secret
             key: SNMPV3_PRIVATE_KEY
-    config:
+    config: |
       auths:
         snmp_v3:
           version: 3
