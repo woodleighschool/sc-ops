@@ -44,13 +44,17 @@ spec:
             name: alertmanager-secret
             key: ALERTMANAGER_TEAMS_WEBHOOK
           text: |-
-            {{- $ctx := dict "sep" "" -}}
             {{- range .Alerts }}
-            {{ $ctx.sep }}
-            **{{ .Annotations.summary | default .Labels.alertname }}**
+            **Alert:** {{ .Labels.alertname }}
 
-            {{- if .Annotations.description }}
+            {{- if ne .Annotations.description "" }}
             {{ .Annotations.description }}
+            {{- else if ne .Annotations.summary "" }}
+            {{ .Annotations.summary }}
+            {{- else if ne .Annotations.message "" }}
+            {{ .Annotations.message }}
+            {{- else }}
+            Alert description not available
             {{- end }}
 
             **Status:** `{{ .Status }}`
@@ -58,12 +62,14 @@ spec:
             **Ends:** {{ .EndsAt }}{{ end }}
             **Source:** [Open in source]({{ .GeneratorURL }})
 
-            **Labels**
+            {{- if gt (len .Labels.SortedPairs) 0 }}
+            **Labels:**
             {{- range .Labels.SortedPairs }}
-            - **{{ .Name }}**: `{{ .Value }}`
+            - **{{ .Name }}:** `{{ .Value }}`
+            {{- end }}
             {{- end }}
 
-            {{- $_ := set $ctx "sep" "\n---\n" -}}
+            ---
             {{- end }}
           title: >-
             [{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] {{ .CommonLabels.alertname }}
