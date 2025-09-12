@@ -20,22 +20,9 @@ spec:
     fullnameOverride: *app
     extraArgs:
       - --config.expand-environment-variables
-    env:
-      - name: SNMPV3_USERNAME
-        valueFrom:
-          secretKeyRef:
-            name: snmp-secret
-            key: SNMPV3_USERNAME
-      - name: SNMPV3_PASSWORD
-        valueFrom:
-          secretKeyRef:
-            name: snmp-secret
-            key: SNMPV3_PASSWORD
-      - name: SNMPV3_PRIVATE_KEY
-        valueFrom:
-          secretKeyRef:
-            name: snmp-secret
-            key: SNMPV3_PRIVATE_KEY
+    envFrom:
+      - secretRef:
+          name: snmp-secret
     config: |
       auths:
         snmp_v3:
