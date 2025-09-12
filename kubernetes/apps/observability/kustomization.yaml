@@ -12,6 +12,7 @@ resources:
   - ./grafana/ks.yaml
   - ./keda/ks.yaml
 #  - ./kromgo/ks.yaml
+  - ./snmp-exporter/ks.yaml
   - ./kube-prometheus-stack/ks.yaml
   - ./loki/ks.yaml
   - ./silence-operator/ks.yaml

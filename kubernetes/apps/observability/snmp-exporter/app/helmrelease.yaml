@@ -1,0 +1,57 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app snmp-exporter
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: snmp-exporter
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    fullnameOverride: *app
+    env:
+      - name: SNMPV3_USERNAME
+        valueFrom:
+          secretKeyRef:
+            name: snmp-secret
+            key: SNMPV3_USERNAME
+      - name: SNMPV3_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: snmp-secret
+            key: SNMPV3_PASSWORD
+      - name: SNMPV3_PRIVATE_KEY
+        valueFrom:
+          secretKeyRef:
+            name: snmp-secret
+            key: SNMPV3_PRIVATE_KEY
+    serviceMonitor:
+      enabled: true
+      params:
+        - name: wcitups1
+          module:
+            - apcups
+          target: 172.20.1.15
+          auth:
+            - snmp_v3
+        - name: wcitups2
+          module:
+            - apcups
+          target: 172.20.1.16
+          auth:
+            - snmp_v3
+      path: /snmp
+      scrapeTimeout: 10s
+      relabelings:
+        - sourceLabels:
+            - __param_target
+          targetLabel: instance
