@@ -45,24 +45,35 @@ spec:
             key: ALERTMANAGER_TEAMS_WEBHOOK
           text: |-
             {{- range .Alerts }}
+
             **Alert:** {{ .Labels.alertname }}
 
             {{- if ne .Annotations.description "" }}
+
             {{ .Annotations.description }}
             {{- else if ne .Annotations.summary "" }}
+
             {{ .Annotations.summary }}
             {{- else if ne .Annotations.message "" }}
+
             {{ .Annotations.message }}
             {{- else }}
+
             Alert description not available
             {{- end }}
 
             **Status:** `{{ .Status }}`
-            **Starts:** {{ .StartsAt }}{{ if .EndsAt }}
-            **Ends:** {{ .EndsAt }}{{ end }}
-            **Source:** [Open in source]({{ .GeneratorURL }})
+
+            **Starts:** {{ .StartsAt }}
+            {{- if .EndsAt }}
+
+            **Ends:** {{ .EndsAt }}
+            {{- end }}
+
+            **Source:** [Open in Alertmanager](https://alertmanager.woodleighschool.net)
 
             {{- if gt (len .Labels.SortedPairs) 0 }}
+
             **Labels:**
             {{- range .Labels.SortedPairs }}
             - **{{ .Name }}:** `{{ .Value }}`
