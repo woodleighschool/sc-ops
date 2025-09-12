@@ -36,6 +36,7 @@ spec:
               JAMF_HOST: wdm.jamfcloud.com
               LOG_LEVEL: debug
               UPDATE_NOW: true
+              TZ: Australia/Melbourne
             envFrom:
               - secretRef:
                   name: "{{ .Release.Name }}-secret"
