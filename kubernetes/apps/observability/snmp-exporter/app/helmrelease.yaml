@@ -21,6 +21,7 @@ spec:
     extraArgs:
       - --config.expand-environment-variables
       - --config.file=/etc/snmp_exporter/snmp*.yml
+      - --log.level=debug
     envFrom:
       - secretRef:
           name: snmp-secret
