@@ -7,3 +7,9 @@ resources:
   - ./ocirepository.yaml
   - ./prometheusrule.yaml
   - ./externalsecret.yaml
+configMapGenerator:
+  - name: snmp-exporter-configmap
+    files:
+      - ./resources/snmp_v3.yml
+generatorOptions:
+  disableNameSuffixHash: true

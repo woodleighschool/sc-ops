@@ -20,19 +20,16 @@ spec:
     fullnameOverride: *app
     extraArgs:
       - --config.expand-environment-variables
+      - --config.file=/config/snmp*.yml
     envFrom:
       - secretRef:
           name: snmp-secret
-    config: |
-      auths:
-        snmp_v3:
-          version: 3
-          username: ${SNMPV3_USERNAME}
-          password: ${SNMPV3_PASSWORD}
-          auth_protocol: SHA
-          priv_protocol: AES
-          priv_password: ${SNMPV3_PRIVATE_KEY}
-          security_level: authPriv
+    extraConfigmapMounts:
+      - name: snmp-exporter-configmap
+        mountPath: /config/snmp_v3.yml
+        subPath: snmp_v3.yml
+        configMap: snmp-exporter-configmap
+        readOnly: true
     serviceMonitor:
       enabled: true
       params:
