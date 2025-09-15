@@ -46,7 +46,7 @@ spec:
           auth:
             - snmp_v3
       path: /snmp
-      scrapeTimeout: 30s
+      scrapeTimeout: 50s
       relabelings:
         - sourceLabels:
             - __param_target
