@@ -18,10 +18,11 @@ spec:
       retries: 3
   values:
     fullnameOverride: *app
-    config:
-      modules:
-        default:
-          metrics:
+    configuration:
+      config: |-
+        modules:
+          default:
+            metrics:
             - name: solar_device_info
               help: Solar device label carrier (value = 'now' timestamp)
               type: value
