@@ -1,0 +1,163 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app json-exporter
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: json-exporter
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    fullnameOverride: *app
+    config:
+      modules:
+        default:
+          metrics:
+            - name: solar_device_info
+              help: Solar device label carrier (value = 'now' timestamp)
+              type: value
+              path: $
+              value: $.now
+              valuetype: gauge
+              labels:
+                device_name: $.device.name
+            - name: solar_item_count
+              path: $.item_count
+              help: Number of items in the solar monitoring response
+              type: value
+              valuetype: gauge
+            - name: solar_battery_in_wh_today
+              path: $.items.battery_in_wh_today
+              help: Battery energy input today (Wh)
+              type: value
+              valuetype: gauge
+            - name: solar_battery_in_wh_total
+              path: $.items.battery_in_wh_total
+              help: Battery energy input total (Wh)
+              type: value
+              valuetype: counter
+            - name: solar_battery_out_wh_today
+              path: $.items.battery_out_wh_today
+              help: Battery energy output today (Wh)
+              type: value
+              valuetype: gauge
+            - name: solar_battery_out_wh_total
+              path: $.items.battery_out_wh_total
+              help: Battery energy output total (Wh)
+              type: value
+              valuetype: counter
+            - name: solar_battery_soc
+              path: $.items.battery_soc
+              help: Battery state of charge (%)
+              type: value
+              valuetype: gauge
+            - name: solar_battery_power_watts
+              path: $.items.battery_w
+              help: Battery power (W) - negative = charging, positive = discharging
+              type: value
+              valuetype: gauge
+            - name: solar_fault_code
+              path: $.items.fault_code
+              help: Solar system fault code
+              type: value
+              valuetype: gauge
+            - name: solar_fault_timestamp
+              path: $.items.fault_ts
+              help: Solar system fault timestamp (epoch seconds)
+              type: value
+              valuetype: gauge
+            - name: solar_generator_status
+              path: $.items.gen_status
+              help: Generator status
+              type: value
+              valuetype: gauge
+            - name: solar_grid_in_wh_today
+              path: $.items.grid_in_wh_today
+              help: Grid energy input today (Wh)
+              type: value
+              valuetype: gauge
+            - name: solar_grid_in_wh_total
+              path: $.items.grid_in_wh_total
+              help: Grid energy input total (Wh)
+              type: value
+              valuetype: counter
+            - name: solar_grid_out_wh_today
+              path: $.items.grid_out_wh_today
+              help: Grid energy output today (Wh)
+              type: value
+              valuetype: gauge
+            - name: solar_grid_out_wh_total
+              path: $.items.grid_out_wh_total
+              help: Grid energy output total (Wh)
+              type: value
+              valuetype: counter
+            - name: solar_grid_power_watts
+              path: $.items.grid_w
+              help: Grid power (W)
+              type: value
+              valuetype: gauge
+            - name: solar_load_power_watts
+              path: $.items.load_w
+              help: Load power consumption (W)
+              type: value
+              valuetype: gauge
+            - name: solar_load_wh_today
+              path: $.items.load_wh_today
+              help: Load energy consumption today (Wh)
+              type: value
+              valuetype: gauge
+            - name: solar_load_wh_total
+              path: $.items.load_wh_total
+              help: Load energy consumption total (Wh)
+              type: value
+              valuetype: counter
+            - name: solar_shunt_power_watts
+              path: $.items.shunt_w
+              help: Shunt power (W)
+              type: value
+              valuetype: gauge
+            - name: solar_production_wh_today
+              path: $.items.solar_wh_today
+              help: Solar energy production today (Wh)
+              type: value
+              valuetype: gauge
+            - name: solar_production_wh_total
+              path: $.items.solar_wh_total
+              help: Solar energy production total (Wh)
+              type: value
+              valuetype: counter
+            - name: solar_inverter_power_watts
+              path: $.items.solarinverter_w
+              help: Solar inverter power output (W)
+              type: value
+              valuetype: gauge
+            - name: solar_data_timestamp
+              path: $.items.timestamp
+              help: Solar data timestamp (epoch seconds)
+              type: value
+              valuetype: gauge
+            - name: solar_now_timestamp
+              path: $.now
+              help: Current timestamp from solar monitoring system (epoch seconds)
+              type: value
+              valuetype: gauge
+    serviceMonitor:
+      enabled: true
+      defaults:
+        labels:
+          release: prometheus
+        interval: 30s
+        scrapeTimeout: 10s
+      targets:
+        - name: selectronic-sp-pro
+          url: http://172.19.10.19/cgi-bin/solarmonweb/devices/C2AC1FC1F77E671ACF1368C7F1A07574/point
+          module: default
