@@ -5,6 +5,7 @@
     "docker:enableMajor",
     "helpers:pinGitHubActionDigests",
     "github>woodleighschool/sc-ops//.renovate/autoMerge.json5",
+    "github>woodleighschool/sc-ops//.renovate/changelogs.json5",
     "github>woodleighschool/sc-ops//.renovate/customManagers.json5",
     "github>woodleighschool/sc-ops//.renovate/grafanaDashboards.json5",
     "github>woodleighschool/sc-ops//.renovate/groups.json5",

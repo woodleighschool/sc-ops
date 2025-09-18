@@ -12,6 +12,3 @@ Brewfile.lock.json
 Thumbs.db
 kubeconfig
 talosconfig
-
-# In development
-kubernetes/apps/observability/portainer
