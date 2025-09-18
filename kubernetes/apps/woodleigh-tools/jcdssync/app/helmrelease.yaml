@@ -80,6 +80,21 @@ spec:
                 memory: 128Mi
               limits:
                 memory: 512Mi
+        pod:
+          affinity:
+            podAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                - labelSelector:
+                    matchExpressions:
+                      - key: app.kubernetes.io/instance
+                        operator: In
+                        values:
+                          - jcdssync
+                      - key: app.kubernetes.io/controller
+                        operator: In
+                        values:
+                          - nginx
+                  topologyKey: kubernetes.io/hostname
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true
