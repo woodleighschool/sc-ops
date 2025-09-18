@@ -1,0 +1,92 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app portainer
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: portainer
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    controllers:
+      portainer:
+        containers:
+          app:
+            image:
+              repository: portainer/portainer-ce
+              tag: 2.34.0@sha256:d61738f5a4670c50395a13a42345a5b9675d96573817ef009a6c7de48ce5a13d
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: 9000
+                  initialDelaySeconds: 45
+                  periodSeconds: 30
+                  failureThreshold: 5
+              readiness: *probes
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+    rbac:
+      roles:
+        portainer:
+          type: ClusterRole
+          rules:
+            - apiGroups:
+                - "*"
+              resources:
+                - "*"
+              verbs:
+                - get
+                - list
+                - watch
+            - nonResourceURLs:
+                - "*"
+              verbs:
+                - get
+                - list
+      bindings:
+        portainer-binding:
+          type: ClusterRoleBinding
+          roleRef:
+            apiGroup: rbac.authorization.k8s.io
+            kind: ClusterRole
+            identifier: portainer
+          subjects:
+            - kind: ServiceAccount
+              identifier: portainer
+              namespace: default
+    serviceAccount:
+      portainer: {}
+    service:
+      app:
+        ports:
+          http:
+            port: 9000
+    route:
+      app:
+        hostnames:
+          - "{{ .Release.Name }}.woodleighschool.net"
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
+            sectionName: https
+    persistence:
+      data:
+        existingClaim: *app
