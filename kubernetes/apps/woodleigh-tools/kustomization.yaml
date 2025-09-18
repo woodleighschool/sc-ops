@@ -9,3 +9,4 @@ resources:
   - ./adoverseas/ks.yaml
   - ./setrecoverypassword/ks.yaml
   - ./updateuserinfo/ks.yaml
+  - ./jcdssync/ks.yaml
