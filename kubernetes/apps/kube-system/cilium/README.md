@@ -2,7 +2,7 @@
 
 ### Switch Configuration
 
-```bash
+```sh
 router bgp 64513
   bgp router-id 10.10.69.1
 
