@@ -23,7 +23,7 @@ spec:
           app:
             image:
               repository: ghcr.io/woodleighschool/adoverseas
-              tag: 1.2.1@sha256:8d4312359d6af9b2593a5713cf40af0123dbdcad669c8390df2d291936179a64
+              tag: 1.2.2@sha256:644c9f5495e5abc485de3605f98fce995398440ad08308a274a078e376941f70
             env:
               LOG_LEVEL: debug
               TZ: Australia/Melbourne
