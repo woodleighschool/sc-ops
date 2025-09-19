@@ -13,10 +13,15 @@ metadata:
 spec:
   matchConstraints:
     resourceRules:
-      - apiGroups: [""]
-        apiVersions: ["v1"]
-        operations: ["CREATE", "UPDATE"]
-        resources: ["pods"]
+      - apiGroups:
+          - ""
+        apiVersions:
+          - v1
+        operations:
+          - CREATE
+          - UPDATE
+        resources:
+          - pods
   matchConditions: []
   failurePolicy: Fail
   reinvocationPolicy: IfNeeded
@@ -46,18 +51,31 @@ spec:
           Object{
             spec: Object.spec{
               containers: object.spec.containers.map(c,
-                c.volumeMounts.exists(vm, vm.name == "cm-ssl-certs")
+                (
+                  has(c.volumeMounts) &&
+                  c.volumeMounts.exists(vm, vm.name == "cm-ssl-certs")
+                )
                 ? Object.spec.containers{name: c.name}
                 : Object.spec.containers{
                     name: c.name,
-                    volumeMounts: [
-                      Object.spec.containers.volumeMounts{
-                        name: "cm-ssl-certs",
-                        mountPath: "/etc/ssl/certs/ca-certificates.crt",
-                        subPath: "ca-bundle.crt",
-                        readOnly: true
-                      }
-                    ]
+                    volumeMounts:
+                      has(c.volumeMounts)
+                      ? c.volumeMounts + [
+                          Object.spec.containers.volumeMounts{
+                            name: "cm-ssl-certs",
+                            mountPath: "/etc/ssl/certs/ca-certificates.crt",
+                            subPath: "ca-bundle.crt",
+                            readOnly: true
+                          }
+                        ]
+                      : [
+                          Object.spec.containers.volumeMounts{
+                            name: "cm-ssl-certs",
+                            mountPath: "/etc/ssl/certs/ca-certificates.crt",
+                            subPath: "ca-bundle.crt",
+                            readOnly: true
+                          }
+                        ]
                   }
               )
             }
@@ -70,18 +88,31 @@ spec:
           ? Object{
               spec: Object.spec{
                 initContainers: object.spec.initContainers.map(ic,
-                  ic.volumeMounts.exists(vm, vm.name == "cm-ssl-certs")
+                  (
+                    has(ic.volumeMounts) &&
+                    ic.volumeMounts.exists(vm, vm.name == "cm-ssl-certs")
+                  )
                   ? Object.spec.initContainers{name: ic.name}
                   : Object.spec.initContainers{
                       name: ic.name,
-                      volumeMounts: [
-                        Object.spec.initContainers.volumeMounts{
-                          name: "cm-ssl-certs",
-                          mountPath: "/etc/ssl/certs/ca-certificates.crt",
-                          subPath: "ca-bundle.crt",
-                          readOnly: true
-                        }
-                      ]
+                      volumeMounts:
+                        has(ic.volumeMounts)
+                        ? ic.volumeMounts + [
+                            Object.spec.initContainers.volumeMounts{
+                              name: "cm-ssl-certs",
+                              mountPath: "/etc/ssl/certs/ca-certificates.crt",
+                              subPath: "ca-bundle.crt",
+                              readOnly: true
+                            }
+                          ]
+                        : [
+                            Object.spec.initContainers.volumeMounts{
+                              name: "cm-ssl-certs",
+                              mountPath: "/etc/ssl/certs/ca-certificates.crt",
+                              subPath: "ca-bundle.crt",
+                              readOnly: true
+                            }
+                          ]
                     }
                 )
               }
