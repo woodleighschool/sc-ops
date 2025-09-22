@@ -159,5 +159,5 @@ spec:
         scrapeTimeout: 10s
       targets:
         - name: selectronic-sp-pro
-          url: http://172.19.10.19/cgi-bin/solarmonweb/devices/C2AC1FC1F77E671ACF1368C7F1A07574/point
+          url: http://172.19.10.36/cgi-bin/solarmonweb/devices/C2AC1FC1F77E671ACF1368C7F1A07574/point
           module: default
