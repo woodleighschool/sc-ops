@@ -59,7 +59,7 @@
               "mode": "none"
             },
             "thresholdsStyle": {
-              "mode": "off"
+              "mode": "dashed"
             }
           },
           "mappings": [],
@@ -165,7 +165,9 @@
       "targets": [
         {
           "editorMode": "builder",
+          "exemplar": false,
           "expr": "load_power_watts{target=\"selectronic-sp-pro\"}",
+          "instant": false,
           "legendFormat": "Load",
           "range": true,
           "refId": "A"
@@ -243,9 +245,7 @@
         "orientation": "auto",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
@@ -309,9 +309,7 @@
         "orientation": "auto",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
@@ -323,8 +321,10 @@
       "targets": [
         {
           "editorMode": "builder",
+          "exemplar": false,
           "expr": "load_power_watts{target=\"selectronic-sp-pro\"}",
-          "range": true,
+          "instant": true,
+          "range": false,
           "refId": "A"
         }
       ],
@@ -374,9 +374,7 @@
         "orientation": "auto",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
@@ -435,9 +433,7 @@
         "orientation": "auto",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
@@ -508,9 +504,7 @@
         "orientation": "auto",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
@@ -572,9 +566,7 @@
         "orientation": "auto",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
@@ -636,9 +628,7 @@
         "orientation": "auto",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
@@ -660,7 +650,7 @@
     }
   ],
   "preload": false,
-  "refresh": "10s",
+  "refresh": "1m",
   "schemaVersion": 41,
   "tags": [],
   "templating": {
@@ -674,5 +664,5 @@
   "timezone": "browser",
   "title": "Selectronic SP‑PRO / Power & Energy",
   "uid": "sel-86878cf2",
-  "version": 25
+  "version": 1
 }
