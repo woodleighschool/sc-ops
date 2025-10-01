@@ -16,9 +16,23 @@ spec:
           app:
             image:
               repository: ghcr.io/woodleighschool/papercut-checkin
-              tag: 0.1.0@sha256:bb283bec10a5e24caa5486e6677cef89d471bce97177c61b8a9a4821bc95262c
+              tag: 0.2.0@sha256:205bae042b22a38e4a5793cd663ad205d9741be1bc9d62c28c30d434aab4f4b1
             env:
               TZ: Australia/Melbourne
+              SIGNIN_AREAS: |-
+                Wellbeing
+                Learning Enhancement
+              NAMES_LIST: |-
+                John Smith
+                Jane Doe
+                Alex Johnson
+                Sarah Wilson
+                Michael Brown
+                Emma Davis
+                James Miller
+                Olivia Garcia
+                William Martinez
+                Sophia Anderson
             probes:
               liveness: &probes
                 enabled: true
