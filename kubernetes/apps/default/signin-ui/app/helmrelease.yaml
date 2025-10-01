@@ -53,5 +53,12 @@ spec:
             namespace: network
             sectionName: https
     persistence:
-      data:
+      config:
         existingClaim: *app
+      tmpfs:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
+            subPath: tmp
+          - path: /app/instance
+            subPath: instance
