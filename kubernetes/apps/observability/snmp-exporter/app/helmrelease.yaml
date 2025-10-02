@@ -13,30 +13,36 @@ spec:
     fullnameOverride: *app
     extraArgs:
       - --config.expand-environment-variables
-      - --config.file=/etc/snmp_exporter/snmp*.yml
+      - --config.file=/etc/snmp_exporter/snmp.yml
       - --log.level=debug
     envFrom:
       - secretRef:
           name: snmp-secret
     extraConfigmapMounts:
       - name: snmp-exporter-configmap
-        mountPath: /etc/snmp_exporter/snmp_v3.yml
-        subPath: snmp_v3.yml
+        mountPath: /etc/snmp_exporter/snmp.yml
+        subPath: snmp.yml
         configMap: snmp-exporter-configmap
         readOnly: true
     serviceMonitor:
       enabled: true
       params:
-        - name: wcitups1
+        #- name: itups1
+        #  module:
+        #    - apcups
+        #  target: 172.20.1.15
+        #  auth:
+        #    - snmp_v3
+        #- name: itups2
+        #  module:
+        #    - apcups
+        #  target: 172.20.1.16
+        #  auth:
+        #    - snmp_v3
+        - name: adminups
           module:
-            - apcups
-          target: 172.20.1.15
-          auth:
-            - snmp_v3
-        - name: wcitups2
-          module:
-            - apcups
-          target: 172.20.1.16
+            - eatonups
+          target: 10.10.28.210
           auth:
             - snmp_v3
       path: /snmp

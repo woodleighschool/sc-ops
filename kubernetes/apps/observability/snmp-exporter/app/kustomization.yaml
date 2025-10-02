@@ -10,6 +10,6 @@ resources:
 configMapGenerator:
   - name: snmp-exporter-configmap
     files:
-      - ./resources/snmp_v3.yml
+      - ./resources/snmp.yml
 generatorOptions:
   disableNameSuffixHash: true
