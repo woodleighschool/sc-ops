@@ -27,10 +27,16 @@ spec:
     serviceMonitor:
       enabled: true
       params:
-        - name: sc-sw-core
+        - name: wcitups1
           module:
-            - hpe
-          target: 10.10.28.1
+            - apcups
+          target: 172.20.1.15
+          auth:
+            - snmp_v3
+        - name: wcitups2
+          module:
+            - apcups
+          target: 172.20.1.16
           auth:
             - snmp_v3
       path: /snmp
