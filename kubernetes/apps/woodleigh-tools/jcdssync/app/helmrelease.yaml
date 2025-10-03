@@ -56,7 +56,7 @@ spec:
           app:
             image:
               repository: ghcr.io/woodleighschool/jcdssync
-              tag: 2.0.4@sha256:d60f2f3d4e150f34afb1334b7e19995731eeb7c2ce469181d07a78ea087da135
+              tag: 3.0.0@sha256:f77fa990e66d6a8a845b7d6c83f6783a02e5b672ae855c8142600a854cbf5f1a
             env:
               TZ: Australia/Melbourne
               JAMF_URL: https://wdm.jamfcloud.com
