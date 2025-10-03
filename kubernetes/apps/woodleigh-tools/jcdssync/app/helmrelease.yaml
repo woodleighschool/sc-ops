@@ -59,8 +59,9 @@ spec:
               tag: 3.0.0@sha256:f77fa990e66d6a8a845b7d6c83f6783a02e5b672ae855c8142600a854cbf5f1a
             env:
               TZ: Australia/Melbourne
-              JAMF_URL: https://wdm.jamfcloud.com
-              SYNC_NOW: true
+              INSTANCE_DOMAIN: https://wdm.jamfcloud.com
+            args:
+              - --log-level=debug
             envFrom:
               - secretRef:
                   name: "{{ .Release.Name }}-secret"
