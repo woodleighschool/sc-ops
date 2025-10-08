@@ -22,17 +22,6 @@ spec:
               SIGNIN_AREAS: |-
                 Wellbeing
                 Learning Enhancement
-              NAMES_LIST: |-
-                John Smith
-                Jane Doe
-                Alex Johnson
-                Sarah Wilson
-                Michael Brown
-                Emma Davis
-                James Miller
-                Olivia Garcia
-                William Martinez
-                Sophia Anderson
             envFrom:
               - secretRef:
                   name: "{{ .Release.Name }}-secret"
