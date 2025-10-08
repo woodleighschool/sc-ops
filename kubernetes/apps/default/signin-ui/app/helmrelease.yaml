@@ -16,7 +16,7 @@ spec:
           app:
             image:
               repository: ghcr.io/woodleighschool/papercut-checkin
-              tag: 0.3.0@sha256:14c6635092339f6188d955a33228f47e5c47f1dfd88c661f2bd498c5a45ac1a4
+              tag: 0.3.1@sha256:c8f8b1daed2e5391b111c25213e7f311f23e83d5d88d88fe15cdf45913d3ee85
             env:
               TZ: Australia/Melbourne
               SIGNIN_AREAS: |-
