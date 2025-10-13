@@ -202,7 +202,7 @@ spec:
         hostnames:
           - "{{ .Release.Name }}.woodleighschool.net"
         parentRefs:
-          - name: envoy-internal
+          - name: envoy-internal-public
             namespace: network
             sectionName: https
     persistence:
