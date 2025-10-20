@@ -1,0 +1,109 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: pgadmin
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: pgadmin
+  interval: 1h
+  values:
+    controllers:
+      pgadmin:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: docker.io/dpage/pgadmin4
+              tag: 9.9@sha256:5d9624a93634d1c5e595619cc57b1d330758120d1baf445fa97300c0c1fc3c0a
+            env:
+              TZ: Australia/Melbourne
+            envFrom:
+              - secretRef:
+                  name: "{{ .Release.Name }}-secret"
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /misc/ping
+                    port: &port 80
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+            securityContext:
+              allowPrivilegeEscalation: false
+              # /pgadmin4/config_distro.py: Read-only file system:
+              # readOnlyRootFilesystem: true
+              # /venv/bin/python3: Operation not permitted:
+              # capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 15m
+                memory: 256M
+              limits:
+                memory: 512M
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+    service:
+      app:
+        ports:
+          http:
+            port: *port
+    route:
+      app:
+        hostnames:
+          - "{{ .Release.Name }}.woodleighschool.net"
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
+            sectionName: https
+    configMaps:
+      config:
+        data:
+          servers.json: |-
+            {
+              "Servers": {
+                "1": {
+                  "Name": "postgres",
+                  "Group": "Servers",
+                  "Host": "postgres-rw.databases.svc.cluster.local",
+                  "Port": 5432,
+                  "MaintenanceDB": "postgres",
+                  "Username": "postgres",
+                  "SSLMode": "disable",
+                  "SSLCompression": 0,
+                  "Timeout": 10,
+                  "UseSSHTunnel": 0,
+                  "TunnelPort": "22",
+                  "TunnelAuthentication": 0
+                }
+              }
+            }
+    persistence:
+      config-file:
+        type: configMap
+        identifier: config
+        globalMounts:
+          - path: /pgadmin4/servers.json
+            subPath: servers.json
+      tmpfs:
+        type: emptyDir
+        globalMounts:
+          - path: /var/lib/pgadmin
+            subPath: pgadmin
+          - path: /var/log/pgadmin
+            subPath: logs
+          - path: /tmp
+            subPath: tmp
