@@ -24,11 +24,12 @@ spec:
           app:
             image:
               repository: ghcr.io/woodleighschool/setrecoverypassword
-              tag: 1.2.3@sha256:8142efe4be8b566b323f17562563e5ed9334f64e633b0b0ec042d4cc164b677f
+              tag: 2.0.1:48a6ffe1b78d9ea5db5464489c475d35f713b61269b394ef03adb0df56576592
             env:
-              JAMF_HOST: wdm.jamfcloud.com
+              PASSWORD_LENGTH: 10
+              SYNC_SCHEDULE: 0 2 * * *
               LOG_LEVEL: debug
-              UPDATE_NOW: true
+              INSTANCE_DOMAIN: wdm.jamfcloud.com
               TZ: Australia/Melbourne
             envFrom:
               - secretRef:
