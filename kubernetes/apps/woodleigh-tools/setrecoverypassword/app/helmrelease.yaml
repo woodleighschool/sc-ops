@@ -27,7 +27,6 @@ spec:
               tag: 2.0.1:48a6ffe1b78d9ea5db5464489c475d35f713b61269b394ef03adb0df56576592
             env:
               PASSWORD_LENGTH: 10
-              SYNC_SCHEDULE: 0 2 * * *
               LOG_LEVEL: debug
               INSTANCE_DOMAIN: wdm.jamfcloud.com
               TZ: Australia/Melbourne
