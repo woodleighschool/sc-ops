@@ -24,7 +24,7 @@ spec:
           app:
             image:
               repository: ghcr.io/woodleighschool/setrecoverypassword
-              tag: 2.0.1@sha256:48a6ffe1b78d9ea5db5464489c475d35f713b61269b394ef03adb0df56576592
+              tag: 2.0.1@sha256:e70f0ce05fac42ef0bd66e49a2bb0c30cfb19536b1c69d65aafaf88415604f07
             env:
               PASSWORD_LENGTH: 10
               LOG_LEVEL: debug
