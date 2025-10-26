@@ -18,7 +18,7 @@ spec:
           app:
             image:
               repository: docker.io/library/nginx
-              tag: 1.29.2-alpine@sha256:91dfeb21f1fa1b44bdc779810f5dedcc26b5663beadd7c8e91d23f3f4a7fad6f
+              tag: 1.29.2-alpine@sha256:61e01287e546aac28a3f56839c136b31f590273f3b41187a36f46f6a03bbfe22
             probes:
               liveness: &probes
                 enabled: true
