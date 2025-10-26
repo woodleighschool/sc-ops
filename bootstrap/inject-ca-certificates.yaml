@@ -22,7 +22,14 @@ spec:
           - UPDATE
         resources:
           - pods
-  matchConditions: []
+  matchConditions:
+    - name: skip-talos-managed
+      expression: |
+        !(
+          has(object.metadata.labels) &&
+          "app.kubernetes.io/managed-by" in object.metadata.labels &&
+          object.metadata.labels["app.kubernetes.io/managed-by"] == "Talos"
+        )
   failurePolicy: Fail
   reinvocationPolicy: IfNeeded
   mutations:
