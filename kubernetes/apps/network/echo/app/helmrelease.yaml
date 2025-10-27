@@ -5,10 +5,10 @@ kind: HelmRelease
 metadata:
   name: echo
 spec:
-  interval: 1h
   chartRef:
     kind: OCIRepository
     name: echo
+  interval: 1h
   values:
     controllers:
       echo:
@@ -61,9 +61,11 @@ spec:
           - port: http
     route:
       app:
+        annotations:
+          gatus.home-operations.com/endpoint: |-
+            conditions: ["[STATUS] == 200"]
         hostnames:
           - "{{ .Release.Name }}.woodleighschool.net"
         parentRefs:
           - name: envoy-external
             namespace: network
-            sectionName: https

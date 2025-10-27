@@ -5,10 +5,10 @@ kind: HelmRelease
 metadata:
   name: &app json-exporter
 spec:
-  interval: 1h
   chartRef:
     kind: OCIRepository
     name: json-exporter
+  interval: 1h
   values:
     fullnameOverride: *app
     configuration:

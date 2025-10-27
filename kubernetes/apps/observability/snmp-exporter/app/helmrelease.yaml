@@ -5,10 +5,10 @@ kind: HelmRelease
 metadata:
   name: &app snmp-exporter
 spec:
-  interval: 1h
   chartRef:
     kind: OCIRepository
     name: snmp-exporter
+  interval: 1h
   values:
     fullnameOverride: *app
     extraArgs:
@@ -46,7 +46,7 @@ spec:
           auth:
             - snmp_v3
       path: /snmp
-      scrapeTimeout: 30s
+      scrapeTimeout: 10s
       relabelings:
         - sourceLabels:
             - __param_target

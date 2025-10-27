@@ -8,7 +8,7 @@
   "editor.hover.delay": 1500,
   "editor.rulers": [100],
   "editor.stickyScroll.enabled": false,
-  "explorer.autoReveal": false,
+  "explorer.autoReveal": true,
   "files.associations": {
     "**/*.json5": "json5",
   },
@@ -31,6 +31,7 @@
     "talos": "linux",
     // namespaces
     "cert-manager": "guard",
+    "default": "home",
     "external-secrets": "secure",
     "flux-system": "pipe",
     "kube-system": "kubernetes",
@@ -39,13 +40,16 @@
     "openebs-system": "base",
     "rook-ceph": "dump",
     "system-upgrade": "update",
-    "volsync-system": "aws",
+    "volsync-system": "aws"
   },
   "sops.defaults.ageKeyFile": "age.key",
   "vs-kubernetes": {
     "vs-kubernetes.kubeconfig": "./kubeconfig",
-    "vs-kubernetes.knownKubeconfigs": []
+    "vs-kubernetes.knownKubeconfigs": [
+      "./kubeconfig"
+    ]
   },
+  "window.zoomLevel": 0,
   "yaml.schemaStore.enable": true,
   "yaml.schemas": {
     "kubernetes": "./kubernetes/**/*.yaml"

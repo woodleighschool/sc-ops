@@ -5,10 +5,10 @@ kind: HelmRelease
 metadata:
   name: &app windows-dns
 spec:
-  interval: 1h
   chartRef:
     kind: OCIRepository
     name: windows-dns
+  interval: 1h
   values:
     fullnameOverride: *app
     provider:

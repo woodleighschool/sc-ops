@@ -5,20 +5,13 @@ kind: HelmRelease
 metadata:
   name: &app smartctl-exporter
 spec:
-  interval: 1h
   chartRef:
     kind: OCIRepository
     name: smartctl-exporter
+  interval: 1h
   values:
     fullnameOverride: *app
     serviceMonitor:
       enabled: true
-      relabelings:
-        - action: replace
-          regex: (.*)
-          replacement: $1
-          sourceLabels:
-            - __meta_kubernetes_pod_node_name
-          targetLabel: instance
     prometheusRules:
       enabled: false

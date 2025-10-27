@@ -5,10 +5,10 @@ kind: HelmRelease
 metadata:
   name: &app adoverseas
 spec:
-  interval: 1h
   chartRef:
     kind: OCIRepository
     name: adoverseas
+  interval: 1h
   values:
     controllers:
       adoverseas:
@@ -51,7 +51,6 @@ spec:
         parentRefs:
           - name: envoy-external
             namespace: network
-            sectionName: https
     persistence:
       config:
         existingClaim: *app

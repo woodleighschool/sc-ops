@@ -3,12 +3,12 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app jcdssync
+  name: jcdssync
 spec:
-  interval: 1h
   chartRef:
     kind: OCIRepository
     name: jcdssync
+  interval: 1h
   values:
     controllers:
       nginx:
@@ -110,7 +110,6 @@ spec:
         parentRefs:
           - name: envoy-internal
             namespace: network
-            sectionName: https
     persistence:
       packages:
         existingClaim: "{{ .Release.Name }}-cache"

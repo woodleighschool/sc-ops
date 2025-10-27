@@ -7,24 +7,39 @@ metadata:
   annotations:
     cnpg.io/skipEmptyWalArchiveCheck: "enabled"
 spec:
-  instances: 3
   # renovate: datasource=docker depName=ghcr.io/cloudnative-pg/postgresql
   imageName: ghcr.io/cloudnative-pg/postgresql:16.9@sha256:7f3990485b139ccf9e2222c8f106d97ac0331f313cb5278e7018ef38686bb561
-  primaryUpdateStrategy: unsupervised
+  instances: 3
   storage:
     size: 8Gi
     storageClass: openebs-hostpath
+  resources:
+    requests:
+      cpu: 50m
+      memory: 512Mi
+    limits:
+      memory: 2Gi
+  managed:
+    services:
+      additional:
+        # create a stub service for gatus to monitor
+        - selectorType: rw
+          serviceTemplate:
+            metadata:
+              name: postgres
+              annotations:
+                gatus.home-operations.com/endpoint: |-
+                  group: services
+                  interval: 15s
+                  conditions:
+                    - "[CONNECTED] == true"
+  enableSuperuserAccess: true
   superuserSecret:
     name: cloudnative-pg-secret
-  enableSuperuserAccess: true
   postgresql:
     parameters:
       max_connections: "200"
       shared_buffers: 256MB
-  resources:
-    requests:
-      cpu: 500m
-    limits:
-      memory: 4Gi
   monitoring:
     enablePodMonitor: true
+  primaryUpdateStrategy: unsupervised

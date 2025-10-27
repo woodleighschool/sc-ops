@@ -4,9 +4,10 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: woodleigh-tools
 components:
-  - ../../components/common
+  - ../../components/alerts
 resources:
   - ./adoverseas/ks.yaml
+  - ./jcdssync/ks.yaml
+  - ./namespace.yaml
   - ./setrecoverypassword/ks.yaml
   - ./updateuserinfo/ks.yaml
-  - ./jcdssync/ks.yaml

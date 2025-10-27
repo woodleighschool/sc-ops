@@ -5,11 +5,6 @@ kind: Kustomization
 resources:
   - ./dnsendpoint.yaml
   - ./externalsecret.yaml
+  - ./grafanadashboard.yaml
   - ./helmrelease.yaml
   - ./ocirepository.yaml
-configMapGenerator:
-  - name: cloudflare-tunnel-configmap
-    files:
-      - ./resources/config.yaml
-generatorOptions:
-  disableNameSuffixHash: true
