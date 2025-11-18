@@ -46,6 +46,9 @@ spec:
             port: 80
     route:
       app:
+        annotations:
+          gatus.home-operations.com/endpoint: |-
+            url: https://adoverseas.woodleighschool.net/health
         hostnames:
           - "{{ .Release.Name }}.woodleighschool.net"
         parentRefs:
