@@ -18,7 +18,7 @@ spec:
           app:
             image:
               repository: ghcr.io/woodleighschool/grinch
-              tag: 1.0.9@sha256:c885c4343a10082b09d3260307ae7401a486afcb879733b0847c459930cdd72f
+              tag: 2.0.0@sha256:379d0173fd37bdfec89434b1e01548a9ab9c3b358ed4c9cc26fea209c74f1dba
             env:
               LOG_LEVEL: debug
               SITE_BASE_URL: https://grinch.woodleighschool.net
@@ -46,6 +46,8 @@ spec:
         ports:
           http:
             port: 8080
+          santa:
+            port: 8081
     route:
       app:
         hostnames:
@@ -53,3 +55,14 @@ spec:
         parentRefs:
           - name: envoy-internal
             namespace: network
+        rules:
+          - matches:
+              - path:
+                  type: PathPrefix
+                  value: /santa
+            backendRefs:
+              - identifier: app
+                port: 8081
+          - backendRefs:
+              - identifier: app
+                port: 8080
