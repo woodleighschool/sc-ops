@@ -16,10 +16,9 @@ spec:
           app:
             image:
               repository: ghcr.io/woodleighschool/adoverseas
-              tag: 1.2.7@sha256:164b39ff695c57869f0f496edf9cf3bd5f16816b9a836cc9c3be5acf41b946e4
+              tag: 2.0.0@sha256:6743753720e5da3d2a14c3e99608b1fb8597c9a003646d853765d2c5aeee9062
             env:
-              LOG_LEVEL: debug
-              TZ: Australia/Melbourne
+              LISTEN_ADDR: ":80"
             envFrom:
               - secretRef:
                   name: "{{ .Release.Name }}-secret"
@@ -48,7 +47,7 @@ spec:
       app:
         annotations:
           gatus.home-operations.com/endpoint: |-
-            url: https://adoverseas.woodleighschool.net/health
+            url: https://adoverseas.woodleighschool.net/api/v1/status
         hostnames:
           - "{{ .Release.Name }}.woodleighschool.net"
         parentRefs:
