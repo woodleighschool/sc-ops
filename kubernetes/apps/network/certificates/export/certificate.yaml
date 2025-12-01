@@ -13,3 +13,18 @@ spec:
   dnsNames:
     - woodleighschool.net
     - "*.woodleighschool.net"
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/cert-manager.io/certificate_v1.json
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: woodleigh-vic-edu-au
+spec:
+  secretName: woodleigh-vic-edu-au-tls
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  commonName: woodleigh.vic.edu.au
+  dnsNames:
+    - woodleigh.vic.edu.au
+    - "*.woodleigh.vic.edu.au"
