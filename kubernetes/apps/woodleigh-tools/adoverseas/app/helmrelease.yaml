@@ -19,6 +19,7 @@ spec:
               tag: 2.1.0@sha256:09f36c46c205a5b98dee02262dc296213d7b438c5e0db4baee705ceba9159605
             env:
               LISTEN_ADDR: ":80"
+              LOG_LEVEL: "debug"
             envFrom:
               - secretRef:
                   name: "{{ .Release.Name }}-secret"
