@@ -18,7 +18,7 @@ spec:
           app:
             image:
               repository: ghcr.io/woodleighschool/grinch
-              tag: 2.0.0@sha256:379d0173fd37bdfec89434b1e01548a9ab9c3b358ed4c9cc26fea209c74f1dba
+              tag: 3.0.0@sha256:14a9b47c2c8005545f7ee26b9c6b5d06d1d365b9fe2a81f2f23803708d9ad3b8
             env:
               LOG_LEVEL: debug
               SITE_BASE_URL: https://grinch.woodleighschool.net
