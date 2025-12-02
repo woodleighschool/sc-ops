@@ -38,6 +38,7 @@ spec:
       - --rfc2136-host=wdc01.woodleighschool.net
       - --rfc2136-port=53
       - --rfc2136-zone=woodleighschool.net
+      - --rfc2136-zone=woodleigh.vic.edu.au
       - --rfc2136-kerberos-username=$(AD_DOMAIN_USERNAME)
       - --rfc2136-kerberos-password=$(AD_DOMAIN_PASSWORD)
       - --rfc2136-kerberos-realm=WOODLEIGHSCHOOL.NET
@@ -52,6 +53,7 @@ spec:
     txtPrefix: k8s.main.
     domainFilters:
       - woodleighschool.net
+      - woodleigh.vic.edu.au
     serviceMonitor:
       enabled: true
     podAnnotations:
