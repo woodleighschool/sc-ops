@@ -21,7 +21,7 @@ spec:
               tag: 2.0.0@sha256:379d0173fd37bdfec89434b1e01548a9ab9c3b358ed4c9cc26fea209c74f1dba
             env:
               LOG_LEVEL: debug
-              SITE_BASE_URL: https://grinch-admin.woodleighschool.net
+              SITE_BASE_URL: https://grinch.woodleighschool.net
               SYNC_CRON: "@every 5m"
             envFrom:
               - secretRef:
@@ -51,7 +51,7 @@ spec:
     route:
       app:
         hostnames:
-          - "{{ .Release.Name }}-admin.woodleighschool.net"
+          - "{{ .Release.Name }}.woodleighschool.net"
         parentRefs:
           - name: envoy-internal
             namespace: network
@@ -61,9 +61,9 @@ spec:
                 port: 8080
       santa:
         hostnames:
-          - "{{ .Release.Name }}.woodleighschool.net"
+          - "santa.woodleigh.vic.edu.au"
         parentRefs:
-          - name: envoy-internal-public
+          - name: envoy-external
             namespace: network
         rules:
           - backendRefs:
