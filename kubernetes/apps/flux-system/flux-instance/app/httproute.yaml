@@ -9,7 +9,7 @@ metadata:
       conditions: ["[STATUS] == 404"]
 spec:
   hostnames:
-    - flux-webhook.woodleighschool.net
+    - flux-webhook.woodleigh.vic.edu.au
   parentRefs:
     - name: envoy-external
       namespace: network

@@ -23,6 +23,19 @@ spec:
             envFrom:
               - secretRef:
                   name: "{{ .Release.Name }}-secret"
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /api/v1/status
+                    port: 80
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
@@ -48,9 +61,9 @@ spec:
       app:
         annotations:
           gatus.home-operations.com/endpoint: |-
-            url: https://adoverseas.woodleighschool.net/api/v1/status
+            url: https://adoverseas.woodleigh.vic.edu.au/api/v1/status
         hostnames:
-          - "{{ .Release.Name }}.woodleighschool.net"
+          - "{{ .Release.Name }}.woodleigh.vic.edu.au"
         parentRefs:
           - name: envoy-external
             namespace: network

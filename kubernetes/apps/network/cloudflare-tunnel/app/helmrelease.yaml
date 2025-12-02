@@ -73,10 +73,10 @@ spec:
         data:
           config.yaml: |-
             ingress:
-              - hostname: "*.woodleighschool.net"
+              - hostname: "*.woodleigh.vic.edu.au"
                 originRequest:
                   http2Origin: true
-                  originServerName: external.woodleighschool.net
+                  originServerName: external.woodleigh.vic.edu.au
                 service: https://envoy-external.{{ .Release.Namespace }}.svc.cluster.local:443
               - service: http_status:404
     persistence:

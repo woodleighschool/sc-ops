@@ -6,7 +6,7 @@ metadata:
   name: cloudflare-tunnel
 spec:
   endpoints:
-    - dnsName: external.woodleighschool.net
+    - dnsName: external.woodleigh.vic.edu.au
       recordType: CNAME
       targets:
         - ${CLOUDFLARE_TUNNEL_ID}.cfargotunnel.com
