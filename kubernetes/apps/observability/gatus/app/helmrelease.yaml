@@ -86,7 +86,7 @@ spec:
           - "{{ .Release.Name }}.woodleigh.vic.edu.au"
           - status.woodleigh.vic.edu.au
         parentRefs:
-          - name: envoy-external
+          - name: envoy-internal-public
             namespace: network
     rbac:
       roles:
