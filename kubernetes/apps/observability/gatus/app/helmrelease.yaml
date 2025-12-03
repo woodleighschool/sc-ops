@@ -83,8 +83,8 @@ spec:
         annotations:
           gatus.home-operations.com/enabled: "false"
         hostnames:
-          - "{{ .Release.Name }}.woodleigh.vic.edu.au"
-          - status.woodleigh.vic.edu.au
+          - "{{ .Release.Name }}.woodleighschool.net"
+          - status.woodleighschool.net
         parentRefs:
           - name: envoy-internal-public
             namespace: network
