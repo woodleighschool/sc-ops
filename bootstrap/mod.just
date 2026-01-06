@@ -8,7 +8,7 @@ controller := `talosctl config info -o yaml | yq -e '.endpoints[0]'`
 nodes := `talosctl config info -o yaml | yq -e '.nodes | join (" ")'`
 
 [private]
-default: talos k8s (kubeconfig "node") wait namespaces resources mutating-admission-policy crds apps kubeconfig
+default: talos kube (kubeconfig "node") wait namespaces resources crds apps kubeconfig
 
 [doc('Install Talos')]
 talos:
@@ -24,7 +24,7 @@ talos:
     done
 
 [doc('Install Kubernetes')]
-k8s:
+kube:
     just log info "Running stage..." "stage" "$0"
     until op=$(talosctl -n "{{ controller }}" bootstrap 2>&1 || true) && [[ "$op" == *"AlreadyExists"* ]]; do \
         just log info "Kubernetes bootstrap in progress. Retrying in 5 seconds..." "stage" "$0"; \
@@ -69,7 +69,7 @@ namespaces:
 [doc('Apply Kubernetes resources')]
 resources:
     just log info "Running stage..." "stage" "$0"
-    if ! just template "{{ bootstrap_dir }}/resources.yaml.j2" | kubectl apply --server-side --field-manager flux-client-side-apply -f -; then \
+    if ! just template "{{ bootstrap_dir }}/resources.yaml.j2" | kubectl apply --server-side --field-manager bootstrap --force-conflicts -f -; then \
         just log fatal "Failed to apply resources" "stage" "$0"; \
     fi;
 [doc('Apply inject-ca-certificates MutatingAdmissionPolicy')]
@@ -82,7 +82,7 @@ mutating-admission-policy:
 [doc('Apply Helmfile CRDs')]
 crds:
     just log info "Running stage..." "stage" "$0"
-    if ! helmfile -f "{{ bootstrap_dir }}/helmfile.d/00-crds.yaml" template -q | kubectl apply --server-side --field-manager flux-client-side-apply -f -; then \
+    if ! helmfile -f "{{ bootstrap_dir }}/helmfile.d/00-crds.yaml" template -q | kubectl apply --server-side --field-manager bootstrap --force-conflicts -f -; then \
         just log fatal "Failed to apply crds" "stage" "$0"; \
     fi;
 
