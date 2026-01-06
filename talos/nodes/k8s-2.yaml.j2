@@ -3,23 +3,22 @@ machine:
   install:
     diskSelector:
       wwid: naa.5246930400bc0455 # SATADOM-SL 3IE3
-  network:
-    hostname: k8s-2
-    interfaces:
-      - interface: bond0
-        addresses:
-          - 10.10.69.6/24
-        routes:
-          - network: 0.0.0.0/0
-            gateway: 10.10.69.1
-        bond:
-          interfaces: []
-          deviceSelectors:
-            - hardwareAddr: 24:6e:96:60:cd:58
-              driver: ixgbe
-          mode: active-backup
-        dhcp: false
   type: controlplane
+---
+apiVersion: v1alpha1
+kind: HostnameConfig
+hostname: k8s-2
+---
+apiVersion: v1alpha1
+kind: BondConfig
+name: bond0
+hardwareAddr: 24:6e:96:60:cd:58
+---
+apiVersion: v1alpha1
+kind: LinkAliasConfig
+name: net0
+selector:
+  match: link.driver == "ixgbe" && mac(link.permanent_addr) == "24:6e:96:60:cd:58"
 ---
 apiVersion: v1alpha1
 kind: VolumeConfig
