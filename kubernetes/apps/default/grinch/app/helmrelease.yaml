@@ -20,10 +20,10 @@ spec:
               repository: ghcr.io/woodleighschool/grinch
               tag: 4.0.0@sha256:045fbe66b4b4cdc2aae50602706a0a94ee0d86b2fc174b309d339d12b62423ff
             env:
-              LOG_LEVEL: debug
               BASE_URL: https://grinch.woodleighschool.net
-              PORT: &port 8080
               ENTRA_SYNC_INTERVAL: 24h
+              LOG_LEVEL: debug
+              PORT: &port 8080
             envFrom:
               - secretRef:
                   name: grinch-secret
@@ -54,3 +54,6 @@ spec:
         parentRefs:
           - name: envoy-internal-public
             namespace: network
+    persistence:
+      tmp:
+        type: emptyDir
