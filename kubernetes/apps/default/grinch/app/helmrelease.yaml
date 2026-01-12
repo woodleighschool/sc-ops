@@ -18,11 +18,12 @@ spec:
           app:
             image:
               repository: ghcr.io/woodleighschool/grinch
-              tag: 3.0.0@sha256:14a9b47c2c8005545f7ee26b9c6b5d06d1d365b9fe2a81f2f23803708d9ad3b8
+              tag: 4.0.0@sha256:045fbe66b4b4cdc2aae50602706a0a94ee0d86b2fc174b309d339d12b62423ff
             env:
               LOG_LEVEL: debug
-              SITE_BASE_URL: https://grinch.woodleighschool.net
-              SYNC_CRON: "@every 5m"
+              BASE_URL: https://grinch.woodleighschool.net
+              PORT: &port 8080
+              ENTRA_SYNC_INTERVAL: 24h
             envFrom:
               - secretRef:
                   name: grinch-secret
@@ -35,7 +36,7 @@ spec:
                 cpu: 10m
                 memory: 256Mi
               limits:
-                memory: 1Gi
+                memory: 4Gi
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true
@@ -45,27 +46,11 @@ spec:
       app:
         ports:
           http:
-            port: 8080
-          santa:
-            port: 8081
+            port: *port
     route:
       app:
         hostnames:
           - "{{ .Release.Name }}.woodleighschool.net"
         parentRefs:
-          - name: envoy-internal
+          - name: envoy-internal-public
             namespace: network
-        rules:
-          - backendRefs:
-              - identifier: app
-                port: 8080
-      santa:
-        hostnames:
-          - "santa.woodleigh.vic.edu.au"
-        parentRefs:
-          - name: envoy-external
-            namespace: network
-        rules:
-          - backendRefs:
-              - identifier: app
-                port: 8081
