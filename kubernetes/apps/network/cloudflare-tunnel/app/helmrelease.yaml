@@ -24,6 +24,9 @@ spec:
             env:
               NO_AUTOUPDATE: true
               TUNNEL_METRICS: 0.0.0.0:8080
+              # QUIC/HTTP3 is not allowed
+              TUNNEL_POST_QUANTUM: false
+              TUNNEL_TRANSPORT_PROTOCOL: http2
             envFrom:
               - secretRef:
                   name: "{{ .Release.Name }}-secret"
@@ -71,11 +74,11 @@ spec:
         data:
           config.yaml: |-
             ingress:
-              - hostname: "*.woodleigh.vic.edu.au"
+              - hostname: "*.turbo.ac"
                 originRequest:
                   http2Origin: true
                   keepAliveTimeout: 3600s
-                  originServerName: external.woodleigh.vic.edu.au
+                  originServerName: external.turbo.ac
                   tcpKeepAlive: 7200s
                 service: https://envoy-external.{{ .Release.Namespace }}.svc.cluster.local:443
               - service: http_status:404
