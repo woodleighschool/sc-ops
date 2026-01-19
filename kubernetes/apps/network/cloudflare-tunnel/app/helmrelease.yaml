@@ -24,6 +24,9 @@ spec:
             env:
               NO_AUTOUPDATE: true
               TUNNEL_METRICS: 0.0.0.0:8080
+              # QUIC/HTTP3 is not allowed
+              TUNNEL_POST_QUANTUM: false
+              TUNNEL_TRANSPORT_PROTOCOL: http2
             envFrom:
               - secretRef:
                   name: "{{ .Release.Name }}-secret"
