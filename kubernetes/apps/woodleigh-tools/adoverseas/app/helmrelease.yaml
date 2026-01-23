@@ -12,11 +12,13 @@ spec:
   values:
     controllers:
       adoverseas:
+        annotations:
+          reloader.stakater.com/auto: "true"
         containers:
           app:
             image:
               repository: ghcr.io/woodleighschool/adoverseas
-              tag: 2.1.3@sha256:1f575893acfe25bca698d00708f873e3b833d2dbff8c678a812e2800e556cfdd
+              tag: 2.2.0@sha256:7520be1e1b6996c2a6e6052b67b247c79b7f319bafc654e5fea1db329a441f33
             env:
               LISTEN_ADDR: ":80"
               LOG_LEVEL: "debug"
