@@ -1,0 +1,22 @@
+---
+# yaml-language-server: $schema=https://schemas.hydaz.com/k8s.mariadb.com/physicalbackup_v1alpha1.json
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: PhysicalBackup
+metadata:
+  name: mariadb-backup
+spec:
+  mariaDbRef:
+    name: mariadb
+  target: Replica
+  schedule:
+    cron: 0 2 * * *
+  storage:
+    persistentVolumeClaim:
+      resources:
+        requests:
+          storage: 16Gi
+      accessModes:
+        - ReadWriteMany
+      storageClassName: ceph-filesystem
+  compression: bzip2
+  maxRetention: 168h # 7 days

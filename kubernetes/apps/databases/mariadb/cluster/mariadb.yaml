@@ -1,0 +1,59 @@
+---
+# yaml-language-server: $schema=https://schemas.hydaz.com/k8s.mariadb.com/mariadb_v1alpha1.json
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: MariaDB
+metadata:
+  name: mariadb
+spec:
+  # renovate: datasource=docker depName=docker.io/library/mariadb
+  image: docker.io/library/mariadb:12.1.2@sha256:f54db0cb3ccfe9431aba6d08c65a1763c499789b116b4cb651dd7fcf325965b3
+  replicas: 3
+  replication:
+    enabled: true
+    replica:
+      replPasswordSecretKeyRef:
+        name: mariadb-secret
+        key: REPLICATION_PASSWORD
+      bootstrapFrom:
+        physicalBackupTemplateRef:
+          name: mariadb-backup
+      recovery:
+        enabled: true
+  storage:
+    size: 16Gi
+    storageClassName: openebs-hostpath
+  affinity:
+    antiAffinityEnabled: true
+  resources:
+    requests:
+      cpu: 10m
+      memory: 512Mi
+    limits:
+      memory: 2Gi
+  service:
+    metadata:
+      annotations:
+        gatus.home-operations.com/endpoint: |-
+          group: services
+          interval: 15s
+          conditions:
+            - "[CONNECTED] == true"
+  rootPasswordSecretKeyRef:
+    name: mariadb-secret
+    key: root-password
+  myCnf: |-
+    [mariadb]
+    bind-address=*
+    default_storage_engine=InnoDB
+    binlog_format=row
+    innodb_autoinc_lock_mode=2
+    innodb_buffer_pool_size=1600MB
+    max_allowed_packet=1GB
+    log_warnings=0
+  bootstrapFrom:
+    backupRef:
+      name: mariadb-backup
+  metrics:
+    enabled: true
+  updateStrategy:
+    autoUpdateDataPlane: true
