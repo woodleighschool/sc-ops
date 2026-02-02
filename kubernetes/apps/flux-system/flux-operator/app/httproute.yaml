@@ -8,7 +8,7 @@ spec:
   hostnames:
     - flux-operator.woodleighschool.net
   parentRefs:
-    - name: envoy-internal
+    - name: envoy-secure
       namespace: network
   rules:
     - backendRefs:

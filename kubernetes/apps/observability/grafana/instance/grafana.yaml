@@ -63,7 +63,7 @@ spec:
       hostnames:
         - grafana.woodleighschool.net
       parentRefs:
-        - name: envoy-internal-public
+        - name: envoy-internal
           namespace: network
       rules:
         - backendRefs:

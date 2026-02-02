@@ -83,7 +83,7 @@ spec:
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
-  name: envoy-internal
+  name: envoy-secure
   annotations:
     external-dns.alpha.kubernetes.io/target: &hostname internal.woodleighschool.net
     gatus.home-operations.com/endpoint: |-
@@ -120,7 +120,7 @@ spec:
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
-  name: envoy-internal-public
+  name: envoy-internal
   annotations:
     external-dns.alpha.kubernetes.io/target: &hostname internal-pub.woodleighschool.net
     gatus.home-operations.com/endpoint: |-
@@ -214,10 +214,10 @@ spec:
     - name: envoy-external
       namespace: network
       sectionName: http
-    - name: envoy-internal
+    - name: envoy-secure
       namespace: network
       sectionName: http
-    - name: envoy-internal-public
+    - name: envoy-internal
       namespace: network
       sectionName: http
   rules:

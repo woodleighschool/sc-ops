@@ -22,7 +22,7 @@ spec:
         hostnames:
           - victoria-logs.woodleighschool.net
         parentRefs:
-          - name: envoy-internal
+          - name: envoy-secure
             namespace: network
         extraRules:
           - filters:

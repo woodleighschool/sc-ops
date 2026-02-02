@@ -18,7 +18,7 @@ spec:
           hostnames:
             - alertmanager.woodleighschool.net
           parentRefs:
-            - name: envoy-internal
+            - name: envoy-secure
               namespace: network
       alertmanagerSpec:
         alertmanagerConfiguration:
@@ -44,7 +44,7 @@ spec:
           hostnames:
             - prometheus.woodleighschool.net
           parentRefs:
-            - name: envoy-internal
+            - name: envoy-secure
               namespace: network
       prometheusSpec:
         externalUrl: https://prometheus.woodleighschool.net
