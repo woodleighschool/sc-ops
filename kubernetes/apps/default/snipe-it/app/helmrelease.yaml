@@ -1,0 +1,92 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: snipe-it
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: snipe-it
+  interval: 1h
+  values:
+    controllers:
+      snipe-it:
+        containers:
+          app:
+            image:
+              repository: docker.io/snipe/snipe-it
+              tag: v8.3.7@sha256:f277e504357a0a94f9d7afd2251f3e9b6de65ea1f69f1c9cbf27e2e2059804b6
+            env:
+              ALLOW_BACKUP_DELETE: "false"
+              ALLOW_DATA_PURGE: "true"
+              ALLOW_IFRAMING: "false"
+              API_THROTTLE_PER_MINUTE: "1000"
+              APP_DEBUG: "false"
+              APP_ENV: production
+              APP_TIMEZONE: Australia/Melbourne
+              APP_TRUSTED_PROXIES: 10.42.0.0/16,10.10.69.0/24
+              APP_URL: https://snipe-it.woodleighschool.net
+              # COOKIE_DOMAIN: null
+              COOKIE_NAME: snipeit_session
+              # CORS_ALLOWED_ORIGINS: null
+              DB_CHARSET: utf8mb4
+              DB_COLLATION: utf8mb4_unicode_ci
+              ENABLE_CSP: "true"
+              ENABLE_HSTS: "true"
+              ENCRYPT: "false"
+              EXPIRE_ON_CLOSE: "false"
+              IMAGE_LIB: gd
+              MAX_RESULTS: "1000"
+              PRIVATE_FILESYSTEM_DISK: local
+              PUBLIC_FILESYSTEM_DISK: local_public
+              REFERRER_POLICY: same-origin
+              SECURE_COOKIES: "true"
+              # Mail
+              MAIL_AUTO_EMBED_METHOD: 'attachment'
+              MAIL_FROM_ADDR: you@example.com
+              MAIL_FROM_NAME: 'Snipe-IT'
+              MAIL_HOST: mailhog
+              MAIL_MAILER: smtp
+              MAIL_PASSWORD: null
+              MAIL_PORT: 1025
+              MAIL_REPLYTO_ADDR: you@example.com
+              MAIL_REPLYTO_NAME: 'Snipe-IT'
+              MAIL_TLS_VERIFY_PEER: "true"
+              MAIL_USERNAME: null
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: {drop: ["ALL"]}
+            resources:
+              requests:
+                cpu: 200m
+                memory: 1Gi
+              limits:
+                memory: 2Gi
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+    service:
+      app:
+        ports:
+          http:
+            port: 80
+    route:
+      app:
+        hostnames:
+          - snipe-it.woodleighschool.net
+        parentRefs:
+          - name: envoy-secure
+            namespace: network
+    persistence:
+      config:
+        existingClaim: "{{ .Release.Name }}"
+        globalMounts:
+          - path: /var/lib/snipeit
+      tmp:
+        type: emptyDir
