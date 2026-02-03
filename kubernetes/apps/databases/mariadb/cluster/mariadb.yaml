@@ -50,9 +50,9 @@ spec:
     innodb_buffer_pool_size=1600MB
     max_allowed_packet=1GB
     log_warnings=0
-  bootstrapFrom:
-    backupRef:
-      name: mariadb-backup
+  #bootstrapFrom:
+  #  backupRef:
+  #    name: mariadb-backup
   metrics:
     enabled: true
   updateStrategy:
