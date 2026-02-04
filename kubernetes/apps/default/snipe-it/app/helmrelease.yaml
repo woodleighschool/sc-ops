@@ -22,18 +22,11 @@ spec:
               ALLOW_DATA_PURGE: "true"
               ALLOW_IFRAMING: "false"
               API_THROTTLE_PER_MINUTE: "1000"
-              APP_DEBUG: "false"
               APP_ENV: production
-              APP_FORCE_TLS: "false"
               APP_TIMEZONE: Australia/Melbourne
               APP_TRUSTED_PROXIES: 10.42.0.0/16,10.10.69.0/24
+              APP_PORT: &port 80
               APP_URL: https://snipe-it.woodleighschool.net
-              DB_CHARSET: utf8mb4
-              DB_COLLATION: utf8mb4_unicode_ci
-              ENABLE_CSP: "false"
-              ENABLE_HSTS: "false"
-              ENCRYPT: "false"
-              IMAGE_LIB: gd
               MAX_RESULTS: "1000"
               PRIVATE_FILESYSTEM_DISK: local
               PUBLIC_FILESYSTEM_DISK: local_public
@@ -45,18 +38,18 @@ spec:
               MAIL_FROM_NAME: 'Snipe-IT'
               MAIL_HOST: mailhog
               MAIL_MAILER: smtp
-              #MAIL_PASSWORD: null
+              MAIL_PASSWORD: "null"
               MAIL_PORT: 1025
               MAIL_REPLYTO_ADDR: you@example.com
               MAIL_REPLYTO_NAME: 'Snipe-IT'
               MAIL_TLS_VERIFY_PEER: "true"
-              # MAIL_USERNAME: null
+              MAIL_USERNAME: "null"
             envFrom:
               - secretRef:
                   name: "{{ .Release.Name }}-secret"
             securityContext:
               allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
+              #readOnlyRootFilesystem: true
               capabilities: {drop: ["ALL"]}
             resources:
               requests:
@@ -67,7 +60,7 @@ spec:
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true
-        runAsUser: 1000
+        runAsUser: 100
         runAsGroup: 1000
         fsGroup: 1000
         fsGroupChangePolicy: OnRootMismatch
@@ -75,7 +68,7 @@ spec:
       app:
         ports:
           http:
-            port: 80
+            port: *port
     route:
       app:
         hostnames:
@@ -88,5 +81,8 @@ spec:
         existingClaim: "{{ .Release.Name }}"
         globalMounts:
           - path: /var/lib/snipeit
-      tmp:
+      tmpfs:
         type: emptyDir
+        globalMounts:
+          - path: /var/www/logs/
+            subPath: www-logs
