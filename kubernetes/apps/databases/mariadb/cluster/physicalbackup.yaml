@@ -11,12 +11,26 @@ spec:
   schedule:
     cron: 0 2 * * *
   storage:
+    s3:
+      accessKeyIdSecretKeyRef:
+        name: mariadb-secret
+        key: N3_ACCESS_KEY_ID
+      bucket: sc-ops
+      endpoint: n3.woodleighschool.net
+      prefix: mariadb
+      secretAccessKeySecretKeyRef:
+        name: mariadb-secret
+        key: N3_SECRET_ACCESS_KEY
+      tls:
+        enabled: true
+  compression: bzip2
+  maxRetention: 168h # 7 days
+  stagingStorage:
     persistentVolumeClaim:
       resources:
         requests:
           storage: 16Gi
+      # used by replica.bootstrapFrom (cross nodes)
       accessModes:
         - ReadWriteMany
       storageClassName: ceph-filesystem
-  compression: bzip2
-  maxRetention: 168h # 7 days

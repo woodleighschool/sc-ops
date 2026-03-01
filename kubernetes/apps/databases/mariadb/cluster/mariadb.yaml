@@ -51,8 +51,27 @@ spec:
     max_allowed_packet=1GB
     log_warnings=0
   #bootstrapFrom:
-  #  backupRef:
-  #    name: mariadb-backup
+  #  s3:
+  #    accessKeyIdSecretKeyRef:
+  #      name: mariadb-secret
+  #      key: N3_ACCESS_KEY_ID
+  #    bucket: backup
+  #    endpoint: n3.woodleighschool.net
+  #    prefix: mariadb
+  #    secretAccessKeySecretKeyRef:
+  #      name: mariadb-secret
+  #      key: N3_SECRET_ACCESS_KEY
+  #    tls:
+  #      enabled: true
+  #  backupContentType: Physical
+  #  stagingStorage:
+  #    persistentVolumeClaim:
+  #      resources:
+  #        requests:
+  #          storage: 16Gi
+  #      accessModes:
+  #        - ReadWriteMany
+  #      storageClassName: ceph-filesystem
   metrics:
     enabled: true
   updateStrategy:
