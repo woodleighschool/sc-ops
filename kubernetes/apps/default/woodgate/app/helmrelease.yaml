@@ -1,0 +1,66 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: woodgate
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: woodgate
+  values:
+    controllers:
+      woodgate:
+        containers:
+          app:
+            image:
+              repository: ghcr.io/woodleighschool/woodgate
+              tag: 1.0.0@sha256:5b0a052ab8907eb4a69bd3b231d1818e0f0719da3c72266d221c3f22489e5807
+            env:
+              ENTRA_SYNC_ENABLED: true
+              ENTRA_SYNC_INTERVAL: 1d
+              TZ: Australia/Melbourne
+              WOODGATE_BASE_URL: https://{{ .Release.Name }}.woodleighschool.net
+              WOODGATE_MEDIA_ROOT: /media
+              WOODGATE_PORT: &port 8080
+            envFrom:
+              - secretRef:
+                  name: "{{ .Release.Name }}-secret"
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+    service:
+      app:
+        ports:
+          http:
+            port: *port
+    route:
+      app:
+        hostnames:
+          - "{{ .Release.Name }}.woodleighschool.net"
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
+    persistence:
+      media:
+        existingClaim: "{{ .Release.Name }}-media"
+      tmp:
+        type: emptyDir
