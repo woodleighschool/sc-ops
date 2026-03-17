@@ -18,15 +18,39 @@ spec:
           app:
             image:
               repository: ghcr.io/woodleighschool/grinch
-              tag: 4.1.0@sha256:e6854cefeff76db6e9936f1d8f22d948691cb94b45abd873cf78ce04eb270167
+              tag: 5.0.0@sha256:891c466d18d789c203c1e03a4583cc2e21860b84054c00efe8c1f2bddef98e17
             env:
-              BASE_URL: https://grinch.woodleighschool.net
+              ENTRA_SYNC_ENABLED: true
               ENTRA_SYNC_INTERVAL: 24h
-              LOG_LEVEL: debug
-              PORT: &port 8080
+              GRINCH_PORT: &port 8080
+              TZ: Australia/Melbourne
+              GRINCH_BASE_URL: https://{{ .Release.Name }}.woodleighschool.net
             envFrom:
               - secretRef:
-                  name: grinch-secret
+                  name: "{{ .Release.Name }}-secret"
+            probes:
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /healthz
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /readyz
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
