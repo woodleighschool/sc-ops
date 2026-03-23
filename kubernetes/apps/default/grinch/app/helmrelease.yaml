@@ -78,6 +78,19 @@ spec:
         parentRefs:
           - name: envoy-internal
             namespace: network
+      sync:
+        hostnames:
+          - "{{ .Release.Name }}.woodleigh.vic.edu.au"
+        parentRefs:
+          - name: envoy-external
+            namespace: network
+        rules:
+          - backendRefs:
+              - identifier: app
+            matches:
+              - path:
+                  type: PathPrefix
+                  value: /sync
     persistence:
       tmp:
         type: emptyDir
