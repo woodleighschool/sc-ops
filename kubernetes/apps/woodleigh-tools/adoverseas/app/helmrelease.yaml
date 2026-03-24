@@ -70,14 +70,6 @@ spec:
           - name: envoy-external
             namespace: network
     persistence:
-      config:
-        existingClaim: *app
-      tmpfs:
+      tmp:
         type: emptyDir
-        globalMounts:
-          - path: /tmp
-            subPath: tmp
-          - path: /app
-            subPath: app
-
 
