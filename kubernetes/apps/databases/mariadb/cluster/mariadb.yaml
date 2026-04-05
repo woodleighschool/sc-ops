@@ -6,7 +6,7 @@ metadata:
   name: mariadb
 spec:
   # renovate: datasource=docker depName=docker.io/library/mariadb
-  image: docker.io/library/mariadb:12.1.2@sha256:f54db0cb3ccfe9431aba6d08c65a1763c499789b116b4cb651dd7fcf325965b3
+  image: docker.io/library/mariadb:11.8.6@sha256:31c1aa20ba2d78c4cbc45b2675e40ffd6a3cd59897a9767ce88fc284309f55ab
   replicas: 3
   replication:
     enabled: true
@@ -20,7 +20,7 @@ spec:
       recovery:
         enabled: true
   storage:
-    size: 16Gi
+    size: 64Gi
     storageClassName: openebs-hostpath
   affinity:
     antiAffinityEnabled: true
@@ -50,28 +50,28 @@ spec:
     innodb_buffer_pool_size=1600MB
     max_allowed_packet=1GB
     log_warnings=0
-  #bootstrapFrom:
-  #  s3:
-  #    accessKeyIdSecretKeyRef:
-  #      name: mariadb-secret
-  #      key: N3_ACCESS_KEY_ID
-  #    bucket: sc-ops
-  #    endpoint: n3.woodleighschool.net
-  #    prefix: mariadb
-  #    secretAccessKeySecretKeyRef:
-  #      name: mariadb-secret
-  #      key: N3_SECRET_ACCESS_KEY
-  #    tls:
-  #      enabled: true
-  #  backupContentType: Physical
-  #  stagingStorage:
-  #    persistentVolumeClaim:
-  #      resources:
-  #        requests:
-  #          storage: 16Gi
-  #      accessModes:
-  #        - ReadWriteMany
-  #      storageClassName: ceph-filesystem
+  bootstrapFrom:
+    s3:
+      accessKeyIdSecretKeyRef:
+        name: mariadb-secret
+        key: N3_ACCESS_KEY_ID
+      bucket: sc-ops
+      endpoint: n3.woodleighschool.net
+      prefix: mariadb
+      secretAccessKeySecretKeyRef:
+        name: mariadb-secret
+        key: N3_SECRET_ACCESS_KEY
+      tls:
+        enabled: true
+    backupContentType: Physical
+    stagingStorage:
+      persistentVolumeClaim:
+        resources:
+          requests:
+            storage: 64Gi
+        accessModes:
+          - ReadWriteMany
+        storageClassName: ceph-filesystem
   metrics:
     enabled: true
   updateStrategy:

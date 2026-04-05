@@ -29,7 +29,7 @@ spec:
     persistentVolumeClaim:
       resources:
         requests:
-          storage: 16Gi
+          storage: 64Gi
       # used by replica.bootstrapFrom (cross nodes)
       accessModes:
         - ReadWriteMany
