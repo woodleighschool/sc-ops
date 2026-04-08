@@ -20,9 +20,11 @@ spec:
             env:
               DATA_FOLDER: /data
               DOMAIN: https://vaultwarden.woodleighschool.net
-              SIGNUPS_ALLOWED: "false"
-              SHOW_PASSWORD_HINT: "false"
+              SIGNUPS_ALLOWED: false
+              SHOW_PASSWORD_HINT: false
               TZ: Australia/Melbourne
+              SSO_ENABLED: true
+              SSO_SCOPES: openid profile email offline_access
             envFrom:
               - secretRef:
                   name: "{{ .Release.Name }}-secret"
