@@ -30,6 +30,11 @@ releases:
     chart: oci://ghcr.io/home-operations/charts-mirror/keda
     version: 2.19.0
 
+  - name: garage-operator
+    namespace: garage-system
+    chart: oci://ghcr.io/rajsinghtech/charts/garage-operator
+    version: v0.2.8
+
   - name: kube-prometheus-stack
     namespace: observability
     chart: oci://ghcr.io/prometheus-community/charts/kube-prometheus-stack

@@ -1,0 +1,41 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/rajsinghtech/garage-operator/refs/heads/main/schemas/garagecluster_v1alpha1.json
+apiVersion: garage.rajsingh.info/v1alpha1
+kind: GarageCluster
+metadata:
+  name: garage
+spec:
+  replicas: 3
+  zone: woodleigh
+  replication:
+    factor: 3
+  storage:
+    metadata:
+      size: 2Gi
+      storageClassName: openebs-hostpath
+    data:
+      size: 100Gi
+      storageClassName: openebs-hostpath
+  network:
+    rpcBindPort: 3901
+    service:
+      type: ClusterIP
+  s3Api:
+    bindPort: 3900
+    region: garage
+  webApi:
+    bindPort: 3902
+    rootDomain: ".woodleigh.vic.edu.au"
+  admin:
+    enabled: true
+    bindPort: 3903
+    adminTokenSecretRef:
+      name: garage-admin-token
+      key: admin-token
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
