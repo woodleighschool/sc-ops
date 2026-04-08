@@ -12,7 +12,7 @@ helmDefaults:
 releases:
   - name: cloudflare-dns
     namespace: network
-    chart: oci://quay.io/cilium/charts/cilium
+    chart: oci://ghcr.io/home-operations/charts-mirror/external-dns
     version: 1.20.0
 
   - name: envoy-gateway
@@ -29,6 +29,11 @@ releases:
     namespace: observability
     chart: oci://ghcr.io/home-operations/charts-mirror/keda
     version: 2.19.0
+
+  - name: garage-operator
+    namespace: garage-system
+    chart: oci://ghcr.io/rajsinghtech/charts/garage-operator
+    version: 0.2.8
 
   - name: kube-prometheus-stack
     namespace: observability
