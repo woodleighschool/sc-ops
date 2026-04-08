@@ -23,3 +23,14 @@ metadata:
   namespace: network
 stringData:
   CLOUDFLARE_TUNNEL_ID: op://Kubernetes/cloudflare/CLOUDFLARE_TUNNEL_ID
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ca-trust-bundle
+  namespace: kube-system
+  annotations:
+    reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+    reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
+data:
+  ca-bundle.crt: op://Kubernetes/ca-bundle/CA_BUNDLE_B64

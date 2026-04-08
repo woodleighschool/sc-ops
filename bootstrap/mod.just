@@ -8,7 +8,7 @@ controller := `talosctl config info -o yaml | yq -e '.endpoints[0]'`
 nodes := `talosctl config info -o yaml | yq -e '.nodes | join (" ")'`
 
 [private]
-default: talos kube (kubeconfig "node") wait namespaces resources crds apps kubeconfig
+default: talos kube (kubeconfig "node") wait namespaces resources admission crds apps kubeconfig
 
 [doc('Install Talos')]
 talos:
@@ -56,13 +56,9 @@ wait:
 [doc('Apply Kubernetes namespaces')]
 namespaces:
     just log info "Running stage..." "stage" "$0"
-    just bootstrap verify-ca-bundle
-    find "{{ kubernetes_dir }}/apps" -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | while IFS= read -r ns; do \
-        if ! kubectl create namespace "$ns" --dry-run=client -o yaml | kubectl apply --server-side --field-manager flux-client-side-apply -f -; then \
-            just log fatal "Failed to apply namespace" "stage" "$0" "namespace" "$ns"; \
-        fi; \
-        if ! kubectl create configmap ca-trust-bundle --from-file=ca-bundle.crt="${CA_CERT_PATH}" -n "$ns" --dry-run=client -o yaml | kubectl apply --server-side -f -; then \
-            just log fatal "Failed to create ca-trust-bundle ConfigMap in namespace" "stage" "$0" "namespace" "$ns"; \
+    find "{{ kubernetes_dir }}/apps" -mindepth 1 -maxdepth 1 -type d | while IFS= read -r dir; do \
+        if ! kustomize build "$dir" | yq ea -e 'select(.kind == "Namespace")' | kubectl apply --server-side --field-manager bootstrap --force-conflicts -f -; then \
+            just log fatal "Failed to apply namespace" "stage" "$0" "namespace" "$(basename "$dir")"; \
         fi; \
     done
 
@@ -72,17 +68,19 @@ resources:
     if ! just template "{{ bootstrap_dir }}/resources.yaml.j2" | kubectl apply --server-side --field-manager bootstrap --force-conflicts -f -; then \
         just log fatal "Failed to apply resources" "stage" "$0"; \
     fi;
-[doc('Apply inject-ca-certificates MutatingAdmissionPolicy')]
-mutating-admission-policy:
+
+[doc('Apply admission policies')]
+admission:
     just log info "Running stage..." "stage" "$0"
-    if ! kubectl apply --server-side -f "{{ bootstrap_dir }}/inject-ca-certificates.yaml"; then \
-        just log fatal "Failed to apply inject-ca-certificates MutatingAdmissionPolicy" "stage" "$0"; \
+    if ! kubectl apply --server-side --field-manager bootstrap --force-conflicts -f "{{ bootstrap_dir }}/inject-ca-certificates.yaml"; then \
+        just log fatal "Failed to apply admission policies" "stage" "$0"; \
     fi
 
 [doc('Apply Helmfile CRDs')]
 crds:
     just log info "Running stage..." "stage" "$0"
-    if ! helmfile -f "{{ bootstrap_dir }}/helmfile.d/00-crds.yaml" template -q | kubectl apply --server-side --field-manager bootstrap --force-conflicts -f -; then \
+
+    if ! helmfile -f "{{ bootstrap_dir }}/helmfile.d/00-crds.yaml" template -q | yq ea -e 'select(.kind == "CustomResourceDefinition")' | kubectl apply --server-side --field-manager bootstrap --force-conflicts -f -; then \
         just log fatal "Failed to apply crds" "stage" "$0"; \
     fi;
 
@@ -92,13 +90,3 @@ apps:
     if ! helmfile -f "{{ bootstrap_dir }}/helmfile.d/01-apps.yaml" sync --hide-notes; then \
         just log fatal "Failed to sync helmfile" "stage" "$0"; \
     fi
-
-[private]
-verify-ca-bundle:
-    just log info "Verifying CA bundle..." "stage" "$0"
-    @if ! openssl crl2pkcs7 -nocrl -certfile ${CA_CERT_PATH} \
-        | openssl pkcs7 -print_certs -noout \
-        | grep -Fq "CN=trust.woodleigh.vic.edu.au"; then \
-        just log fatal "Woodleigh CA not found in brew certificate bundle" "stage" "$0"; \
-    fi
-    @just log info "✓ Woodleigh CA found in ${CA_CERT_PATH}" "stage" "$0"

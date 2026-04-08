@@ -44,8 +44,8 @@ spec:
                 volumes: [
                   Object.spec.volumes{
                     name: "cm-ssl-certs",
-                    configMap: Object.spec.volumes.configMap{
-                      name: "ca-trust-bundle"
+                    secret: Object.spec.volumes.secret{
+                      secretName: "ca-trust-bundle"
                     }
                   }
                 ]
