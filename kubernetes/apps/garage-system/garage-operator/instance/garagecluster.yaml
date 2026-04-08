@@ -32,6 +32,8 @@ spec:
     adminTokenSecretRef:
       name: garage-admin-token
       key: admin-token
+  monitoring:
+    enabled: true
   resources:
     requests:
       cpu: 100m
