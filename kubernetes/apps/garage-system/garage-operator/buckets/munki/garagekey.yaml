@@ -1,0 +1,15 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/rajsinghtech/garage-operator/refs/heads/main/schemas/garagekey_v1alpha1.json
+apiVersion: garage.rajsingh.info/v1alpha1
+kind: GarageKey
+metadata:
+  name: munki
+spec:
+  clusterRef:
+    name: garage
+  bucketPermissions:
+    - bucketRef: munki
+      read: true
+      write: true
+  secretTemplate:
+    name: munki-s3-credentials
