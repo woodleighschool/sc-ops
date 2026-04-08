@@ -12,4 +12,5 @@ resources:
   - ./portainer/ks.yaml
   - ./signin-ui/ks.yaml
   - ./snipe-it/ks.yaml
+  - ./vaultwarden/ks.yaml
   - ./woodgate/ks.yaml
