@@ -33,7 +33,7 @@ releases:
   - name: garage-operator
     namespace: garage-system
     chart: oci://ghcr.io/rajsinghtech/charts/garage-operator
-    version: 0.2.8
+    version: 0.3.8
 
   - name: kube-prometheus-stack
     namespace: observability
