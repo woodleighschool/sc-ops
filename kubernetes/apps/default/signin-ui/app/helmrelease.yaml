@@ -55,7 +55,7 @@ spec:
         hostnames:
           - "{{ .Release.Name }}.woodleighschool.net"
         parentRefs:
-          - name: envoy-internal
+          - name: envoy-secure
             namespace: network
     persistence:
       config:
