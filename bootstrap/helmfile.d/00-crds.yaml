@@ -21,21 +21,16 @@ releases:
     version: v1.7.2
 
   - name: grafana-operator
-    namespace: observability
+    namespace: o11y
     chart: oci://ghcr.io/grafana/helm-charts/grafana-operator
     version: 5.22.2
 
-  - name: keda
-    namespace: observability
-    chart: oci://ghcr.io/home-operations/charts-mirror/keda
-    version: 2.19.0
+  - name: prometheus-operator-crds
+    namespace: o11y
+    chart: oci://ghcr.io/prometheus-community/charts/prometheus-operator-crds
+    version: 28.0.1
 
   - name: garage-operator
     namespace: garage-system
     chart: oci://ghcr.io/rajsinghtech/charts/garage-operator
     version: 0.3.14
-
-  - name: kube-prometheus-stack
-    namespace: observability
-    chart: oci://ghcr.io/prometheus-community/charts/kube-prometheus-stack
-    version: 84.3.0
