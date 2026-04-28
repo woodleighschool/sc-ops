@@ -20,26 +20,14 @@ spec:
       persistentVolume:
         enabled: true
         storageClassName: ceph-block
-        size: 20Gi
-      retentionPeriod: 14d
+        size: 50Gi
+      retentionPeriod: 90d
       route:
         enabled: true
         hostnames:
-          - victoria-logs.woodleighschool.net
+          - vlogs.woodleighschool.net
         parentRefs:
           - name: envoy-secure
             namespace: network
-        extraRules:
-          - filters:
-              - type: RequestRedirect
-                requestRedirect:
-                  path:
-                    type: ReplaceFullPath
-                    replaceFullPath: /select/vmui/
-                  statusCode: 302
-            matches:
-              - path:
-                  type: Exact
-                  value: /
       serviceMonitor:
         enabled: true
