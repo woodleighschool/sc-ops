@@ -250,7 +250,7 @@ spec:
           - name: envoy-secure
             namespace: network
       spec:
-        retentionPeriod: 14d
+        retentionPeriod: 90d
         storage:
           accessModes:
             - ReadWriteOnce
