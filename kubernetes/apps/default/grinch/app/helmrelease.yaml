@@ -81,6 +81,9 @@ spec:
           - name: envoy-internal
             namespace: network
       sync:
+        annotations:
+          gatus.home-operations.com/endpoint: |-
+            conditions: ["[STATUS] == 403"]
         hostnames:
           - "{{ .Release.Name }}.woodleigh.vic.edu.au"
         parentRefs:
