@@ -16,7 +16,7 @@ spec:
     auth:
       disable_login_form: "false"
     auth.anonymous:
-      enabled: "true"
+      enabled: "false"
     log:
       mode: console
     metrics:
@@ -62,7 +62,7 @@ spec:
       hostnames:
         - grafana.woodleighschool.net
       parentRefs:
-        - name: envoy-internal
+        - name: envoy-secure
           namespace: network
   persistentVolumeClaim:
     spec:
