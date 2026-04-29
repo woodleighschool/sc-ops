@@ -33,4 +33,4 @@ releases:
   - name: garage-operator
     namespace: garage-system
     chart: oci://ghcr.io/rajsinghtech/charts/garage-operator
-    version: 0.3.14
+    version: 0.3.15
