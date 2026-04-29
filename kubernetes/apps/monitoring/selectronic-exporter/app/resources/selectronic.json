@@ -13,7 +13,6 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 57,
   "links": [],
   "panels": [
     {
@@ -53,6 +52,7 @@
               "type": "linear"
             },
             "showPoints": "never",
+            "showValues": false,
             "spanNulls": false,
             "stacking": {
               "group": "A",
@@ -165,12 +165,12 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.1.0",
+      "pluginVersion": "12.4.1",
       "targets": [
         {
           "editorMode": "builder",
           "exemplar": false,
-          "expr": "load_power_watts{site=\"$site\"}",
+          "expr": "selectronic_load_watts{site=\"$site\"}",
           "instant": false,
           "legendFormat": "Load",
           "range": true,
@@ -178,14 +178,14 @@
         },
         {
           "editorMode": "builder",
-          "expr": "inverter_power_watts{site=\"$site\"}",
+          "expr": "selectronic_solar_inverter_watts{site=\"$site\"}",
           "legendFormat": "Solar",
           "range": true,
           "refId": "B"
         },
         {
           "editorMode": "builder",
-          "expr": "battery_power_watts{site=\"$site\"}",
+          "expr": "selectronic_battery_watts{site=\"$site\"}",
           "legendFormat": "Battery",
           "range": true,
           "refId": "C"
@@ -197,9 +197,8 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "-1 * grid_power_watts{site=\"$site\"}",
+          "expr": "-1 * selectronic_grid_watts{site=\"$site\"}",
           "fullMetaSearch": false,
-          "hide": false,
           "includeNullMetadata": true,
           "legendFormat": "Grid",
           "range": true,
@@ -254,9 +253,7 @@
         "orientation": "auto",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
@@ -264,12 +261,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "12.1.0",
+      "pluginVersion": "12.4.1",
       "targets": [
         {
           "editorMode": "builder",
           "exemplar": false,
-          "expr": "load_power_watts{site=\"$site\"}",
+          "expr": "selectronic_load_watts{site=\"$site\"}",
           "instant": true,
           "range": false,
           "refId": "A"
@@ -321,9 +318,7 @@
         "orientation": "auto",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
@@ -331,11 +326,11 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "12.1.0",
+      "pluginVersion": "12.4.1",
       "targets": [
         {
-          "editorMode": "code",
-          "expr": "load_wh_today{site=\"$site\"}",
+          "editorMode": "builder",
+          "expr": "selectronic_load_watt_hours_today{site=\"$site\"}",
           "range": true,
           "refId": "A"
         }
@@ -386,9 +381,7 @@
         "orientation": "auto",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
@@ -396,11 +389,11 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "12.1.0",
+      "pluginVersion": "12.4.1",
       "targets": [
         {
-          "editorMode": "code",
-          "expr": "solar_production_wh_today{site=\"$site\"}",
+          "editorMode": "builder",
+          "expr": "selectronic_solar_watt_hours_today{site=\"$site\"}",
           "range": true,
           "refId": "A"
         }
@@ -447,9 +440,7 @@
         "orientation": "auto",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
@@ -457,11 +448,11 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "12.1.0",
+      "pluginVersion": "12.4.1",
       "targets": [
         {
           "editorMode": "builder",
-          "expr": "battery_soc{site=\"$site\"}",
+          "expr": "selectronic_battery_state_of_charge_percent{site=\"$site\"}",
           "range": true,
           "refId": "A"
         }
@@ -508,9 +499,7 @@
         "orientation": "auto",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
@@ -518,18 +507,18 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "12.1.0",
+      "pluginVersion": "12.4.1",
       "targets": [
         {
           "editorMode": "builder",
-          "expr": "battery_in_wh_today{site=\"$site\"}",
+          "expr": "selectronic_battery_in_watt_hours_today{site=\"$site\"}",
           "legendFormat": "Charge In",
           "range": true,
           "refId": "A"
         },
         {
           "editorMode": "builder",
-          "expr": "battery_out_wh_today{site=\"$site\"}",
+          "expr": "selectronic_battery_out_watt_hours_today{site=\"$site\"}",
           "legendFormat": "Discharge Out",
           "range": true,
           "refId": "B"
@@ -580,9 +569,7 @@
         "orientation": "auto",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
@@ -590,11 +577,11 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "12.1.0",
+      "pluginVersion": "12.4.1",
       "targets": [
         {
-          "editorMode": "code",
-          "expr": "grid_in_wh_today{site=\"$site\"}",
+          "editorMode": "builder",
+          "expr": "selectronic_grid_in_watt_hours_today{site=\"$site\"}",
           "range": true,
           "refId": "A"
         }
@@ -644,9 +631,7 @@
         "orientation": "auto",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
@@ -654,11 +639,11 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "12.1.0",
+      "pluginVersion": "12.4.1",
       "targets": [
         {
-          "editorMode": "code",
-          "expr": "grid_out_wh_today{site=\"$site\"}",
+          "editorMode": "builder",
+          "expr": "selectronic_grid_out_watt_hours_today{site=\"$site\"}",
           "range": true,
           "refId": "A"
         }
@@ -700,9 +685,7 @@
         "minVizWidth": 75,
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
@@ -710,12 +693,12 @@
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
-      "pluginVersion": "12.1.0",
+      "pluginVersion": "12.4.1",
       "targets": [
         {
           "editorMode": "code",
           "exemplar": false,
-          "expr": "( solar_production_wh_today{site=\"$site\"} \n  / load_wh_today{site=\"$site\"} ) * 100\n",
+          "expr": "( selectronic_solar_watt_hours_today{site=\"$site\"} \n  / selectronic_load_watt_hours_today{site=\"$site\"} ) * 100\n",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -759,9 +742,7 @@
         "minVizWidth": 75,
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
@@ -769,12 +750,12 @@
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
-      "pluginVersion": "12.1.0",
+      "pluginVersion": "12.4.1",
       "targets": [
         {
-          "editorMode": "builder",
+          "editorMode": "code",
           "exemplar": false,
-          "expr": "( (solar_production_wh_today{site=\"$site\"} - grid_out_wh_today{site=\"$site\"}) \n  / solar_production_wh_today{site=\"$site\"} ) * 100",
+          "expr": "(selectronic_solar_watt_hours_today{site=\"$site\"} - selectronic_grid_out_watt_hours_today{site=\"$site\"}) / selectronic_solar_watt_hours_today{site=\"$site\"} * 100",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -787,7 +768,7 @@
   ],
   "preload": false,
   "refresh": "1m",
-  "schemaVersion": 41,
+  "schemaVersion": 42,
   "tags": [],
   "templating": {
     "list": [
@@ -797,20 +778,19 @@
           "type": "prometheus",
           "uid": "VictoriaMetrics"
         },
-        "definition": "label_values(load_power_watts, site)",
-        "hide": 0,
+        "definition": "label_values(selectronic_load_watts,site)",
         "includeAll": false,
         "label": "Site",
-        "multi": false,
         "name": "site",
         "options": [],
         "query": {
-          "query": "label_values(load_power_watts, site)",
-          "refId": "StandardVariableQuery"
+          "qryType": 1,
+          "query": "label_values(selectronic_load_watts,site)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 1,
         "regex": "",
-        "skipUrlSync": false,
+        "regexApplyTo": "value",
         "sort": 1,
         "type": "query"
       }
@@ -824,5 +804,5 @@
   "timezone": "browser",
   "title": "Selectronic Dashboard",
   "uid": "sel-86878cf2",
-  "version": 1
+  "version": 2
 }
