@@ -1,0 +1,31 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/monitoring.coreos.com/scrapeconfig_v1alpha1.json
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: selectronic
+  labels:
+    monitoring.woodleighschool.net/scrape: "true"
+spec:
+  staticConfigs:
+    - targets:
+        - http://172.19.10.130
+      labels:
+        device_id: C2AC1FC1F77E671ACF1368C7F1A07574
+        site: Futures Studio
+  metricsPath: /probe
+  params:
+    module:
+      - default
+  relabelings:
+    - sourceLabels:
+        - __address__
+      targetLabel: __param_target
+    - sourceLabels:
+        - device_id
+      targetLabel: __param_device_id
+    - targetLabel: __address__
+      replacement: selectronic-exporter.monitoring.svc.cluster.local:9788
+    - action: replace
+      targetLabel: job
+      replacement: selectronic
