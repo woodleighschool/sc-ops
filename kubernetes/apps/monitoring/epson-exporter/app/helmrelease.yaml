@@ -1,0 +1,41 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: epson-exporter
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: epson-exporter
+  interval: 1h
+  values:
+    controllers:
+      epson-exporter:
+        containers:
+          app:
+            image:
+              repository: ghcr.io/woodleighschool/epson-exporter
+              tag: 0.1.1@sha256:d3454c6c62b09daedfc5a0630e8b883cb51a7030e40618ac23bb0539060718c8
+            env:
+              TZ: Australia/Melbourne
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: {drop: ["ALL"]}
+            resources:
+              requests:
+                cpu: 10m
+                memory: 32Mi
+              limits:
+                memory: 128Mi
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+    service:
+      app:
+        ports:
+          http:
+            port: 9788

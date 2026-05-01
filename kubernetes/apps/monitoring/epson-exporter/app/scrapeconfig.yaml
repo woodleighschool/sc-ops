@@ -1,0 +1,78 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/monitoring.coreos.com/scrapeconfig_v1alpha1.json
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: epson
+  labels:
+    monitoring.woodleighschool.net/scrape: "true"
+spec:
+  staticConfigs:
+    - targets:
+        - https://172.20.2.24
+      labels:
+        printer: SC-PR-VARTS
+    - targets:
+        - https://172.20.2.141
+      labels:
+        printer: SC-PR-JAGO
+    - targets:
+        - https://172.20.2.32
+      labels:
+        printer: SC-PR-FUTURES
+    - targets:
+        - https://172.20.2.34
+      labels:
+        printer: SC-PR-VCE
+    - targets:
+        - https://172.20.2.145
+      labels:
+        printer: SC-PR-STAFF-L
+    - targets:
+        - https://172.20.2.31
+      labels:
+        printer: SC-PR-STAFF-R
+    - targets:
+        - https://172.20.2.30
+      labels:
+        printer: SC-PR-LIBRARY
+    - targets:
+        - https://172.22.2.128
+      labels:
+        printer: PC-PR-PCR
+    - targets:
+        - https://172.22.2.130
+      labels:
+        printer: PC-PR-GYM
+    - targets:
+        - https://172.22.2.129
+      labels:
+        printer: PC-PR-HS-56
+    - targets:
+        - https://172.23.2.128
+      labels:
+        printer: MC-PR-ADMIN
+    - targets:
+        - https://172.23.2.130
+      labels:
+        printer: MC-PR-56
+    - targets:
+        - https://172.23.2.129
+      labels:
+        printer: MC-PR-LE
+  metricsPath: /probe
+  params:
+    module:
+      - default
+  relabelings:
+    - sourceLabels:
+        - __address__
+      targetLabel: __param_target
+    - sourceLabels:
+        - printer
+      targetLabel: instance
+    - targetLabel: __address__
+      replacement: epson-exporter.monitoring.svc.cluster.local:9788
+    - action: replace
+      targetLabel: job
+      replacement: epson
