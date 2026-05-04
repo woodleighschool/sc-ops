@@ -1,0 +1,82 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: victoria-metrics-backup
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: victoria-metrics-backup
+  interval: 1h
+  values:
+    controllers:
+      backup:
+        type: cronjob
+        cronjob:
+          schedule: "15 2 * * *"
+          timeZone: Australia/Melbourne
+          backoffLimit: 2
+          concurrencyPolicy: Forbid
+          successfulJobsHistory: 3
+          failedJobsHistory: 3
+        containers:
+          app:
+            image:
+              repository: quay.io/victoriametrics/vmbackup
+              tag: v1.142.0@sha256:8db6f99b8e62f50a89fdf6ff04156a27bb3bff6d3cfb5369bc2f1c2fbf6cfab1
+            args:
+              - -storageDataPath=/data
+              - -snapshot.createURL=http://vmsingle-victoria-metrics-cluster.monitoring.svc.cluster.local:8428/snapshot/create
+              - -dst=s3://sc-ops/victoria-metrics/monitoring/vmsingle
+              - -customS3Endpoint=https://n3.woodleighschool.net
+            envFrom:
+              - secretRef:
+                  name: victoria-metrics-backup-secret
+            resources:
+              requests:
+                cpu: 50m
+                memory: 128Mi
+              limits:
+                memory: 512Mi
+        pod:
+          affinity:
+            podAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                - labelSelector:
+                    matchLabels:
+                      app.kubernetes.io/instance: victoria-metrics-cluster
+                      app.kubernetes.io/name: vmsingle
+                  topologyKey: kubernetes.io/hostname
+      # Restores are not automated, run this as a job to kickstart when needed
+      restore:
+        type: cronjob
+        cronjob:
+          schedule: "0 0 1 1 *"
+          timeZone: Australia/Melbourne
+          suspend: true
+          backoffLimit: 1
+          concurrencyPolicy: Forbid
+          successfulJobsHistory: 1
+          failedJobsHistory: 1
+        containers:
+          app:
+            image:
+              repository: quay.io/victoriametrics/vmrestore
+              tag: v1.142.0@sha256:12c83096b6cf2c46492a9fcc80c8f041de8eb480ae6b3c6e6d640f450d22e6e6
+            args:
+              - -storageDataPath=/data
+              - -src=s3://sc-ops/victoria-metrics/monitoring/vmsingle
+              - -customS3Endpoint=https://n3.woodleighschool.net
+            envFrom:
+              - secretRef:
+                  name: victoria-metrics-backup-secret
+            resources:
+              requests:
+                cpu: 50m
+                memory: 128Mi
+              limits:
+                memory: 512Mi
+    persistence:
+      data:
+        existingClaim: vmsingle-victoria-metrics-cluster
