@@ -1,6 +1,6 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/rajsinghtech/garage-operator/refs/heads/main/schemas/garagecluster_v1alpha1.json
-apiVersion: garage.rajsingh.info/v1alpha1
+# yaml-language-server: $schema=https://raw.githubusercontent.com/rajsinghtech/garage-operator/refs/heads/main/schemas/garagecluster_v1beta1.json
+apiVersion: garage.rajsingh.info/v1beta1
 kind: GarageCluster
 metadata:
   name: garage
@@ -27,7 +27,6 @@ spec:
     bindPort: 3902
     rootDomain: ".woodleigh.vic.edu.au"
   admin:
-    enabled: true
     bindPort: 3903
     adminTokenSecretRef:
       name: garage-admin-token
