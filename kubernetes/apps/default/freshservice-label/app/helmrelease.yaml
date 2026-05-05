@@ -18,7 +18,7 @@ spec:
           app:
             image:
               repository: ghcr.io/woodleighschool/freshservice-label
-              tag: 0.1.0@sha256:192d952758f7ce77f71542fbbbf2625253a8deb03ae630a94948009715e70c65
+              tag: 0.1.1@sha256:21839b059c376813a55293911b71750cebf82b1c9209b046f3ace93c38284f81
             env:
               PRINTER_ADDR: 172.19.10.13
               TZ: Australia/Melbourne
