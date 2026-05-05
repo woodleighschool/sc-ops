@@ -28,11 +28,6 @@ spec:
     - name: garage-operator
     - name: openebs
       namespace: openebs-system
-  healthChecks:
-    - apiVersion: garage.rajsingh.info/v1beta1
-      kind: GarageCluster
-      name: garage
-      namespace: garage-system
   interval: 1h
   path: ./kubernetes/apps/garage-system/garage-operator/instance
   prune: true
