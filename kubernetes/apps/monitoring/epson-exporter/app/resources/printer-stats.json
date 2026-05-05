@@ -366,6 +366,7 @@
       },
       "id": 15,
       "interval": "5m",
+      "maxDataPoints": 300,
       "options": {
         "legend": {
           "calcs": [],
@@ -382,14 +383,14 @@
       "pluginVersion": "12.4.1",
       "targets": [
         {
-          "editorMode": "code",
-          "expr": "increase(epson_pages_total{kind=\"total\", instance=~\"$instance\"}[5m])",
+          "editorMode": "builder",
+          "expr": "increase(epson_pages_total{kind=\"total\", instance=~\"$instance\"}[$__interval])",
           "legendFormat": "{{printer}}",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Pages Printed per 5 Minutes",
+      "title": "Pages Printed",
       "type": "timeseries"
     },
     {
@@ -1221,6 +1222,6 @@
   "timezone": "browser",
   "title": "Printing Statistics",
   "uid": "adp4prd",
-  "version": 8,
+  "version": 10,
   "weekStart": "monday"
 }
