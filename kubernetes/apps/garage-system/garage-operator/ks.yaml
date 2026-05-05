@@ -33,11 +33,6 @@ spec:
       kind: GarageCluster
       name: garage
       namespace: garage-system
-  healthCheckExprs:
-    - apiVersion: garage.rajsingh.info/v1beta1
-      kind: GarageCluster
-      current: status.conditions.filter(e, e.type == 'Ready').all(e, e.status == 'True')
-      failed: status.conditions.filter(e, e.type == 'Ready').all(e, e.status == 'False')
   interval: 1h
   path: ./kubernetes/apps/garage-system/garage-operator/instance
   prune: true
@@ -46,7 +41,6 @@ spec:
     name: flux-system
     namespace: flux-system
   targetNamespace: garage-system
-  wait: true
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
