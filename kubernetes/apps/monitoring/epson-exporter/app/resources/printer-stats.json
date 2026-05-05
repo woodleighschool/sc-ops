@@ -242,12 +242,10 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "thresholds"
+            "fixedColor": "orange",
+            "mode": "fixed"
           },
-          "decimals": 1,
           "mappings": [],
-          "max": 100,
-          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -256,16 +254,11 @@
                 "value": 0
               },
               {
-                "color": "yellow",
-                "value": 20
-              },
-              {
                 "color": "red",
-                "value": 45
+                "value": 2
               }
             ]
-          },
-          "unit": "percent"
+          }
         },
         "overrides": []
       },
@@ -275,37 +268,34 @@
         "x": 18,
         "y": 0
       },
-      "id": 5,
+      "id": 16,
       "options": {
-        "minVizHeight": 75,
-        "minVizWidth": 75,
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true,
-        "sizing": "auto"
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
       },
       "pluginVersion": "12.4.1",
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "VictoriaMetrics"
-          },
           "editorMode": "code",
-          "expr": "100 * sum(increase(epson_pages_by_size_total{instance=~\"$instance\",color_mode=~\"(?i).*colou?r.*|.*full.*\"}[$__range])) / clamp_min(sum(increase(epson_pages_by_size_total{instance=~\"$instance\"}[$__range])), 1)",
-          "instant": true,
-          "legendFormat": "",
-          "range": false,
+          "expr": "round(sum(increase(epson_pages_by_size_total{instance=~\"$instance\",sides!~\"(?i).*duplex.*|.*2.*|.*double.*|.*two.*\"}[$__range])) + sum(increase(epson_pages_by_size_total{instance=~\"$instance\",sides=~\"(?i).*duplex.*|.*2.*|.*double.*|.*two.*\"}[$__range])) / 2)/8333",
+          "legendFormat": "__auto",
+          "range": true,
           "refId": "A"
         }
       ],
-      "title": "Colour printing share",
-      "type": "gauge"
+      "title": "Trees Consumed",
+      "type": "stat"
     },
     {
       "datasource": {
@@ -1224,13 +1214,13 @@
     ]
   },
   "time": {
-    "from": "now-24h",
+    "from": "now-7d",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "Printing Statistics",
   "uid": "adp4prd",
-  "version": 6,
+  "version": 8,
   "weekStart": "monday"
 }
