@@ -24,7 +24,7 @@ spec:
           app:
             image:
               repository: quay.io/victoriametrics/vmbackup
-              tag: v1.142.0@sha256:8db6f99b8e62f50a89fdf6ff04156a27bb3bff6d3cfb5369bc2f1c2fbf6cfab1
+              tag: v1.143.0@sha256:fbd4f3ff2871587e5501d3c93270876da2d7d2234df53b62a034a50c2e17eaac
             args:
               - -storageDataPath=/data
               - -snapshot.createURL=http://vmsingle-victoria-metrics-cluster.monitoring.svc.cluster.local:8428/snapshot/create
