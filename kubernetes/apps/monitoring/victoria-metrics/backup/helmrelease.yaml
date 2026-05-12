@@ -63,7 +63,7 @@ spec:
           app:
             image:
               repository: quay.io/victoriametrics/vmrestore
-              tag: v1.142.0@sha256:12c83096b6cf2c46492a9fcc80c8f041de8eb480ae6b3c6e6d640f450d22e6e6
+              tag: v1.143.0@sha256:1dd117e88792b209c2336b06044d4e561bdb10801516fadb36b14a668309c789
             args:
               - -storageDataPath=/data
               - -src=s3://sc-ops/victoria-metrics/monitoring/vmsingle
