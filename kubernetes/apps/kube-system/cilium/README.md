@@ -22,3 +22,21 @@ router bgp 64513
     neighbor 10.10.69.7 activate
   exit-address-family
 ```
+
+### On node reboot
+
+AOS Sucks, run this to uncook BGP:
+
+```bash
+conf t
+router bgp 64513
+disable
+enable
+end
+```
+
+each Neighbor should be `Established`:
+
+```bash
+show bgp ipv4 unicast summary
+```
