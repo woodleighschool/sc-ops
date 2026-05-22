@@ -49,11 +49,69 @@ spec:
           hello: alertmanager.woodleighschool.net
           requireTLS: false
           sendResolved: true
+          threading:
+            enabled: true
+            threadByDate: daily
           headers:
             - key: Subject
               value: >-
-                [{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] {{ .CommonLabels.alertname }}
+                [{{ .Status | title }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] {{ .CommonLabels.alertname }}
+          text: |-
+            {{ .CommonLabels.alertname }} is {{ .Status }}.
+            {{- if eq .Status "firing" }}
+            Firing alerts: {{ .Alerts.Firing | len }}
+            {{- else }}
+            Resolved alerts: {{ .Alerts.Resolved | len }}
+            {{- end }}
+
+            {{- if gt (len .CommonAnnotations) 0 }}
+            Summary:
+            {{- range .CommonAnnotations.SortedPairs }}
+            {{ .Name }}: {{ .Value }}
+            {{- end }}
+
+            {{- end }}
+            View in Alertmanager: {{ .ExternalURL }}
+
+            {{- range .Alerts }}
+
+            Alert:
+            {{- if ne .Annotations.description "" }}
+            {{ .Annotations.description }}
+            {{- else if ne .Annotations.summary "" }}
+            {{ .Annotations.summary }}
+            {{- else if ne .Annotations.message "" }}
+            {{ .Annotations.message }}
+            {{- else }}
+            Alert description not available.
+            {{- end }}
+
+            Labels:
+            {{- range .Labels.SortedPairs }}
+            {{ .Name }}: {{ .Value }}
+            {{- end }}
+            {{- end }}
           html: |-
+            <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; color:#24292f; font-size:14px; line-height:1.45;">
+              <p style="margin:0 0 12px 0;">
+                <strong>{{ .CommonLabels.alertname }}</strong> is <strong>{{ .Status }}</strong>{{ if eq .Status "firing" }} with {{ .Alerts.Firing | len }} firing alert{{ if ne (len .Alerts.Firing) 1 }}s{{ end }}{{ end }}.
+              </p>
+
+              <p style="margin:0 0 16px 0;">
+                <a href="{{ .ExternalURL | safeUrl }}" style="color:#0969da;">View in Alertmanager</a>
+              </p>
+
+              {{- if gt (len .CommonAnnotations) 0 }}
+                <table style="border-collapse:collapse; margin:0 0 16px 0; font-size:13px; line-height:1.35;">
+                  {{- range .CommonAnnotations.SortedPairs }}
+                    <tr>
+                      <th style="padding:2px 10px 2px 0; text-align:left; white-space:nowrap; color:#57606a;">{{ .Name }}</th>
+                      <td style="padding:2px 0;">{{ .Value }}</td>
+                    </tr>
+                  {{- end }}
+                </table>
+              {{- end }}
+
             {{- range .Alerts }}
               <div style="margin:0 0 16px 0; padding:0 0 14px 0; border-bottom:1px solid #d0d7de;">
                 <p style="margin:0 0 10px 0; font-size:14px; line-height:1.45;">
@@ -79,3 +137,4 @@ spec:
               {{- end }}
               </div>
             {{- end }}
+            </div>
