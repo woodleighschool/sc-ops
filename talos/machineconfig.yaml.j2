@@ -3,7 +3,7 @@ version: v1alpha1
 machine:
   ca:
     crt: op://Kubernetes/talos/MACHINE_CA_CRT
-    {% if ENV.IS_CONTROLLER %}
+    {% if ENV.CONTROLPLANE %}
     key: op://Kubernetes/talos/MACHINE_CA_KEY
     {% endif %}
   features:
@@ -16,13 +16,13 @@ machine:
     kubePrism:
       enabled: true
       port: 7445
-    {% if ENV.IS_CONTROLLER %}
+    {% if ENV.CONTROLPLANE %}
     kubernetesTalosAPIAccess:
+      enabled: true
       allowedKubernetesNamespaces:
         - system-upgrade
       allowedRoles:
         - os:admin
-      enabled: true
     {% endif %}
     rbac: true
   files:
@@ -34,7 +34,7 @@ machine:
         [plugins."io.containerd.cri.v1.runtime"]
           device_ownership_from_security_context = true
   install:
-    image: factory.talos.dev/metal-installer/58fb53f4ea79a9b918b902f2c868fa3ef776b6e8d2b711c4cc52342b78a8d9e4:v1.13.0
+    image: factory.talos.dev/metal-installer/{{ ENV.SCHEMATIC }}:v1.13.0
     wipe: false
   kernel:
     modules:
@@ -76,6 +76,7 @@ machine:
     net.ipv4.tcp_rmem: 4096 87380 33554432
     net.ipv4.tcp_slow_start_after_idle: "0"
     net.ipv4.tcp_window_scaling: "1"
+    net.ipv4.tcp_wmem: 4096 65536 33554432
     sunrpc.tcp_max_slot_table_entries: "128"
     sunrpc.tcp_slot_table_entries: "128"
     user.max_user_namespaces: "11255"
@@ -84,7 +85,7 @@ machine:
 cluster:
   ca:
     crt: op://Kubernetes/talos/CLUSTER_CA_CRT
-    {% if ENV.IS_CONTROLLER %}
+    {% if ENV.CONTROLPLANE %}
     key: op://Kubernetes/talos/CLUSTER_CA_KEY
     {% endif %}
   clusterName: sc-ops
@@ -108,7 +109,7 @@ cluster:
       - 10.43.0.0/16
   secret: op://Kubernetes/talos/CLUSTER_SECRET
   token: op://Kubernetes/talos/CLUSTER_TOKEN
-  {% if ENV.IS_CONTROLLER %}
+  {% if ENV.CONTROLPLANE %}
   aggregatorCA:
     crt: op://Kubernetes/talos/CLUSTER_AGGREGATORCA_CRT
     key: op://Kubernetes/talos/CLUSTER_AGGREGATORCA_KEY
@@ -125,11 +126,12 @@ cluster:
     disablePodSecurityPolicy: true
     extraArgs:
       enable-aggregator-routing: "true"
-      feature-gates: ImageVolume=true
+      feature-gates: HPAScaleToZero=true
     image: registry.k8s.io/kube-apiserver:v1.36.1
   controllerManager:
     extraArgs:
       bind-address: 0.0.0.0
+      feature-gates: HPAScaleToZero=true
     image: registry.k8s.io/kube-controller-manager:v1.36.1
   coreDNS:
     disabled: true
@@ -180,7 +182,6 @@ bondMode: active-backup
 apiVersion: v1alpha1
 kind: DHCPv4Config
 name: bond0
-clientIdentifier: mac
 ---
 apiVersion: v1alpha1
 kind: UserVolumeConfig

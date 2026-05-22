@@ -35,7 +35,7 @@ spec:
   failurePolicy: Fail
   reinvocationPolicy: IfNeeded
   mutations:
-    # Add certificate configMap volume
+    # Add the CA trust bundle Secret volume.
     - patchType: ApplyConfiguration
       applyConfiguration:
         expression: >
@@ -53,7 +53,7 @@ spec:
                 ]
               }
             }
-    # Mount the certificates to every container
+    # Mount the CA trust bundle into every container.
     - patchType: ApplyConfiguration
       applyConfiguration:
         expression: >
@@ -89,7 +89,7 @@ spec:
               )
             }
           }
-    # Mount the certificates to every initContainer
+    # Mount the CA trust bundle into every init container.
     - patchType: ApplyConfiguration
       applyConfiguration:
         expression: >-

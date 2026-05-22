@@ -1,4 +1,5 @@
 [env]
+_.python.venv = { path = "{{config_root}}/.venv", create = true }
 KUBECONFIG = "{{config_root}}/kubeconfig"
 MINIJINJA_CONFIG_FILE = "{{config_root}}/.minijinja.toml"
 OP_ACCOUNT = "woodleigh-school.1password.com"
@@ -12,5 +13,6 @@ _.file = [
 ]
 
 [tools]
+"python" = "latest"
 "uv" = "latest"
 "pipx:flux-local" = "latest"
