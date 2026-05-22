@@ -49,13 +49,10 @@ spec:
           hello: alertmanager.woodleighschool.net
           requireTLS: false
           sendResolved: true
-          threading:
-            enabled: true
-            threadByDate: daily
           headers:
             - key: Subject
               value: >-
-                [{{ .Status | title }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] {{ .CommonLabels.alertname }}
+                {{ if eq .Status "resolved" }}[Resolved]{{ else }}[Firing:{{ .Alerts.Firing | len }}]{{ end }} {{ .CommonLabels.alertname }}
           text: |-
             {{ .CommonLabels.alertname }} is {{ .Status }}.
             {{- if eq .Status "firing" }}
