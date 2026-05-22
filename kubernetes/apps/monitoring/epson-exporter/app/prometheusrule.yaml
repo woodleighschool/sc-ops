@@ -1,0 +1,71 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/monitoring.coreos.com/prometheusrule_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: epson-exporter
+  labels:
+    monitoring.woodleighschool.net/rule: "true"
+spec:
+  groups:
+    - name: epson-exporter.rules
+      rules:
+        - alert: EpsonPrinterScrapeFailed
+          expr: |-
+            epson_scrape_success == 0
+          for: 10m
+          annotations:
+            summary: >-
+              Epson printer {{ $labels.instance }} scrape is failing
+            description: >-
+              Prometheus has not been able to scrape {{ $labels.instance }} via epson-exporter for 10 minutes.
+          labels:
+            severity: warning
+
+        - alert: EpsonInkNearlyEmpty
+          expr: |-
+            epson_consumable_level_percent{type="ink"} < 1
+          for: 15m
+          annotations:
+            summary: >-
+              Epson printer {{ $labels.instance }} {{ $labels.color }} ink is below 1%
+            description: >-
+              {{ $labels.instance }} reports {{ $labels.color }} ink in slot {{ $labels.slot }} at {{ $value }}%.
+          labels:
+            severity: critical
+
+        - alert: EpsonInkWarning
+          expr: |-
+            epson_consumable_warning{type="ink"} == 1
+          for: 30m
+          annotations:
+            summary: >-
+              Epson printer {{ $labels.instance }} has an ink warning
+            description: >-
+              {{ $labels.instance }} is showing an ink warning for {{ $labels.color }} in slot {{ $labels.slot }}.
+          labels:
+            severity: warning
+
+        - alert: EpsonStaplesOut
+          expr: |-
+            epson_status_info{status=~"(?i).*(out of staples|out of staple|staple.*empty|staple.*out|replace.*staple).*"} == 1
+          for: 5m
+          annotations:
+            summary: >-
+              Epson printer {{ $labels.instance }} may be out of staples
+            description: >-
+              {{ $labels.instance }} reports {{ $labels.component }} status: {{ $labels.status }}.
+          labels:
+            severity: warning
+
+        - alert: EpsonPrinterJamOrError
+          expr: |-
+            epson_status_info{component="printer",status=~"(?i).*(paper jam|jammed|printer error|service required|call service).*"} == 1
+          for: 5m
+          annotations:
+            summary: >-
+              Epson printer {{ $labels.instance }} reports a jam or printer error
+            description: >-
+              {{ $labels.instance }} reports printer status: {{ $labels.status }}.
+          labels:
+            severity: warning

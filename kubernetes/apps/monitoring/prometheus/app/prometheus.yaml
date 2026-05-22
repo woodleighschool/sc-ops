@@ -5,6 +5,12 @@ kind: Prometheus
 metadata:
   name: prometheus
 spec:
+  alerting:
+    alertmanagers:
+      - apiVersion: v2
+        name: alertmanager-operated
+        namespace: o11y
+        port: http-web
   externalLabels:
     cluster: sc-ops
     prometheus: monitoring/prometheus
@@ -17,6 +23,12 @@ spec:
   replicas: 1
   retention: 90d
   retentionSize: 8GB
+  ruleNamespaceSelector:
+    matchLabels:
+      monitoring.woodleighschool.net/enabled: "true"
+  ruleSelector:
+    matchLabels:
+      monitoring.woodleighschool.net/rule: "true"
   scrapeConfigNamespaceSelector:
     matchLabels:
       monitoring.woodleighschool.net/enabled: "true"
@@ -31,6 +43,7 @@ spec:
     runAsUser: 1000
     seccompProfile:
       type: RuntimeDefault
+  serviceAccountName: prometheus
   serviceMonitorSelector:
     matchLabels:
       monitoring.woodleighschool.net/scrape: "true"
