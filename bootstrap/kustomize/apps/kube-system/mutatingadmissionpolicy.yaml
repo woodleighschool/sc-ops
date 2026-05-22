@@ -39,6 +39,7 @@ spec:
     - patchType: ApplyConfiguration
       applyConfiguration:
         expression: >
+          has(object.spec.volumes) &&
           object.spec.volumes.exists(v, v.name == "cm-ssl-certs")
           ? Object{}
           : Object{
