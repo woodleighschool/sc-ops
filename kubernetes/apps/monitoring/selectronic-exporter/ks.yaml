@@ -6,7 +6,6 @@ metadata:
   name: selectronic-exporter
 spec:
   dependsOn:
-    - name: grafana
     - name: prometheus
   interval: 1h
   path: ./kubernetes/apps/monitoring/selectronic-exporter/app
