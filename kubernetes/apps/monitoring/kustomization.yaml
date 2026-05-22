@@ -7,5 +7,5 @@ resources:
   - ./epson-exporter/ks.yaml
   - ./grafana/ks.yaml
   - ./namespace.yaml
+  - ./prometheus/ks.yaml
   - ./selectronic-exporter/ks.yaml
-  - ./victoria-metrics/ks.yaml

@@ -1,0 +1,36 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/monitoring.coreos.com/prometheus_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: Prometheus
+metadata:
+  name: prometheus
+spec:
+  externalLabels:
+    cluster: sc-ops
+    prometheus: monitoring/prometheus
+  podMonitorSelector: null
+  probeSelector: null
+  replicas: 1
+  retention: 90d
+  retentionSize: 8GB
+  scrapeConfigNamespaceSelector:
+    matchLabels:
+      monitoring.woodleighschool.net/enabled: "true"
+  scrapeConfigSelector:
+    matchLabels:
+      monitoring.woodleighschool.net/scrape: "true"
+  scrapeInterval: 30s
+  serviceMonitorSelector: null
+  storage:
+    volumeClaimTemplate:
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 10Gi
+        storageClassName: ceph-block
+  thanos:
+    objectStorageConfig:
+      key: objstore.yml
+      name: prometheus-object-storage-secret

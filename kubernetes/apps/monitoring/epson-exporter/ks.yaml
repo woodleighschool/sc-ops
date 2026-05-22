@@ -6,7 +6,7 @@ metadata:
   name: epson-exporter
 spec:
   dependsOn:
-    - name: victoria-metrics-cluster
+    - name: prometheus
   interval: 1h
   path: ./kubernetes/apps/monitoring/epson-exporter/app
   prune: true
