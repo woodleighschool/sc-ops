@@ -11,4 +11,4 @@ spec:
     operation: copy
   ref:
     tag: 0.12.4
-  url: oci://ghcr.io/victoriametrics/helm-charts/victoria-logs-single
+  url: oci://ghcr.io/prometheus/helm-charts/victoria-logs-single
