@@ -8,8 +8,12 @@ spec:
   externalLabels:
     cluster: sc-ops
     prometheus: monitoring/prometheus
-  podMonitorSelector: null
-  probeSelector: null
+  podMonitorSelector:
+    matchLabels:
+      monitoring.woodleighschool.net/scrape: "true"
+  probeSelector:
+    matchLabels:
+      monitoring.woodleighschool.net/scrape: "true"
   replicas: 1
   retention: 90d
   retentionSize: 8GB
@@ -20,7 +24,9 @@ spec:
     matchLabels:
       monitoring.woodleighschool.net/scrape: "true"
   scrapeInterval: 30s
-  serviceMonitorSelector: null
+  serviceMonitorSelector:
+    matchLabels:
+      monitoring.woodleighschool.net/scrape: "true"
   storage:
     volumeClaimTemplate:
       spec:
