@@ -1,0 +1,23 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/monitoring.coreos.com/prometheusrule_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: selectronic-exporter
+  labels:
+    monitoring.woodleighschool.net/rule: "true"
+spec:
+  groups:
+    - name: selectronic-exporter.rules
+      rules:
+        - alert: selectronicPrinterScrapeFailed
+          expr: |-
+            selectronic_scrape_success == 0
+          for: 10m
+          annotations:
+            summary: >-
+              selectronic printer {{ $labels.instance }} scrape is failing
+            description: >-
+              Prometheus has not been able to scrape {{ $labels.instance }} via selectronic-exporter for 10 minutes.
+          labels:
+            severity: warning
