@@ -1,0 +1,83 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: woodstar
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: woodstar
+  interval: 1h
+  values:
+    controllers:
+      woodstar:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: ghcr.io/woodleighschool/woodstar
+              tag: 0.0.1@sha256:1ad790b4f007f365717eabf46e809857650bcdd580496da1c20404d0d9e5cc79
+            env:
+              TZ: Australia/Melbourne
+              WOODSTAR_HOST: 0.0.0.0
+              WOODSTAR_LOG_LEVEL: debug
+              WOODSTAR_PORT: &port 8080
+              WOODSTAR_PUBLIC_URL: https://{{ .Release.Name }}.woodleighschool.net
+            envFrom:
+              - secretRef:
+                  name: "{{ .Release.Name }}-secret"
+            probes:
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /healthz
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /readyz
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: {drop: ["ALL"]}
+            resources:
+              requests:
+                cpu: 10m
+                memory: 128Mi
+              limits:
+                memory: 512Mi
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+    service:
+      app:
+        ports:
+          http:
+            port: *port
+    route:
+      app:
+        hostnames:
+          - "{{ .Release.Name }}.woodleighschool.net"
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
+    persistence:
+      tmp:
+        type: emptyDir
