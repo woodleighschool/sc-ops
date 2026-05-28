@@ -15,8 +15,6 @@ spec:
       valuesKey: flux-metrics.yaml
   values:
     cleanPrometheusOperatorObjectNames: true
-    crds:
-      enabled: false
     alertmanager:
       route:
         main:
