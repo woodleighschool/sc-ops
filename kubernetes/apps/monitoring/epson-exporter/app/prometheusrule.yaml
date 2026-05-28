@@ -24,7 +24,7 @@ spec:
 
         - alert: EpsonInkEmpty
           expr: |-
-            epson_consumable_level_percent{type="ink"} == 0
+            epson_consumable_level_percent{type="ink"} <= 1
           for: 15m
           annotations:
             summary: >-
