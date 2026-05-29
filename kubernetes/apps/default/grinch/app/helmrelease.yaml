@@ -18,7 +18,7 @@ spec:
           app:
             image:
               repository: ghcr.io/woodleighschool/grinch
-              tag: 0.1.0@sha256:ec09967367edf31cc7e34fe8136327b5a7f00958b5436a60a7bc6ca395ef6f7b
+              tag: 0.1.1@sha256:c4da2c78ee23b82d376ef4c6cfc3a86a41760f3e02b3317f76044540158cc432
             env:
               ENTRA_SYNC_ENABLED: true
               ENTRA_SYNC_INTERVAL: 24h
