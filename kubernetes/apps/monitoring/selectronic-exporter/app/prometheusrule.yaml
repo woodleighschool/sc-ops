@@ -10,13 +10,13 @@ spec:
   groups:
     - name: selectronic-exporter.rules
       rules:
-        - alert: selectronicPrinterScrapeFailed
+        - alert: selectronicScrapeFailed
           expr: |-
             selectronic_scrape_success == 0
           for: 10m
           annotations:
             summary: >-
-              selectronic printer {{ $labels.instance }} scrape is failing
+              selectronic {{ $labels.instance }} scrape is failing
             description: >-
               Prometheus has not been able to scrape {{ $labels.instance }} via selectronic-exporter for 10 minutes.
           labels:
