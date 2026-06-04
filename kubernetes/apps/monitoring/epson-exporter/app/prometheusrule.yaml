@@ -22,17 +22,17 @@ spec:
           labels:
             severity: warning
 
-        - alert: EpsonInkEmpty
-          expr: |-
-            epson_consumable_level_percent{type="ink"} <= 1
-          for: 15m
-          annotations:
-            summary: >-
-              Epson printer {{ $labels.instance }} {{ $labels.color }} ink is empty
-            description: >-
-              {{ $labels.instance }} reports {{ $labels.color }} ink in slot {{ $labels.slot }} at {{ $value }}%.
-          labels:
-            severity: critical
+        #- alert: EpsonInkEmpty
+        #  expr: |-
+        #    epson_consumable_level_percent{type="ink"} <= 1
+        #  for: 15m
+        #  annotations:
+        #    summary: >-
+        #      Epson printer {{ $labels.instance }} {{ $labels.color }} ink is empty
+        #    description: >-
+        #      {{ $labels.instance }} reports {{ $labels.color }} ink in slot {{ $labels.slot }} at {{ $value }}%.
+        #  labels:
+        #    severity: critical
 
 
         - alert: EpsonPrinterJamOrError
