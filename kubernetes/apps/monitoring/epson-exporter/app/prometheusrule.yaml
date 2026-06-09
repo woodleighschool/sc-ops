@@ -22,23 +22,20 @@ spec:
           labels:
             severity: warning
 
-        #- alert: EpsonInkEmpty
-        #  expr: |-
-        #    epson_consumable_level_percent{type="ink"} <= 1
-        #  for: 15m
-        #  annotations:
-        #    summary: >-
-        #      Epson printer {{ $labels.instance }} {{ $labels.color }} ink is empty
-        #    description: >-
-        #      {{ $labels.instance }} reports {{ $labels.color }} ink in slot {{ $labels.slot }} at {{ $value }}%.
-        #  labels:
-        #    severity: critical
-
+        - alert: EpsonInkEmpty
+          expr: |-
+            epson_consumable_level_percent{type="ink"} == 0
+          annotations:
+            summary: >-
+              Epson printer {{ $labels.instance }} {{ $labels.color }} ink is empty
+            description: >-
+              {{ $labels.instance }} reports {{ $labels.color }} ink in slot {{ $labels.slot }} at {{ $value }}%.
+          labels:
+            severity: critical
 
         - alert: EpsonPrinterJamOrError
           expr: |-
             epson_status_info{component="printer",status=~"(?i).*(paper jam|jammed|printer error|service required|call service).*"} == 1
-          for: 5m
           annotations:
             summary: >-
               Epson printer {{ $labels.instance }} reports a jam or printer error
