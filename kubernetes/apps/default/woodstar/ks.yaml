@@ -7,6 +7,7 @@ metadata:
 spec:
   dependsOn:
     - name: garage-instance
+      namespace: garage-system
   interval: 1h
   path: ./kubernetes/apps/default/woodstar/bucket
   prune: true
