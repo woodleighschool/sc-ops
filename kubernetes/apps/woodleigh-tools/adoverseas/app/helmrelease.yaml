@@ -18,7 +18,7 @@ spec:
           app:
             image:
               repository: ghcr.io/woodleighschool/adoverseas
-              tag: 2.4.3@sha256:dcd4b9fd03b519ca18117ad0e2e764962a7c30beb9d9bd3cc9e172adac18150a
+              tag: 2.4.4@sha256:ebdabbb516a1a8ab825db735990f3e848961e4728487350b40d50a30b1a8faee
             env:
               LISTEN_ADDR: ":80"
               LOG_LEVEL: "debug"
