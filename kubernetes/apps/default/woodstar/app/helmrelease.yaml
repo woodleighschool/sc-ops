@@ -25,6 +25,8 @@ spec:
               WOODSTAR_ENTRA_TRANSITIVE_GROUPS: true
               WOODSTAR_HOST: 0.0.0.0
               WOODSTAR_LOG_LEVEL: debug
+              WOODSTAR_OIDC_SCOPES: openid,email,profile
+              WOODSTAR_OIDC_EMAIL_CLAIM: email
               WOODSTAR_PORT: &port 8080
               WOODSTAR_PUBLIC_URL: https://{{ .Release.Name }}.woodleighschool.net
             envFrom:
