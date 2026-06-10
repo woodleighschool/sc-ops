@@ -25,15 +25,19 @@ spec:
               WOODSTAR_ENTRA_TRANSITIVE_GROUPS: true
               WOODSTAR_HOST: 0.0.0.0
               WOODSTAR_LOG_LEVEL: debug
-              WOODSTAR_OIDC_SCOPES: openid,email,profile
+              WOODSTAR_MUNKI_S3_BUCKET: woodstar
+              WOODSTAR_MUNKI_S3_ENDPOINT: https://67ccf561cd3d68abc81838e145a046b8.r2.cloudflarestorage.com
+              WOODSTAR_MUNKI_S3_PATH_STYLE: "true"
+              WOODSTAR_MUNKI_S3_PRESIGN_TTL: 15m
+              WOODSTAR_MUNKI_S3_PUBLIC_ENDPOINT: https://67ccf561cd3d68abc81838e145a046b8.r2.cloudflarestorage.com
+              WOODSTAR_MUNKI_S3_REGION: auto
               WOODSTAR_OIDC_EMAIL_CLAIM: email
+              WOODSTAR_OIDC_SCOPES: openid,email,profile
               WOODSTAR_PORT: &port 8080
-              WOODSTAR_PUBLIC_URL: https://{{ .Release.Name }}.woodleighschool.net
+              WOODSTAR_PUBLIC_URL: "https://{{ .Release.Name }}.woodleigh.vic.edu.au"
             envFrom:
               - secretRef:
                   name: "{{ .Release.Name }}-secret"
-              - secretRef:
-                  name: woodstar-munki-s3-credentials
             probes:
               liveness:
                 enabled: true
@@ -80,9 +84,9 @@ spec:
     route:
       app:
         hostnames:
-          - "{{ .Release.Name }}.woodleighschool.net"
+          - "{{ .Release.Name }}.woodleigh.vic.edu.au"
         parentRefs:
-          - name: envoy-internal
+          - name: envoy-external
             namespace: network
     persistence:
       tmp:
