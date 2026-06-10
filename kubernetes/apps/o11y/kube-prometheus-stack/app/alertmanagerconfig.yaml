@@ -49,6 +49,8 @@ spec:
           hello: alertmanager.woodleighschool.net
           requireTLS: false
           sendResolved: true
+          threading:
+            threadByDate: Daily
           headers:
             - key: Subject
               value: >-
