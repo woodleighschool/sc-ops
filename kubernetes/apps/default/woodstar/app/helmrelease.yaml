@@ -18,7 +18,7 @@ spec:
           app:
             image:
               repository: ghcr.io/woodleighschool/woodstar
-              tag: 0.1.2@sha256:c14ef0a4c03e7bb718e5ad567910a7cb23ec3554781a1b120ca772b4f1eca141
+              tag: 0.1.3@sha256:b52452b78d8d3e4a85e401fee57dd99828d1e47bd8155bca73e3fb3c4c9b003f
             env:
               TZ: Australia/Melbourne
               WOODSTAR_HOST: 0.0.0.0
