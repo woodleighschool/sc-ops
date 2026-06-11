@@ -15,4 +15,4 @@ resources:
   - ./snipe-it/ks.yaml
   - ./vaultwarden/ks.yaml
   - ./woodgate/ks.yaml
-#  - ./woodstar/ks.yaml
+  - ./woodstar/ks.yaml
