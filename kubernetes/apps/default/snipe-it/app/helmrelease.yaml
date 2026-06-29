@@ -33,15 +33,15 @@ spec:
               REFERRER_POLICY: same-origin
               SECURE_COOKIES: "false"
               # Mail
-              MAIL_AUTO_EMBED_METHOD: 'attachment'
+              MAIL_AUTO_EMBED_METHOD: "attachment"
               MAIL_FROM_ADDR: you@example.com
-              MAIL_FROM_NAME: 'Snipe-IT'
+              MAIL_FROM_NAME: "Snipe-IT"
               MAIL_HOST: mailhog
               MAIL_MAILER: smtp
               MAIL_PASSWORD: "null"
               MAIL_PORT: 1025
               MAIL_REPLYTO_ADDR: you@example.com
-              MAIL_REPLYTO_NAME: 'Snipe-IT'
+              MAIL_REPLYTO_NAME: "Snipe-IT"
               MAIL_TLS_VERIFY_PEER: "true"
               MAIL_USERNAME: "null"
             envFrom:
@@ -72,7 +72,7 @@ spec:
             securityContext:
               allowPrivilegeEscalation: false
               #readOnlyRootFilesystem: true
-              capabilities: {drop: ["ALL"]}
+              capabilities: { drop: ["ALL"] }
             resources:
               requests:
                 cpu: 200m
