@@ -1,0 +1,11 @@
+[env]
+_.file = ["{{config_root}}/.secrets.env"]
+FLATE_PATH = '{{config_root}}/kubernetes/flux/cluster'
+KUBECONFIG = "{{config_root}}/kubeconfig"
+OP_ACCOUNT = "woodleigh-school.1password.com"
+MINIJINJA_CONFIG_FILE = "{{config_root}}/.minijinja.toml"
+TALOSCONFIG = "{{config_root}}/talosconfig"
+JUST_UNSTABLE = "1"
+
+[hooks]
+postinstall = "lefthook install"
