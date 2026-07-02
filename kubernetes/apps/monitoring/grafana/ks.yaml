@@ -6,7 +6,7 @@ metadata:
   name: grafana
 spec:
   dependsOn:
-    - name: grafana
+    - name: grafana-operator
       namespace: o11y
     - name: prometheus
     - name: rook-ceph-cluster
