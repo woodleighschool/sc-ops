@@ -26,6 +26,7 @@ spec:
       news_feed_enabled: "false"
     plugins:
       plugin_admin_enabled: "false"
+      preinstall_sync: marcusolsson-dynamictext-panel@6.3.0
     security:
       angular_support_enabled: "true"
     server:
