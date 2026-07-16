@@ -11,7 +11,7 @@ resources:
 configMapGenerator:
   - name: epson-dashboard
     files:
-      - ./resources/printer-stats.json
+      - ./resources/paper-impact.json
 generatorOptions:
   disableNameSuffixHash: true
   annotations:

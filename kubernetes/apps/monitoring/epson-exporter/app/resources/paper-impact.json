@@ -1,0 +1,838 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "time:DD MMM YYYY"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "afterRender": "",
+        "content": "<div class=\"print-header\">\n  <div class=\"print-prompt\">\n    <h1>BEFORE YOU PRINT…</h1>\n    <h2>Could it stay digital?</h2>\n  </div>\n  <div class=\"data-range\">\n    <span>📅 DATA SHOWN</span>\n    <strong>{{data.[0].[0].Value}} – {{data.[1].[0].Value}}</strong>\n  </div>\n</div>",
+        "contentPartials": [],
+        "defaultContent": "<div class=\"print-header\">\n  <div class=\"print-prompt\">\n    <h1>BEFORE YOU PRINT…</h1>\n    <h2>Could it stay digital?</h2>\n  </div>\n  <div class=\"data-range\">\n    <span>📅 DATA SHOWN</span>\n    <strong>No printer history in this period</strong>\n  </div>\n</div>",
+        "editor": {
+          "format": "auto",
+          "language": "html"
+        },
+        "editors": [
+          "styles"
+        ],
+        "externalStyles": [],
+        "helpers": "",
+        "renderMode": "data",
+        "status": "",
+        "styles": ".dt-row {\n  height: 100%;\n}\n\n.print-header {\n  box-sizing: border-box;\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 32px;\n  height: 100%;\n  padding: 0 18px;\n}\n\n.print-prompt h1,\n.print-prompt h2,\n.data-range span,\n.data-range strong {\n  letter-spacing: 0;\n}\n\n.print-prompt h1 {\n  margin: 0;\n  font-size: 30px;\n  line-height: 1.1;\n}\n\n.print-prompt h2 {\n  margin: 5px 0 0;\n  font-size: 21px;\n  font-weight: 500;\n  line-height: 1.2;\n}\n\n.data-range {\n  flex: 0 0 auto;\n  text-align: right;\n}\n\n.data-range span {\n  display: block;\n  margin-bottom: 5px;\n  font-size: 13px;\n  font-weight: 600;\n  line-height: 1;\n  opacity: 0.7;\n}\n\n.data-range strong {\n  display: block;\n  font-size: 22px;\n  line-height: 1.2;\n  white-space: nowrap;\n}\n\n@media (max-width: 900px) {\n  .print-header {\n    gap: 16px;\n    padding: 0 10px;\n  }\n\n  .print-prompt h1 {\n    font-size: 23px;\n  }\n\n  .print-prompt h2,\n  .data-range strong {\n    font-size: 17px;\n  }\n}",
+        "wrap": true
+      },
+      "pluginVersion": "6.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "1000 * min(\n  min_over_time(\n    timestamp(epson_pages_total{kind=\"total\"})[${__range_s}s:1h]\n  )\n)",
+          "instant": true,
+          "legendFormat": "FROM",
+          "range": false,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "time() * 1000",
+          "instant": true,
+          "legendFormat": "TO",
+          "range": false,
+          "refId": "B"
+        }
+      ],
+      "title": "",
+      "transparent": true,
+      "type": "marcusolsson-dynamictext-panel"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "#225241",
+            "mode": "fixed"
+          },
+          "decimals": 2,
+          "displayName": "🌳 TREES CONSUMED",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#225241",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 4
+      },
+      "id": 2,
+      "options": {
+        "colorMode": "background_solid",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "vertical",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "percentChangeSize": 18,
+          "titleSize": 22,
+          "valueSize": 58
+        },
+        "textMode": "value_and_name",
+        "wideLayout": false
+      },
+      "pluginVersion": "12.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "(\n  sum(increase(epson_pages_total{kind=\"simplex\"}[${__range_s}s]))\n  +\n  sum(increase(epson_pages_total{kind=\"duplex\"}[${__range_s}s])) / 2\n) / ${a4_sheets_per_tree}",
+          "instant": true,
+          "legendFormat": "🌳 TREES CONSUMED",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "#BBD9ED",
+            "mode": "fixed"
+          },
+          "decimals": 0,
+          "displayName": "📄 PAPER SHEETS",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#BBD9ED",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 12,
+        "y": 4
+      },
+      "id": 3,
+      "options": {
+        "colorMode": "background_solid",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "vertical",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "percentChangeSize": 18,
+          "titleSize": 21,
+          "valueSize": 58
+        },
+        "textMode": "value_and_name",
+        "wideLayout": false
+      },
+      "pluginVersion": "12.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum(increase(epson_pages_total{kind=\"simplex\"}[${__range_s}s])) + sum(increase(epson_pages_total{kind=\"duplex\"}[${__range_s}s])) / 2",
+          "instant": true,
+          "legendFormat": "📄 PAPER SHEETS",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "#F6D14B",
+            "mode": "fixed"
+          },
+          "decimals": 1,
+          "displayName": "📦 REAMS OF PAPER",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#F6D14B",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 10
+      },
+      "id": 4,
+      "options": {
+        "colorMode": "background_solid",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "vertical",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "percentChangeSize": 18,
+          "titleSize": 22,
+          "valueSize": 58
+        },
+        "textMode": "value_and_name",
+        "wideLayout": false
+      },
+      "pluginVersion": "12.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "(\n  sum(increase(epson_pages_total{kind=\"simplex\"}[${__range_s}s]))\n  +\n  sum(increase(epson_pages_total{kind=\"duplex\"}[${__range_s}s])) / 2\n) / ${sheets_per_ream}",
+          "instant": true,
+          "legendFormat": "📦 REAMS OF PAPER",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "#F7F3A4",
+            "mode": "fixed"
+          },
+          "decimals": 2,
+          "displayName": "💵 TOTAL PAPER COST",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#F7F3A4",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "currency:$"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 12,
+        "y": 10
+      },
+      "id": 9,
+      "options": {
+        "colorMode": "background_solid",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "vertical",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "percentChangeSize": 18,
+          "titleSize": 22,
+          "valueSize": 58
+        },
+        "textMode": "value_and_name",
+        "wideLayout": false
+      },
+      "pluginVersion": "12.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "(\n  sum(increase(epson_pages_total{kind=\"simplex\"}[${__range_s}s]))\n  +\n  sum(increase(epson_pages_total{kind=\"duplex\"}[${__range_s}s])) / 2\n) / ${sheets_per_ream} * ${paper_cost_per_ream_aud}",
+          "instant": true,
+          "legendFormat": "💵 TOTAL PAPER COST",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "#A3CF67",
+            "mode": "fixed"
+          },
+          "decimals": 0,
+          "displayName": "♻️ SHEETS SAVED BY DOUBLE-SIDED",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#A3CF67",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 0,
+        "y": 16
+      },
+      "id": 5,
+      "options": {
+        "colorMode": "background_solid",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "vertical",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "percentChangeSize": 18,
+          "titleSize": 21,
+          "valueSize": 58
+        },
+        "textMode": "value_and_name",
+        "wideLayout": false
+      },
+      "pluginVersion": "12.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum(increase(epson_pages_total{kind=\"duplex\"}[${__range_s}s])) / 2",
+          "instant": true,
+          "legendFormat": "♻️ SHEETS SAVED BY DOUBLE-SIDED",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "#303F5C",
+            "mode": "fixed"
+          },
+          "decimals": 1,
+          "displayName": "📉 PAPER REDUCTION FROM DOUBLE-SIDED",
+          "mappings": [],
+          "max": 50,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#303F5C",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 8,
+        "y": 16
+      },
+      "id": 6,
+      "options": {
+        "colorMode": "background_solid",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "vertical",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "percentChangeSize": 18,
+          "titleSize": 21,
+          "valueSize": 55
+        },
+        "textMode": "value_and_name",
+        "wideLayout": false
+      },
+      "pluginVersion": "12.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "100 * (\n  sum(increase(epson_pages_total{kind=\"duplex\"}[${__range_s}s])) / 2\n) / clamp_min(\n  sum(increase(epson_pages_total{kind=\"simplex\"}[${__range_s}s]))\n  +\n  sum(increase(epson_pages_total{kind=\"duplex\"}[${__range_s}s])),\n  1\n)",
+          "instant": true,
+          "legendFormat": "📉 PAPER REDUCTION FROM DOUBLE-SIDED",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "#FCD8D4",
+            "mode": "fixed"
+          },
+          "decimals": 2,
+          "displayName": "💰 COST SAVED BY DOUBLE-SIDED",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#FCD8D4",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "currency:$"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 16,
+        "y": 16
+      },
+      "id": 7,
+      "options": {
+        "colorMode": "background_solid",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "vertical",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "percentChangeSize": 18,
+          "titleSize": 21,
+          "valueSize": 55
+        },
+        "textMode": "value_and_name",
+        "wideLayout": false
+      },
+      "pluginVersion": "12.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "(\n  sum(increase(epson_pages_total{kind=\"duplex\"}[${__range_s}s])) / 2\n) / ${sheets_per_ream} * ${paper_cost_per_ream_aud}",
+          "instant": true,
+          "legendFormat": "💰 COST SAVED BY DOUBLE-SIDED",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "printed pages",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "SINGLE-SIDED"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#F89C49",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "DOUBLE-SIDED"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#429659",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 22
+      },
+      "id": 8,
+      "interval": "1h",
+      "maxDataPoints": 12,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.85,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "vertical",
+        "showValue": "never",
+        "stacking": "normal",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      },
+      "pluginVersion": "12.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum(increase(epson_pages_total{kind=\"simplex\"}[$__interval]))",
+          "instant": false,
+          "legendFormat": "SINGLE-SIDED",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum(increase(epson_pages_total{kind=\"duplex\"}[$__interval]))",
+          "instant": false,
+          "legendFormat": "DOUBLE-SIDED",
+          "range": true,
+          "refId": "B"
+        }
+      ],
+      "title": "📊 PRINTING OVER TIME",
+      "type": "barchart"
+    }
+  ],
+  "preload": false,
+  "refresh": "15m",
+  "schemaVersion": 42,
+  "tags": [
+    "epson",
+    "printing",
+    "sustainability"
+  ],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "text": "8333",
+          "value": "8333"
+        },
+        "hide": 2,
+        "name": "a4_sheets_per_tree",
+        "query": "8333",
+        "skipUrlSync": true,
+        "type": "constant"
+      },
+      {
+        "current": {
+          "text": "500",
+          "value": "500"
+        },
+        "hide": 2,
+        "name": "sheets_per_ream",
+        "query": "500",
+        "skipUrlSync": true,
+        "type": "constant"
+      },
+      {
+        "current": {
+          "text": "8",
+          "value": "8"
+        },
+        "hide": 2,
+        "name": "paper_cost_per_ream_aud",
+        "query": "8",
+        "skipUrlSync": true,
+        "type": "constant"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-1y",
+    "to": "now"
+  },
+  "timepicker": {
+    "nowDelay": "",
+    "refresh_intervals": [
+      "5m",
+      "15m",
+      "30m",
+      "1h"
+    ]
+  },
+  "timezone": "browser",
+  "title": "Print Room Paper Impact",
+  "uid": "adp4prd",
+  "version": 12,
+  "weekStart": "monday"
+}
