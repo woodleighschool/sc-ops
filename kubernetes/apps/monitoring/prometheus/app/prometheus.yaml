@@ -21,7 +21,6 @@ spec:
     matchLabels:
       monitoring.woodleighschool.net/scrape: "true"
   replicas: 1
-  retention: 90d
   retentionSize: 8GB
   ruleNamespaceSelector:
     matchLabels:
