@@ -9,7 +9,7 @@ metadata:
 spec:
   staticConfigs:
     - targets:
-        - http://172.19.10.130
+        - http://172.19.10.51
       labels:
         device_id: C2AC1FC1F77E671ACF1368C7F1A07574
         site: Futures Studio
