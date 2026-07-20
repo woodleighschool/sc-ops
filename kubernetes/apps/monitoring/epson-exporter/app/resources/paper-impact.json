@@ -110,7 +110,7 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "fixedColor": "#225241",
+            "fixedColor": "#F2B8B5",
             "mode": "fixed"
           },
           "decimals": 2,
@@ -120,7 +120,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "#225241",
+                "color": "#F2B8B5",
                 "value": 0
               }
             ]
@@ -181,7 +181,7 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "fixedColor": "#BBD9ED",
+            "fixedColor": "#F7C9A9",
             "mode": "fixed"
           },
           "decimals": 0,
@@ -191,7 +191,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "#BBD9ED",
+                "color": "#F7C9A9",
                 "value": 0
               }
             ]
@@ -252,7 +252,7 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "fixedColor": "#F6D14B",
+            "fixedColor": "#F5D6A5",
             "mode": "fixed"
           },
           "decimals": 1,
@@ -262,7 +262,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "#F6D14B",
+                "color": "#F5D6A5",
                 "value": 0
               }
             ]
@@ -323,7 +323,7 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "fixedColor": "#F7F3A4",
+            "fixedColor": "#F4B6A6",
             "mode": "fixed"
           },
           "decimals": 2,
@@ -334,7 +334,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "#F7F3A4",
+                "color": "#F4B6A6",
                 "value": 0
               }
             ]
@@ -395,7 +395,7 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "fixedColor": "#A3CF67",
+            "fixedColor": "#B8DDB5",
             "mode": "fixed"
           },
           "decimals": 0,
@@ -405,7 +405,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "#A3CF67",
+                "color": "#B8DDB5",
                 "value": 0
               }
             ]
@@ -466,7 +466,7 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "fixedColor": "#303F5C",
+            "fixedColor": "#B9D8EB",
             "mode": "fixed"
           },
           "decimals": 1,
@@ -478,7 +478,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "#303F5C",
+                "color": "#B9D8EB",
                 "value": 0
               }
             ]
@@ -539,7 +539,7 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "fixedColor": "#FCD8D4",
+            "fixedColor": "#B8E0D2",
             "mode": "fixed"
           },
           "decimals": 2,
@@ -549,7 +549,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "#FCD8D4",
+                "color": "#B8E0D2",
                 "value": 0
               }
             ]
