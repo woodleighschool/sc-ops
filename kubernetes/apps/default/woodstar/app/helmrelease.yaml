@@ -18,7 +18,7 @@ spec:
           app:
             image:
               repository: ghcr.io/woodleighschool/woodstar
-              tag: 0.2.0@sha256:346bdbeac06002150dd047fd9e37c5ce344d2927f28e1dada69e422a65df4039
+              tag: 0.3.0@sha256:99093989c24c5bb5a78aaa99fc31fba73e217e631f65e9e008df96d99e53ce72
             env:
               TZ: Australia/Melbourne
               WOODSTAR_ENTRA_SYNC_INTERVAL: 1h
@@ -29,7 +29,6 @@ spec:
               WOODSTAR_STORAGE_S3_BUCKET: woodstar
               WOODSTAR_STORAGE_S3_ENDPOINT: https://67ccf561cd3d68abc81838e145a046b8.r2.cloudflarestorage.com
               WOODSTAR_STORAGE_S3_PATH_STYLE: "true"
-              WOODSTAR_STORAGE_S3_PRESIGN_TTL: 15m
               WOODSTAR_STORAGE_S3_PUBLIC_ENDPOINT: https://67ccf561cd3d68abc81838e145a046b8.r2.cloudflarestorage.com
               WOODSTAR_STORAGE_S3_REGION: auto
               WOODSTAR_OIDC_EMAIL_CLAIM: email
