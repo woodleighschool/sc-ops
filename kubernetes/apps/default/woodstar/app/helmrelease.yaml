@@ -24,16 +24,18 @@ spec:
               WOODSTAR_ENTRA_SYNC_INTERVAL: 1h
               WOODSTAR_ENTRA_TRANSITIVE_GROUPS: true
               WOODSTAR_HOST: 0.0.0.0
+              WOODSTAR_HTTP_CLIENT_IP_SOURCE: xff_trusted_cidrs
+              WOODSTAR_HTTP_CLIENT_IP_TRUSTED_CIDRS: 10.42.0.0/16
               WOODSTAR_LOG_LEVEL: debug
+              WOODSTAR_OIDC_EMAIL_CLAIM: email
+              WOODSTAR_OIDC_SCOPES: openid,email,profile
+              WOODSTAR_PORT: &port 8080
               WOODSTAR_STORAGE_KIND: s3
               WOODSTAR_STORAGE_S3_BUCKET: woodstar
               WOODSTAR_STORAGE_S3_ENDPOINT: https://67ccf561cd3d68abc81838e145a046b8.r2.cloudflarestorage.com
               WOODSTAR_STORAGE_S3_PATH_STYLE: "true"
               WOODSTAR_STORAGE_S3_PUBLIC_ENDPOINT: https://67ccf561cd3d68abc81838e145a046b8.r2.cloudflarestorage.com
               WOODSTAR_STORAGE_S3_REGION: auto
-              WOODSTAR_OIDC_EMAIL_CLAIM: email
-              WOODSTAR_OIDC_SCOPES: openid,email,profile
-              WOODSTAR_PORT: &port 8080
               WOODSTAR_URL: "https://{{ .Release.Name }}.woodleigh.vic.edu.au"
             envFrom:
               - secretRef:
