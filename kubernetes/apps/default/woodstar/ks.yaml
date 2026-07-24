@@ -1,4 +1,5 @@
 ---
+---
 # yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
@@ -10,6 +11,23 @@ spec:
       namespace: databases
   interval: 1h
   path: ./kubernetes/apps/default/woodstar/app
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  targetNamespace: default
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: woodstar-mdp
+spec:
+  dependsOn:
+    - name: woodstar
+  interval: 1h
+  path: ./kubernetes/apps/default/woodstar/mdp
   prune: true
   sourceRef:
     kind: GitRepository

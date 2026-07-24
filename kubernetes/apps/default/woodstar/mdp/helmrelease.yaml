@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: woodstar
+  name: woodstar-mdp
 spec:
   chartRef:
     kind: OCIRepository
@@ -11,31 +11,22 @@ spec:
   interval: 1h
   values:
     controllers:
-      woodstar:
+      woodstar-mdp:
         annotations:
           reloader.stakater.com/auto: "true"
         containers:
           app:
+            args:
+              - mdp
             image:
               repository: ghcr.io/woodleighschool/woodstar
               tag: 0.5.0@sha256:01ad47868f922cb9ddc3f6887dd375fd60de7e1e791e77a2e0a54973530688f6
             env:
               TZ: Australia/Melbourne
-              WOODSTAR_ENTRA_SYNC_INTERVAL: 1h
-              WOODSTAR_ENTRA_TRANSITIVE_GROUPS: true
-              WOODSTAR_HOST: 0.0.0.0
-              WOODSTAR_HTTP_CLIENT_IP_SOURCE: xff_trusted_cidrs
-              WOODSTAR_HTTP_CLIENT_IP_TRUSTED_CIDRS: 10.42.0.0/16
-              WOODSTAR_LOG_LEVEL: debug
-              WOODSTAR_OIDC_EMAIL_CLAIM: email
-              WOODSTAR_OIDC_SCOPES: openid,email,profile
-              WOODSTAR_PORT: &port 8080
-              WOODSTAR_STORAGE_KIND: s3
-              WOODSTAR_STORAGE_S3_BUCKET: woodstar
-              WOODSTAR_STORAGE_S3_ENDPOINT: https://67ccf561cd3d68abc81838e145a046b8.r2.cloudflarestorage.com
-              WOODSTAR_STORAGE_S3_PATH_STYLE: "true"
-              WOODSTAR_STORAGE_S3_REGION: auto
-              WOODSTAR_URL: "https://{{ .Release.Name }}.woodleigh.vic.edu.au"
+              WOODSTAR_MDP_DATA_DIR: /data
+              WOODSTAR_MDP_LISTEN_ADDR: :8080
+              WOODSTAR_MDP_LOG_LEVEL: debug
+              WOODSTAR_MDP_SERVER_URL: https://woodstar.woodleigh.vic.edu.au
             envFrom:
               - secretRef:
                   name: "{{ .Release.Name }}-secret"
@@ -46,7 +37,7 @@ spec:
                 spec:
                   httpGet:
                     path: /healthz
-                    port: *port
+                    port: &port 8080
                   initialDelaySeconds: 0
                   periodSeconds: 10
                   timeoutSeconds: 1
@@ -77,6 +68,8 @@ spec:
         runAsNonRoot: true
         runAsUser: 1000
         runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
     service:
       app:
         ports:
@@ -84,11 +77,14 @@ spec:
             port: *port
     route:
       app:
+        annotations:
+          gatus.home-operations.com/endpoint: |-
+            conditions: ["[STATUS] == 404"]
         hostnames:
-          - "{{ .Release.Name }}.woodleigh.vic.edu.au"
+          - "{{ .Release.Name }}.woodleighschool.net"
         parentRefs:
-          - name: envoy-external
+          - name: envoy-internal
             namespace: network
     persistence:
-      tmp:
-        type: emptyDir
+      data:
+        existingClaim: "{{ .Release.Name }}"
