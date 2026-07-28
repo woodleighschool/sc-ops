@@ -16,7 +16,7 @@ spec:
           app:
             image:
               repository: ghcr.io/woodleighschool/selectronic-exporter
-              tag: 0.1.2@sha256:982bef13b7892f8b85e32e410918a1d7b3d456081b468edd5cc9f2b4202b1bbc
+              tag: 0.1.3@sha256:1f975beed25748ae75e99b1159e4e5bd5bf0d9cc7e7576201156406c356cd04a
             env:
               TZ: Australia/Melbourne
             securityContext:
