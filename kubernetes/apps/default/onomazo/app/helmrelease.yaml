@@ -1,0 +1,163 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: onomazo
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: onomazo
+  interval: 1h
+  values:
+    controllers:
+      onomazo:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: ghcr.io/woodleighschool/onomazo
+              tag: 0.0.3@sha256:2f4742ae1a4d2e405001ab5597dbfdd4fa3d1ac0fd57a408075cfe72fb9475d4
+            args:
+              - run
+              - --config=/etc/onomazo/config.yaml
+              - --config=/etc/onomazo/overlay.yaml
+            env:
+              TZ: Australia/Melbourne
+            envFrom:
+              - secretRef:
+                  name: "{{ .Release.Name }}-secret"
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 10m
+                memory: 128Mi
+              limits:
+                memory: 512Mi
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+    configMaps:
+      config:
+        data:
+          config.yaml: |-
+            version: 1
+
+            connections:
+              microsoft:
+                type: microsoft_graph
+                tenant_id: ${MICROSOFT_TENANT_ID}
+                client_id: ${MICROSOFT_CLIENT_ID}
+                client_secret: ${MICROSOFT_CLIENT_SECRET}
+              jamf:
+                type: jamf
+                url: ${JAMF_URL}
+                client_id: ${JAMF_CLIENT_ID}
+                client_secret: ${JAMF_CLIENT_SECRET}
+
+            devices:
+              - name: intune
+                type: intune
+                connection: microsoft
+                platforms: [macos, ios, windows]
+              - name: jamf
+                type: jamf
+                connection: jamf
+                platforms: [macos, ios]
+
+            identity:
+              name: entra
+              type: entra
+              connection: microsoft
+
+            reconcile:
+              poll_interval: 1m
+              device_details_ttl: 1h
+              identity_ttl: 15m
+              rename_retry_after: 30m
+              rename_max_attempts: 3
+              concurrency: 8
+
+            state:
+              type: file
+              path: /data/state.json
+
+            naming:
+              constraints:
+                max_length: 63
+                pattern: "^[A-Z0-9][A-Z0-9-]*$"
+
+              variables:
+                position:
+                  cases:
+                    - when: '"students" in user.groups'
+                      value: S
+                    - when: '"staff" in user.groups && !("students" in user.groups)'
+                      value: T
+                campus:
+                  cases:
+                    - when: '"senior" in user.groups'
+                      value: S
+                    - when: '"minimbah" in user.groups && !("senior" in user.groups)'
+                      value: M
+                    - when: |
+                        "penbank" in user.groups &&
+                        !("senior" in user.groups) &&
+                        !("minimbah" in user.groups)
+                      value: P
+
+              rules:
+                - name: default
+                  when: |
+                    device.platform in ["ios", "macos", "windows"] &&
+                    "campus" in vars &&
+                    "position" in vars &&
+                    user.present &&
+                    user.mail_nickname != ""
+                  desired_name: |
+                    (vars["campus"] + vars["position"] + "-" + slug(user.mail_nickname)).upperAscii()
+
+              collisions:
+                rank:
+                  - expression: |
+                      device.source == "intune" ? 0 :
+                      device.source == "jamf" ? 1 :
+                      99
+                    order: ascending
+                  - expression: |
+                      device.platform == "macos" ? 0 :
+                      device.platform == "ios" ? 1 :
+                      device.platform == "windows" ? 2 :
+                      99
+                    order: ascending
+                  - expression: device.enrolled_at
+                    order: descending
+                disambiguate:
+                  type: sequence
+                  separator: "-"
+                  preserve_existing: false
+    persistence:
+      config:
+        type: configMap
+        identifier: config
+        globalMounts:
+          - path: /etc/onomazo/config.yaml
+            subPath: config.yaml
+      overlay:
+        type: secret
+        name: onomazo-overlay
+        globalMounts:
+          - path: /etc/onomazo/overlay.yaml
+            subPath: overlay.yaml
+      state:
+        existingClaim: "{{ .Release.Name }}"
+        globalMounts:
+          - path: /data
