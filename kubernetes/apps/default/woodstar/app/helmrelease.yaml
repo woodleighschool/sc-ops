@@ -18,7 +18,7 @@ spec:
           app:
             image:
               repository: ghcr.io/woodleighschool/woodstar
-              tag: 0.8.2@sha256:97e1840b94e9601d6b3e99e71c96a8e0e5b0fdf401dd84f66fdf155179db23ee
+              tag: 0.8.4@sha256:d8b49e946cc57226c4964bec51ef09bce6a9bc0000b908bd88bd81ded4af9fed
             env:
               TZ: Australia/Melbourne
               WOODSTAR_ENTRA_SYNC_INTERVAL: 1h
