@@ -1,0 +1,25 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/monitoring.coreos.com/scrapeconfig_v1alpha1.json
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: assetcache
+spec:
+  staticConfigs:
+    - targets:
+        - 10.1.110.46:9200
+      labels:
+        instance: SC-MACCACHE
+    - targets:
+        - 10.2.0.25:9200
+      labels:
+        instance: PC-MACCACHE
+    - targets:
+        - 10.3.110.9:9200
+      labels:
+        instance: MC-MACCACHE
+  metricsPath: /metrics
+  relabelings:
+    - action: replace
+      targetLabel: job
+      replacement: assetcache
