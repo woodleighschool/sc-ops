@@ -16,7 +16,7 @@ spec:
           app:
             image:
               repository: ghcr.io/woodleighschool/leave-calendar
-              tag: 1.5.0@sha256:ad6a947eb3d858fb4ca50b593701a28c4d662d078412f74e28919885794db366
+              tag: 1.6.0@sha256:f79ca2491ba2c21e383cbcaa29ef589b0bb89ad2de89ea6bc93abb8d2fa4b6f1
             env:
               TZ: Australia/Melbourne
             probes:
