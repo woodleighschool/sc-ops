@@ -1,3 +1,4 @@
+---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -39,21 +40,13 @@ spec:
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
-              capabilities: {drop: ["ALL"]}
+              capabilities: { drop: ["ALL"] }
             resources:
               requests:
                 cpu: 10m
                 memory: 32Mi
               limits:
                 memory: 128Mi
-            volumeMounts:
-              - name: leave-calendar-config
-                readOnly: true
-                mountPath: "/data/calendar/"
-        volumes:
-          - name: leave-calendar-config
-            secret:
-              secretName: leave-calendar-config
     defaultPodOptions:
       imagePullSecrets:
         - name: leave-calendar-ghcr-pull-secret
@@ -73,3 +66,10 @@ spec:
         parentRefs:
           - name: envoy-internal
             namespace: network
+    persistence:
+      config-file:
+        type: secret
+        identifier: leave-calendar-config
+        globalMounts:
+          - path: /data/calendar/organisation.json
+            subPath: organisation.json
