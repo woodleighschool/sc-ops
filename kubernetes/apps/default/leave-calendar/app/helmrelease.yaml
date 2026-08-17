@@ -69,7 +69,7 @@ spec:
     persistence:
       config-file:
         type: secret
-        identifier: leave-calendar-config
+        name: leave-calendar-config
         globalMounts:
           - path: /data/calendar/organisation.json
             subPath: organisation.json
