@@ -18,7 +18,7 @@ spec:
           app:
             image:
               repository: ghcr.io/woodleighschool/onomazo
-              tag: 0.1.2@sha256:385436fc24bc203d878e841019939b75046bd826ab0adf63b321535218a61a76
+              tag: 0.1.3@sha256:3544480b5ae5f7af6519cfe01377d49013d92698e92d130831d0b53caa4889f1
             args:
               - run
               - --config=/etc/onomazo/config.yaml
