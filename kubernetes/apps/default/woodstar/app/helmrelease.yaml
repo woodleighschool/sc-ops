@@ -29,6 +29,7 @@ spec:
               WOODSTAR_LOG_LEVEL: debug
               WOODSTAR_OIDC_EMAIL_CLAIM: email
               WOODSTAR_OIDC_SCOPES: openid,email,profile
+              WOODSTAR_ORBIT_SCRIPT_EXECUTION_TIMEOUT: 10m
               WOODSTAR_PORT: &port 8080
               WOODSTAR_STORAGE_KIND: s3
               WOODSTAR_STORAGE_S3_BUCKET: woodstar
