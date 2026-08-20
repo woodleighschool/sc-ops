@@ -8,8 +8,6 @@ spec:
   dependsOn:
     - name: kube-prometheus-stack
       namespace: o11y
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
   interval: 1h
   path: ./kubernetes/apps/monitoring/prometheus/app
   prune: true

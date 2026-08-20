@@ -9,8 +9,6 @@ spec:
     - name: grafana-operator
       namespace: o11y
     - name: prometheus
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
   interval: 1h
   path: ./kubernetes/apps/monitoring/grafana/instance
   prune: true

@@ -5,9 +5,6 @@ kind: Kustomization
 metadata:
   name: signin-ui
 spec:
-  dependsOn:
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
   interval: 1h
   path: ./kubernetes/apps/default/signin-ui/app
   prune: true
