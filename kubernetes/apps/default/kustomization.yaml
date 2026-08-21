@@ -16,4 +16,5 @@ resources:
   - ./snipe-it/ks.yaml
   - ./vaultwarden/ks.yaml
   - ./woodgate/ks.yaml
+  - ./woodsweep/ks.yaml
   - ./woodstar/ks.yaml
