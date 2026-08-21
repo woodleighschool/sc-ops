@@ -77,6 +77,24 @@ spec:
               name: entra
               type: entra
               connection: microsoft
+              groups:
+                students:
+                  - f6fe9403-6a17-4990-99aa-9a82744183ec
+                staff:
+                  - a22c0025-872a-4959-a0fc-b322b5497c47
+                  - 68ab7052-a5d1-4255-b3cf-72b91113eb20
+                senior:
+                  - 50c29194-520b-427c-829f-694815ca6520
+                  - 75e61704-e43c-4dd5-894c-0e65ee48a3f6
+                  - 68ab7052-a5d1-4255-b3cf-72b91113eb20
+                minimbah:
+                  - a99ce3c9-00e2-4c0e-90a7-2b16a1f2a696
+                  - 38cacf1b-2d06-4abd-9734-52efa827ccbf
+                  - 57708a3e-8990-45b6-ba60-f5b469d9de04
+                penbank:
+                  - 740322a9-73bc-4763-8732-6ccfc84d2a56
+                  - fa3a32ea-babe-44ea-bfae-3cdf2ee36531
+                  - 2bc8c366-8563-42e3-8594-5469b255c965
 
             reconcile:
               poll_interval: 1m
