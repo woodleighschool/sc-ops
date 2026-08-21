@@ -53,6 +53,8 @@ spec:
           daemon:
             keyRotationPolicy: KeyGeneration
             keyGeneration: 2
+          csi:
+            keyType: aes # aes256k requires kernel 7.0+
       storage:
         devicePathFilter: /dev/disk/by-id/ata-MZ7KM960HMJP0D3_.*
         useAllDevices: false
