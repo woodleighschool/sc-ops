@@ -21,6 +21,8 @@ spec:
               - --async-repo-connect
               - --server-control-username=bootstrap@woodsweep
               - --server-username=woodmin
+              - --tls-generate-cert
+              - --tls-generate-cert-name=woodsweep.default.svc.cluster.local
             envFrom:
               - secretRef:
                   name: woodsweep-secret
@@ -45,15 +47,7 @@ spec:
       app:
         ports:
           http:
-            appProtocol: kubernetes.io/h2c
             port: 51515
-    route:
-      app:
-        hostnames:
-          - woodsweep.woodleighschool.net
-        parentRefs:
-          - name: envoy-internal
-            namespace: network
     persistence:
       config:
         existingClaim: "{{ .Release.Name }}"

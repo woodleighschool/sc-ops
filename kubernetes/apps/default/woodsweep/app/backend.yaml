@@ -1,0 +1,16 @@
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: Backend
+metadata:
+  name: woodsweep
+spec:
+  appProtocols:
+    - gateway.envoyproxy.io/h2c
+  endpoints:
+    - fqdn:
+        hostname: woodsweep.default.svc.cluster.local
+        port: 51515
+  tls:
+    alpnProtocols:
+      - h2
+    insecureSkipVerify: true
