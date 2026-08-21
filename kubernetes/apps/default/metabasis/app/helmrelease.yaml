@@ -1,0 +1,150 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: metabasis
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: metabasis
+  interval: 1h
+  values:
+    controllers:
+      metabasis:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: ghcr.io/woodleighschool/metabasis
+              tag: 3.0.0@sha256:4d5f5cc9a1da701f1ac6848ad16d00e03c6064f1aeb1345e5f805d4da01c10b0
+            args:
+              - run
+              - --config=/etc/metabasis/config.yaml
+            env:
+              TZ: Australia/Melbourne
+            envFrom:
+              - secretRef:
+                  name: "{{ .Release.Name }}-secret"
+            probes:
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /healthz
+                    port: &port 8080
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /readyz
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 10m
+                memory: 128Mi
+              limits:
+                memory: 512Mi
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+    configMaps:
+      config:
+        data:
+          config.yaml: |-
+            version: 1
+
+            connections:
+              microsoft:
+                type: microsoft_graph
+                tenant_id: ${MICROSOFT_TENANT_ID}
+                client_id: ${MICROSOFT_CLIENT_ID}
+                client_secret: ${MICROSOFT_CLIENT_SECRET}
+
+            database:
+              url: ${DATABASE_URL}
+              min_connections: 2
+              max_connections: 10
+              max_connection_lifetime: 30m
+
+            webhooks:
+              freshservice:
+                path: /webhooks/freshservice
+                bearer_token: ${FRESHSERVICE_WEBHOOK_TOKEN}
+
+            identity:
+              connection: microsoft
+              groups:
+                students:
+                  - f6fe9403-6a17-4990-99aa-9a82744183ec
+                staff:
+                  - a22c0025-872a-4959-a0fc-b322b5497c47
+
+            managed_groups:
+              mfa_registration: e78a3a24-50e8-41ab-b149-8e6a4b4ce83f
+              overseas_access: cac03843-c1ed-44b1-bab1-a2d4deb7bf4d
+              overseas_mfa: 857f6c15-83a0-4188-adef-4e961e5d6d3f
+
+            rules:
+              - name: students
+                when: '"students" in user.groups'
+                phases:
+                  pending:
+                    groups:
+                      - mfa_registration
+                  active:
+                    groups:
+                      - mfa_registration
+                      - overseas_access
+                      - overseas_mfa
+
+              - name: staff
+                when: '"staff" in user.groups'
+                phases:
+                  active:
+                    groups:
+                      - overseas_access
+
+            reconcile:
+              poll_interval: 1m
+              retry_initial: 30s
+              retry_max: 15m
+    service:
+      app:
+        ports:
+          http:
+            port: *port
+    route:
+      app:
+        annotations:
+          gatus.home-operations.com/endpoint: |-
+            url: https://metabasis.woodleigh.vic.edu.au/healthz
+        hostnames:
+          - "{{ .Release.Name }}.woodleigh.vic.edu.au"
+        parentRefs:
+          - name: envoy-external
+            namespace: network
+    persistence:
+      config:
+        type: configMap
+        identifier: config
+        globalMounts:
+          - path: /etc/metabasis/config.yaml
+            subPath: config.yaml

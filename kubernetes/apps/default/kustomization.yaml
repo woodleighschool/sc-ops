@@ -10,6 +10,7 @@ resources:
   - ./grinch/ks.yaml
   - ./home-assistant/ks.yaml
   - ./leave-calendar/ks.yaml
+  - ./metabasis/ks.yaml
   - ./namespace.yaml
   - ./onomazo/ks.yaml
   - ./signin-ui/ks.yaml
