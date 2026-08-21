@@ -36,7 +36,8 @@
     "flux-system": "pipe",
     "kube-system": "kubernetes",
     "network": "connection",
-    "observability": "event",
+    "monitoring": "event",
+    "o11y": "event",
     "openebs-system": "base",
     "rook-ceph": "dump",
     "system-upgrade": "update",
@@ -52,7 +53,22 @@
   "yaml.schemas": {
     "kubernetes": "./kubernetes/**/*.yaml"
   },
+  "[just]": {
+    "editor.defaultFormatter": "nefrob.vscode-just-syntax"
+  },
   "[yaml]": {
-    "editor.defaultFormatter": "redhat.vscode-yaml"
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[json5]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
   }
 }
