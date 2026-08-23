@@ -16,7 +16,7 @@ spec:
           app:
             image:
               repository: ghcr.io/woodleighschool/leave-calendar
-              tag: 3.9.0@sha256:9715e51df774acb378cfc93f1a26e6d8479858d2a073fa5d3292a91c7fb25ea3
+              tag: 3.9.1@sha256:a696dbbb78866ecec20240ebbf869410f24e736016a36f37ba32128fa0cf0f20
             env:
               TZ: Australia/Melbourne
               CALENDAR_SYNC_MAX_AGE_HOURS: 24
