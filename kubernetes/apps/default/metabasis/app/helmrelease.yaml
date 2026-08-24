@@ -18,7 +18,7 @@ spec:
           app:
             image:
               repository: ghcr.io/woodleighschool/metabasis
-              tag: 3.1.0@sha256:3442072c944cfdebb2bd08a5fb06b736b2df401e3c8031e051f03036d8503715
+              tag: 3.1.1@sha256:f362f3d84dd4cd676684db49cbeb80b024dc9bdb7fe3a1e293e01c548e54dcf6
             args:
               - run
               - --config=/etc/metabasis/config.yaml
