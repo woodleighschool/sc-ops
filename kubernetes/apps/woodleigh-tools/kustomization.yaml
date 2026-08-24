@@ -6,7 +6,7 @@ namespace: woodleigh-tools
 components:
   - ../../components/alerts
 resources:
-  - ./adoverseas/ks.yaml
+  #  - ./adoverseas/ks.yaml
   - ./namespace.yaml
   - ./setrecoverypassword/ks.yaml
   - ./updateuserinfo/ks.yaml
