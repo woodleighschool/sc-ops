@@ -23,14 +23,8 @@ spec:
               - run
               - --config=/etc/metabasis/config.yaml
             env:
-              METABASIS_DATABASE_MAX_CONNECTION_LIFETIME: 30m
-              METABASIS_DATABASE_MAX_CONNECTIONS: 10
               METABASIS_DATABASE_MIN_CONNECTIONS: 2
-              METABASIS_LISTEN: :8080
-              METABASIS_METRICS_LISTEN: :8081
-              METABASIS_RECONCILE_POLL_INTERVAL: 1m
-              METABASIS_RECONCILE_RETRY_INITIAL: 30s
-              METABASIS_RECONCILE_RETRY_MAX: 15m
+              METABASIS_LOG_LEVEL: debug # for testing
               TZ: Australia/Melbourne
             envFrom:
               - secretRef:

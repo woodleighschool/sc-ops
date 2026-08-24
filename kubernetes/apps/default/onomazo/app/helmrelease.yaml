@@ -25,11 +25,6 @@ spec:
               - --config=/etc/onomazo/overlay.yaml
             env:
               ONOMAZO_RECONCILE_CONCURRENCY: 8
-              ONOMAZO_RECONCILE_DEVICE_DETAILS_TTL: 1h
-              ONOMAZO_RECONCILE_IDENTITY_TTL: 15m
-              ONOMAZO_RECONCILE_POLL_INTERVAL: 1m
-              ONOMAZO_RECONCILE_RENAME_MAX_ATTEMPTS: 3
-              ONOMAZO_RECONCILE_RENAME_RETRY_AFTER: 30m
               ONOMAZO_STATE_PATH: /data/state.json
               ONOMAZO_STATE_TYPE: file
               TZ: Australia/Melbourne
