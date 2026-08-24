@@ -24,6 +24,14 @@ spec:
               - --config=/etc/onomazo/config.yaml
               - --config=/etc/onomazo/overlay.yaml
             env:
+              ONOMAZO_RECONCILE_CONCURRENCY: 8
+              ONOMAZO_RECONCILE_DEVICE_DETAILS_TTL: 1h
+              ONOMAZO_RECONCILE_IDENTITY_TTL: 15m
+              ONOMAZO_RECONCILE_POLL_INTERVAL: 1m
+              ONOMAZO_RECONCILE_RENAME_MAX_ATTEMPTS: 3
+              ONOMAZO_RECONCILE_RENAME_RETRY_AFTER: 30m
+              ONOMAZO_STATE_PATH: /data/state.json
+              ONOMAZO_STATE_TYPE: file
               TZ: Australia/Melbourne
             envFrom:
               - secretRef:
@@ -95,18 +103,6 @@ spec:
                   - 740322a9-73bc-4763-8732-6ccfc84d2a56
                   - fa3a32ea-babe-44ea-bfae-3cdf2ee36531
                   - 2bc8c366-8563-42e3-8594-5469b255c965
-
-            reconcile:
-              poll_interval: 1m
-              device_details_ttl: 1h
-              identity_ttl: 15m
-              rename_retry_after: 30m
-              rename_max_attempts: 3
-              concurrency: 8
-
-            state:
-              type: file
-              path: /data/state.json
 
             naming:
               constraints:
