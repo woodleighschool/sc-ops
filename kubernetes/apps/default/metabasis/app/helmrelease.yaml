@@ -23,6 +23,14 @@ spec:
               - run
               - --config=/etc/metabasis/config.yaml
             env:
+              METABASIS_DATABASE_MAX_CONNECTION_LIFETIME: 30m
+              METABASIS_DATABASE_MAX_CONNECTIONS: 10
+              METABASIS_DATABASE_MIN_CONNECTIONS: 2
+              METABASIS_LISTEN: :8080
+              METABASIS_METRICS_LISTEN: :8081
+              METABASIS_RECONCILE_POLL_INTERVAL: 1m
+              METABASIS_RECONCILE_RETRY_INITIAL: 30s
+              METABASIS_RECONCILE_RETRY_MAX: 15m
               TZ: Australia/Melbourne
             envFrom:
               - secretRef:
@@ -69,7 +77,7 @@ spec:
       config:
         data:
           config.yaml: |-
-            version: 1
+            version: 2
 
             connections:
               microsoft:
@@ -77,12 +85,6 @@ spec:
                 tenant_id: ${MICROSOFT_TENANT_ID}
                 client_id: ${MICROSOFT_CLIENT_ID}
                 client_secret: ${MICROSOFT_CLIENT_SECRET}
-
-            database:
-              url: ${DATABASE_URL}
-              min_connections: 2
-              max_connections: 10
-              max_connection_lifetime: 30m
 
             webhooks:
               freshservice:
@@ -96,41 +98,72 @@ spec:
                   - f6fe9403-6a17-4990-99aa-9a82744183ec
                 staff:
                   - a22c0025-872a-4959-a0fc-b322b5497c47
-
-            managed_groups:
-              mfa_registration: e78a3a24-50e8-41ab-b149-8e6a4b4ce83f
-              overseas_access: cac03843-c1ed-44b1-bab1-a2d4deb7bf4d
-              overseas_mfa: 857f6c15-83a0-4188-adef-4e961e5d6d3f
+                block_outside_australia:
+                  - eea0b866-eef8-41dd-8e6b-be74cca8a32a
+                allow_overseas:
+                  - cac03843-c1ed-44b1-bab1-a2d4deb7bf4d
+                enable_mfa:
+                  - e78a3a24-50e8-41ab-b149-8e6a4b4ce83f
+                force_mfa:
+                  - 857f6c15-83a0-4188-adef-4e961e5d6d3f
 
             rules:
               - name: students
                 when: '"students" in user.groups'
-                phases:
+                states:
                   pending:
-                    groups:
-                      - mfa_registration
+                    present:
+                      - block_outside_australia
+                      - enable_mfa
+                    absent:
+                      - allow_overseas
+                      - force_mfa
                   active:
-                    groups:
-                      - mfa_registration
-                      - overseas_access
-                      - overseas_mfa
+                    present:
+                      - allow_overseas
+                      - enable_mfa
+                      - force_mfa
+                    absent:
+                      - block_outside_australia
+                  settled:
+                    present:
+                      - block_outside_australia
+                    absent:
+                      - allow_overseas
+                      - enable_mfa
+                      - force_mfa
 
               - name: staff
                 when: '"staff" in user.groups'
-                phases:
+                states:
+                  pending:
+                    present:
+                      - block_outside_australia
+                    absent:
+                      - allow_overseas
                   active:
-                    groups:
-                      - overseas_access
+                    present:
+                      - allow_overseas
+                      - force_mfa
+                    absent:
+                      - block_outside_australia
+                  settled:
+                    present:
+                      - block_outside_australia
+                    absent:
+                      - allow_overseas
 
-            reconcile:
-              poll_interval: 1m
-              retry_initial: 30s
-              retry_max: 15m
     service:
       app:
         ports:
           http:
             port: *port
+          metrics:
+            port: 8081
+    serviceMonitor:
+      app:
+        endpoints:
+          - port: metrics
     route:
       app:
         annotations:

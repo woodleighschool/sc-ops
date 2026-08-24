@@ -1,0 +1,45 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/monitoring.coreos.com/prometheusrule_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: metabasis
+spec:
+  groups:
+    - name: metabasis.rules
+      rules:
+        - alert: MetabasisStateCollectionUnavailable
+          expr: |-
+            metabasis_state_collection_success == 0
+          for: 10m
+          annotations:
+            summary: >-
+              Metabasis cannot collect its persisted state
+            description: >-
+              The Metabasis metrics endpoint is available, but its PostgreSQL state query has failed for 10 minutes.
+          labels:
+            severity: warning
+
+        - alert: MetabasisReconciliationFailures
+          expr: |-
+            metabasis_reconciliation_failed_subjects > 0
+          for: 15m
+          annotations:
+            summary: >-
+              Metabasis has unresolved reconciliation failures
+            description: >-
+              {{ $value }} subject reconciliation failures have remained unresolved for 15 minutes.
+          labels:
+            severity: warning
+
+        - alert: MetabasisReconciliationStalled
+          expr: |-
+            metabasis_reconciliation_due_subjects > 0
+          for: 10m
+          annotations:
+            summary: >-
+              Metabasis is not draining due reconciliations
+            description: >-
+              {{ $value }} subjects have remained due for reconciliation for 10 minutes.
+          labels:
+            severity: critical
