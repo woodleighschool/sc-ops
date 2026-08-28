@@ -16,7 +16,7 @@ spec:
           app:
             image:
               repository: ghcr.io/woodleighschool/epson-exporter
-              tag: 0.1.5@sha256:4242273d16273fb7ade95c4de266a4a9f52684dac57ffb5f7fee72aed63dc3e7
+              tag: 0.1.6@sha256:72fcf0b81a4b90d425dcdb5b850dfca315b1a72e527297ba2e706e544deaa9bd
             env:
               TZ: Australia/Melbourne
             securityContext:
