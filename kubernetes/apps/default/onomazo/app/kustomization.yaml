@@ -7,3 +7,9 @@ resources:
   - ./helmrelease.yaml
   - ./ocirepository.yaml
   - ./pvc.yaml
+secretGenerator:
+  - name: onomazo-naming
+    files:
+      - naming.yaml=./resources/naming.sops.yaml
+generatorOptions:
+  disableNameSuffixHash: true

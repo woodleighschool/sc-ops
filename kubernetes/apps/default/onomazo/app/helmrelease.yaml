@@ -22,7 +22,7 @@ spec:
             args:
               - run
               - --config=/etc/onomazo/config.yaml
-              - --config=/etc/onomazo/overlay.yaml
+              - --config=/etc/onomazo/naming.yaml
             env:
               ONOMAZO_RECONCILE_CONCURRENCY: 8
               ONOMAZO_STATE_PATH: /data/state.json
@@ -160,12 +160,12 @@ spec:
         globalMounts:
           - path: /etc/onomazo/config.yaml
             subPath: config.yaml
-      overlay:
+      naming:
         type: secret
-        name: onomazo-overlay
+        name: onomazo-naming
         globalMounts:
-          - path: /etc/onomazo/overlay.yaml
-            subPath: overlay.yaml
+          - path: /etc/onomazo/naming.yaml
+            subPath: naming.yaml
       state:
         existingClaim: "{{ .Release.Name }}"
         globalMounts:
