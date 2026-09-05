@@ -7,7 +7,6 @@ components:
   - ../../components/alerts
 resources:
   - ./freshservice-label/ks.yaml
-  - ./grinch/ks.yaml
   - ./home-assistant/ks.yaml
   - ./leave-calendar/ks.yaml
   - ./metabasis/ks.yaml
