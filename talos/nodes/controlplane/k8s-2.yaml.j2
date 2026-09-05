@@ -1,10 +1,4 @@
 ---
-machine:
-  install:
-    diskSelector:
-      wwid: naa.5246930400bc0455 # SATADOM-SL 3IE3
-  type: controlplane
----
 apiVersion: v1alpha1
 kind: HostnameConfig
 hostname: k8s-2
@@ -26,3 +20,9 @@ name: EPHEMERAL
 provisioning:
   diskSelector:
     match: disk.wwid == 'naa.5002538c000d430d' # MZ7KM960HMJP0D3
+---
+apiVersion: v1alpha1
+kind: UnattendedInstallConfig
+provisioning:
+  diskSelector:
+    match: disk.wwid == "naa.5246930400bc0455" # SATADOM-SL 3IE3
