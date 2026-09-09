@@ -18,7 +18,7 @@ spec:
           app:
             image:
               repository: ghcr.io/woodleighschool/woodgate
-              tag: 1.5.0@sha256:431da5a92e0c8726a5f4efa2932d8da9ea98ee6b2a4611381fda108f7b4f9c1f
+              tag: 2.0.0@sha256:e86c530480cb167ca5819f6bccbdf5041a8befe0fb34c9b0390725a1fc2fe8a9
             env:
               ENTRA_SYNC_ENABLED: true
               ENTRA_SYNC_INTERVAL: 24h
