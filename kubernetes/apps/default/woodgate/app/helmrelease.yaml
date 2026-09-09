@@ -20,12 +20,14 @@ spec:
               repository: ghcr.io/woodleighschool/woodgate
               tag: 2.0.0@sha256:e86c530480cb167ca5819f6bccbdf5041a8befe0fb34c9b0390725a1fc2fe8a9
             env:
-              ENTRA_SYNC_ENABLED: true
-              ENTRA_SYNC_INTERVAL: 24h
               TZ: Australia/Melbourne
-              WOODGATE_BASE_URL: https://{{ .Release.Name }}.woodleighschool.net
-              WOODGATE_MEDIA_ROOT: /media
-              WOODGATE_PORT: &port 8080
+              WOODGATE_ENTRA_SYNC_INTERVAL: 24h
+              WOODGATE_ENTRA_TRANSITIVE_GROUPS: true
+              WOODGATE_HTTP_CLIENT_IP_SOURCE: xff_trusted_cidrs
+              WOODGATE_HTTP_CLIENT_IP_TRUSTED_CIDRS: 10.42.0.0/16
+              WOODGATE_STORAGE_KIND: file
+              WOODGATE_STORAGE_FILE_ROOT: /media
+              WOODGATE_URL: https://{{ .Release.Name }}.woodleighschool.net
             envFrom:
               - secretRef:
                   name: "{{ .Release.Name }}-secret"
@@ -36,7 +38,7 @@ spec:
                 spec:
                   httpGet:
                     path: /healthz
-                    port: *port
+                    port: &port 8080
                   initialDelaySeconds: 0
                   periodSeconds: 10
                   timeoutSeconds: 1
