@@ -13,7 +13,6 @@ machine:
     extraConfig:
       crashLoopBackOff:
         maxContainerRestartPeriod: 60s
-      imageMaximumGCAge: 168h
       maxParallelImagePulls: 3
       serializeImagePulls: false
       shutdownGracePeriod: 90s
@@ -99,7 +98,7 @@ params:
   net.core.default_qdisc: fq
   net.core.rmem_max: "67108864"
   net.core.wmem_max: "67108864"
-  net.ipv4.ip_local_port_range: 1024 65535
+  net.ipv4.ip_local_port_range: 32768 65535
   net.ipv4.neigh.default.gc_thresh1: "4096"
   net.ipv4.neigh.default.gc_thresh2: "8192"
   net.ipv4.neigh.default.gc_thresh3: "16384"

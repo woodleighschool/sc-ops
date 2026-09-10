@@ -42,7 +42,7 @@ reset-node node *args:
 [confirm('Shutdown node ' + node + ' [y|N] ?')]
 [doc('Shutdown a node')]
 shutdown-node node *args:
-    talosctl -n "{{ node }}" shutdown --force {{ args }}
+    talosctl -n "{{ node }}" shutdown {{ args }}
 
 [confirm('Upgrade Kubernetes to ' + version + ' [y|N] ?')]
 [doc('Upgrade Kubernetes version on the cluster')]
