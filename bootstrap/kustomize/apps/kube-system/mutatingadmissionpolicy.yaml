@@ -68,24 +68,14 @@ spec:
                 ? Object.spec.containers{name: c.name}
                 : Object.spec.containers{
                     name: c.name,
-                    volumeMounts:
-                      has(c.volumeMounts)
-                      ? c.volumeMounts + [
-                          Object.spec.containers.volumeMounts{
-                            name: "cm-ssl-certs",
-                            mountPath: "/etc/ssl/certs/ca-certificates.crt",
-                            subPath: "ca-bundle.crt",
-                            readOnly: true
-                          }
-                        ]
-                      : [
-                          Object.spec.containers.volumeMounts{
-                            name: "cm-ssl-certs",
-                            mountPath: "/etc/ssl/certs/ca-certificates.crt",
-                            subPath: "ca-bundle.crt",
-                            readOnly: true
-                          }
-                        ]
+                    volumeMounts: [
+                      Object.spec.containers.volumeMounts{
+                        name: "cm-ssl-certs",
+                        mountPath: "/etc/ssl/certs/ca-certificates.crt",
+                        subPath: "ca-bundle.crt",
+                        readOnly: true
+                      }
+                    ]
                   }
               )
             }
@@ -105,24 +95,14 @@ spec:
                   ? Object.spec.initContainers{name: ic.name}
                   : Object.spec.initContainers{
                       name: ic.name,
-                      volumeMounts:
-                        has(ic.volumeMounts)
-                        ? ic.volumeMounts + [
-                            Object.spec.initContainers.volumeMounts{
-                              name: "cm-ssl-certs",
-                              mountPath: "/etc/ssl/certs/ca-certificates.crt",
-                              subPath: "ca-bundle.crt",
-                              readOnly: true
-                            }
-                          ]
-                        : [
-                            Object.spec.initContainers.volumeMounts{
-                              name: "cm-ssl-certs",
-                              mountPath: "/etc/ssl/certs/ca-certificates.crt",
-                              subPath: "ca-bundle.crt",
-                              readOnly: true
-                            }
-                          ]
+                      volumeMounts: [
+                        Object.spec.initContainers.volumeMounts{
+                          name: "cm-ssl-certs",
+                          mountPath: "/etc/ssl/certs/ca-certificates.crt",
+                          subPath: "ca-bundle.crt",
+                          readOnly: true
+                        }
+                      ]
                     }
                 )
               }
