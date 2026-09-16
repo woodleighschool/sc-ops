@@ -18,7 +18,7 @@ spec:
           app:
             image:
               repository: ghcr.io/woodleighschool/woodstar
-              tag: 0.10.0@sha256:a31c5027d4346d688fbed32a0ad93733c60112444442ce76487525e8b30c5800
+              tag: 0.10.1@sha256:071fdea76d6fb4b3721e267ee54a52fdd695f2c55e9855e5ac75baea441f1929
             env:
               TZ: Australia/Melbourne
               WOODSTAR_ENTRA_TRANSITIVE_GROUPS: true
