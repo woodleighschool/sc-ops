@@ -17,7 +17,7 @@ machine:
       serializeImagePulls: false
       shutdownGracePeriod: 90s
       shutdownGracePeriodCriticalPods: 60s
-    image: ghcr.io/siderolabs/kubelet:v1.37.0
+    image: ghcr.io/siderolabs/kubelet:v1.37.1
     # KubeletConfig has no extraMounts field; OpenEBS still uses this host path.
     extraMounts:
       - destination: /var/openebs/local
