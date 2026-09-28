@@ -33,6 +33,7 @@ metadata:
   name: l3-bgp-peer-config
 spec:
   timers:
+    connectRetryTimeSeconds: 5
     holdTimeSeconds: 9
     keepAliveTimeSeconds: 3
   families:
