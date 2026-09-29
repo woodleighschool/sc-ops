@@ -20,7 +20,7 @@ ui:
     - name: Github
       link: https://github.com/woodleighschool
     - name: Homelab
-      link: https://github.com/woodleighschool/sc-ops
+      link: https://github.com/woodleighschool/wood-ops
 
 web:
   port: ${GATUS_WEB_PORT}

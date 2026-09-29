@@ -22,7 +22,7 @@ spec:
         - notification-controller
       sync:
         kind: GitRepository
-        url: https://github.com/woodleighschool/sc-ops
+        url: https://github.com/woodleighschool/wood-ops
         ref: refs/heads/main
         path: kubernetes/clusters/${CLUSTER}
         interval: 1h

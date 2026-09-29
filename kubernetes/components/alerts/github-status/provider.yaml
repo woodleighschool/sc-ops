@@ -6,6 +6,8 @@ metadata:
   name: github-status
 spec:
   type: github
-  address: https://github.com/woodleighschool/sc-ops
+  address: https://github.com/woodleighschool/wood-ops
+  # Name the commit status after the cluster so each cluster reports separately
+  commitStatusExpr: (event.involvedObject.kind + '/' + event.involvedObject.name + '/${CLUSTER}').lowerAscii()
   secretRef:
     name: github-status-token-secret

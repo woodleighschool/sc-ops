@@ -11,7 +11,7 @@ spec:
   interval: 1h
   values:
     config:
-      repo: github://woodleighschool/sc-ops
+      repo: github://woodleighschool/wood-ops
       # One instance renders one cluster tree; run another release per cluster
       clusterPath: kubernetes/clusters/${CLUSTER}
       statusChecks: true
