@@ -126,6 +126,16 @@
       minimumGroupSize: 2,
     },
     {
+      description: "Kea Group",
+      groupName: "kea",
+      matchDatasources: ["docker"],
+      matchPackageNames: ["/isc/docker/kea-dhcp4/", "/isc/docker/kea-dhcp-ddns/"],
+      group: {
+        commitMessageTopic: "{{{groupName}}} group",
+      },
+      minimumGroupSize: 2,
+    },
+    {
       description: "Rook-Ceph Group",
       groupName: "rook-ceph",
       matchDatasources: ["docker"],
@@ -151,6 +161,13 @@
       matchManagers: ["mise"],
       matchDepNames: ["1password-cli"],
       enabled: false,
+    },
+    // Version rules
+    {
+      description: "ISC: odd minor versions of BIND and Kea are development releases",
+      matchDatasources: ["docker"],
+      matchPackageNames: ["/internetsystemsconsortium/bind9/", "/isc/docker/kea-/"],
+      allowedVersions: "/^\\d+\\.\\d*[02468](\\.\\d+)?$/",
     },
     // Scheduling rules
     {

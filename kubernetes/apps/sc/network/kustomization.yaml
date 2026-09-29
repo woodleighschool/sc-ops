@@ -5,10 +5,14 @@ kind: Kustomization
 namespace: network
 components:
   - ../../../components/alerts
+  - ../../../components/kopiur/secret
 resources:
+  - ./bind.yaml
+  - ./bind-dns.yaml
   - ./certificates.yaml
   - ./cloudflare-dns.yaml
   - ./cloudflare-tunnel.yaml
   - ./envoy-gateway.yaml
+  - ./kea.yaml
   - ./namespace.yaml
   - ./windows-dns.yaml

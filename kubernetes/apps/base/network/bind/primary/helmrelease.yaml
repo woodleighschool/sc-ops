@@ -1,0 +1,177 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: bind-primary
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: bind-primary
+  interval: 1h
+  values:
+    controllers:
+      bind-primary:
+        # One writer for the zone files and journals on the volume.
+        strategy: Recreate
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: mirror.gcr.io/internetsystemsconsortium/bind9
+              tag: 9.20@sha256:f8506cfcbc8fcb44e40b922fa74b481ba23b50f00482bf6693ff8f120709a778
+            command: ["/bin/sh", "-c"]
+            args:
+              - |
+                set -eu
+                # rndc key for the local control channel, new with every start
+                rndc-confgen -a -A hmac-sha256 -k rndc-key -c /run/named/rndc.key
+                # A zone is seeded only when the volume has no file for it
+                for seed in /etc/bind/db.*; do
+                    zone="/var/lib/bind/$(basename "$seed")"
+                    [ -e "$zone" ] || cp "$seed" "$zone"
+                done
+                named-checkconf -z -j /etc/bind/named.conf
+                exec named -f -c /etc/bind/named.conf -n 2
+            probes:
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  exec:
+                    command: &rndc ["rndc", "-k", "/run/named/rndc.key", "status"]
+                  periodSeconds: 30
+                  timeoutSeconds: 5
+                  failureThreshold: 3
+              # Ready once named answers queries. Readiness also decides whether
+              # BGP advertises the address.
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  exec:
+                    command:
+                      [
+                        "dig",
+                        "+time=2",
+                        "+tries=1",
+                        "+norecurse",
+                        "@127.0.0.1",
+                        "woodleighschool.net",
+                        "SOA",
+                      ]
+                  periodSeconds: 10
+                  timeoutSeconds: 5
+                  failureThreshold: 3
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  exec:
+                    command: *rndc
+                  periodSeconds: 5
+                  failureThreshold: 60
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 10m
+                memory: 64Mi
+              limits:
+                memory: 256Mi
+          exporter:
+            image:
+              repository: quay.io/prometheuscommunity/bind-exporter
+              tag: v0.8.0@sha256:f3d3d3c85e95e752a2af50c46cebeaeee22d94493d7d7c898e2ab9d232b366d7
+            args:
+              - --bind.stats-url=http://127.0.0.1:8053/
+              - --bind.pid-file=
+              - --web.listen-address=:9119
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 5m
+              limits:
+                memory: 64Mi
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 53
+        runAsGroup: 53
+        fsGroup: 53
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile: { type: RuntimeDefault }
+        # named binds port 53 without any capability
+        sysctls:
+          - name: net.ipv4.ip_unprivileged_port_start
+            value: "53"
+    service:
+      app:
+        primary: true
+        type: LoadBalancer
+        # Keeps the updater's address as the source, and BGP advertises the
+        # address only from the node running the pod.
+        externalTrafficPolicy: Local
+        allocateLoadBalancerNodePorts: false
+        annotations:
+          # Kea, external-dns and the resolvers of every cluster use this address
+          lbipam.cilium.io/ips: 10.10.69.54
+        ports:
+          dns-tcp:
+            port: 53
+            protocol: TCP
+          dns-udp:
+            port: 53
+            protocol: UDP
+      metrics:
+        ports:
+          metrics:
+            port: 9119
+    serviceMonitor:
+      app:
+        service:
+          identifier: metrics
+        endpoints:
+          - port: metrics
+    persistence:
+      config:
+        type: configMap
+        name: bind-primary
+        advancedMounts:
+          bind-primary:
+            app:
+              - path: /etc/bind
+                readOnly: true
+      keys:
+        type: secret
+        name: bind-primary-keys
+        defaultMode: 0440
+        advancedMounts:
+          bind-primary:
+            app:
+              - path: /etc/bind-keys
+                readOnly: true
+      zones:
+        existingClaim: "{{ .Release.Name }}"
+        advancedMounts:
+          bind-primary:
+            app:
+              - path: /var/lib/bind
+      run:
+        type: emptyDir
+        advancedMounts:
+          bind-primary:
+            app:
+              - path: /run/named
+      cache:
+        type: emptyDir
+        advancedMounts:
+          bind-primary:
+            app:
+              - path: /var/cache/bind

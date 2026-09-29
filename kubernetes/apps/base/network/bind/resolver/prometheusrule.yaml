@@ -1,0 +1,38 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/monitoring.coreos.com/prometheusrule_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: bind
+spec:
+  groups:
+    - name: bind.rules
+      rules:
+        - alert: BindResolversDown
+          expr: absent(bind_up{job="bind"} == 1)
+          for: 5m
+          annotations:
+            summary: No DNS resolver is running.
+          labels:
+            severity: critical
+        - alert: BindZoneTransferFailing
+          expr: increase(bind_zone_transfer_failure_total{job="bind"}[30m]) > 0
+          for: 30m
+          annotations:
+            summary: >-
+              {{ $labels.pod }} cannot transfer zones from the primary. It keeps
+              answering from its copy until the zones expire (14 days).
+          labels:
+            severity: warning
+        # Serials are Unix times, so the difference is how far behind a resolver is.
+        - alert: BindZoneBehindPrimary
+          expr: |-
+            max by (zone_name) (bind_zone_serial{job="bind-primary"})
+              - on (zone_name) group_right
+            min by (zone_name, pod) (bind_zone_serial{job="bind"})
+              > 900
+          for: 15m
+          annotations:
+            summary: "{{ $labels.pod }} is more than 15 minutes behind the primary for {{ $labels.zone_name }}."
+          labels:
+            severity: warning

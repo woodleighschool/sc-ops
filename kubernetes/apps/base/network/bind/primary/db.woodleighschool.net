@@ -1,0 +1,12 @@
+; Seed for woodleighschool.net, copied to the primary's volume only when the zone
+; file is missing there. Changing this file does not change a running zone.
+$TTL 3600
+@               IN  SOA dns-primary.woodleighschool.net. hostmaster.woodleighschool.net. (
+                        1           ; serial: Unix time from the first update on
+                        60          ; refresh: how often resolvers that missed a NOTIFY check
+                        60          ; retry
+                        1209600     ; expire: resolvers answer for 14 days without the primary
+                        300 )       ; negative answers are cached for 5 minutes
+                IN  NS  dns-sc.woodleighschool.net.
+dns-primary     IN  A   10.10.69.54
+dns-sc          IN  A   10.10.69.53

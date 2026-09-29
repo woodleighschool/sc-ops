@@ -1,0 +1,187 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: bind
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: bind
+  interval: 1h
+  values:
+    controllers:
+      bind:
+        type: statefulset
+        replicas: 2
+        annotations:
+          reloader.stakater.com/auto: "true"
+        statefulset:
+          podManagementPolicy: Parallel
+          # Each resolver keeps its own copy of the zones, so it answers for
+          # them after a restart even when the primary is unreachable.
+          volumeClaimTemplates:
+            - name: zones
+              accessMode: ReadWriteOnce
+              size: 1Gi
+              storageClass: ${STORAGECLASS}
+              advancedMounts:
+                app:
+                  - path: /var/lib/bind
+        containers:
+          app:
+            image:
+              repository: mirror.gcr.io/internetsystemsconsortium/bind9
+              tag: 9.20@sha256:f8506cfcbc8fcb44e40b922fa74b481ba23b50f00482bf6693ff8f120709a778
+            command: ["/bin/sh", "-c"]
+            args:
+              - |
+                set -eu
+                # rndc key for the local control channel, new with every start
+                rndc-confgen -a -A hmac-sha256 -k rndc-key -c /run/named/rndc.key
+                named-checkconf /etc/bind/named.conf
+                exec named -f -c /etc/bind/named.conf -n 4
+            probes:
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  exec:
+                    command: &rndc ["rndc", "-k", "/run/named/rndc.key", "status"]
+                  periodSeconds: 30
+                  timeoutSeconds: 5
+                  failureThreshold: 3
+              # Ready once named answers, with or without the internal zones: a
+              # resolver that cannot reach the primary still resolves the
+              # internet. Readiness also decides whether BGP advertises the
+              # address from this pod's node.
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  exec:
+                    command:
+                      [
+                        "dig",
+                        "+time=2",
+                        "+tries=1",
+                        "+norecurse",
+                        "@127.0.0.1",
+                        "woodleighschool.net",
+                        "SOA",
+                      ]
+                  periodSeconds: 10
+                  timeoutSeconds: 5
+                  failureThreshold: 3
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  exec:
+                    command: *rndc
+                  periodSeconds: 5
+                  failureThreshold: 60
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 20m
+                memory: 128Mi
+              limits:
+                # max-cache-size is 256m
+                memory: 512Mi
+          exporter:
+            image:
+              repository: quay.io/prometheuscommunity/bind-exporter
+              tag: v0.8.0@sha256:f3d3d3c85e95e752a2af50c46cebeaeee22d94493d7d7c898e2ab9d232b366d7
+            args:
+              - --bind.stats-url=http://127.0.0.1:8053/
+              - --bind.pid-file=
+              - --web.listen-address=:9119
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 5m
+              limits:
+                memory: 64Mi
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 53
+        runAsGroup: 53
+        fsGroup: 53
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile: { type: RuntimeDefault }
+        # named binds port 53 without any capability
+        sysctls:
+          - name: net.ipv4.ip_unprivileged_port_start
+            value: "53"
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: bind
+    service:
+      app:
+        primary: true
+        type: LoadBalancer
+        # Keeps clients' addresses for BIND's ACLs, and BGP advertises the
+        # address from every node running a resolver.
+        externalTrafficPolicy: Local
+        allocateLoadBalancerNodePorts: false
+        annotations:
+          lbipam.cilium.io/ips: ${DNS_ADDRESS}
+        ports:
+          dns-tcp:
+            port: 53
+            protocol: TCP
+          dns-udp:
+            port: 53
+            protocol: UDP
+      metrics:
+        ports:
+          metrics:
+            port: 9119
+    serviceMonitor:
+      app:
+        service:
+          identifier: metrics
+        endpoints:
+          - port: metrics
+    persistence:
+      config:
+        type: configMap
+        name: bind
+        advancedMounts:
+          bind:
+            app:
+              - path: /etc/bind
+                readOnly: true
+      keys:
+        type: secret
+        name: bind-keys
+        defaultMode: 0440
+        advancedMounts:
+          bind:
+            app:
+              - path: /etc/bind-keys
+                readOnly: true
+      run:
+        type: emptyDir
+        advancedMounts:
+          bind:
+            app:
+              - path: /run/named
+      cache:
+        type: emptyDir
+        advancedMounts:
+          bind:
+            app:
+              - path: /var/cache/bind

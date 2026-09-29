@@ -1,0 +1,20 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+# A cluster adds the kea-scopes ConfigMap, its dhcp4-scopes.conf, with a
+# component on its Flux Kustomization.
+resources:
+  - ./externalsecret.yaml
+  - ./helmrelease.yaml
+  - ./ocirepository.yaml
+  - ./prometheusrule.yaml
+configMapGenerator:
+  - name: kea
+    files:
+      - ./resources/kea-dhcp4.conf
+      - ./resources/kea-dhcp-ddns.conf
+      - ./resources/probe.sh
+      - ./resources/start.sh
+generatorOptions:
+  disableNameSuffixHash: true

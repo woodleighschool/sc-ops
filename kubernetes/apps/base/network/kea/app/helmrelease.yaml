@@ -1,0 +1,240 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kea
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: kea
+  interval: 1h
+  values:
+    controllers:
+      kea:
+        # One server per cluster: nothing locks the lease file, and a second pod
+        # behind the same address would hand out the same addresses.
+        strategy: Recreate
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: docker.cloudsmith.io/isc/docker/kea-dhcp4
+              tag: 3.2.0@sha256:9c67ace6719e846cab3dcbac594530f6b45f3c6aa74be1ca41702bca2cfa3176
+            command:
+              [
+                "/bin/sh",
+                "/etc/kea/start.sh",
+                "dhcp4",
+                "/usr/sbin/kea-dhcp4",
+                "-c",
+                "/etc/kea/kea-dhcp4.conf",
+              ]
+            env: &env
+              KEA_CONTROL_SOCKET_DIR: /run/kea-k8s/sockets
+              KEA_PIDFILE_DIR: /run/kea-k8s/sockets
+              KEA_LOCKFILE_DIR: none
+            probes:
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  exec:
+                    command: &probe4 ["/bin/sh", "/etc/kea/probe.sh", "dhcp4", "8004"]
+                  periodSeconds: 30
+                  timeoutSeconds: 10
+                  failureThreshold: 4
+              # Readiness also decides whether BGP advertises the address.
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  exec:
+                    command: *probe4
+                  periodSeconds: 10
+                  timeoutSeconds: 10
+                  failureThreshold: 3
+              # Loading a large lease file takes a while.
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  exec:
+                    command: *probe4
+                  periodSeconds: 5
+                  failureThreshold: 60
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              # The image gives kea-dhcp4 file capabilities (net_bind_service,
+              # net_raw), and the kernel refuses to run it unless both are in the
+              # bounding set. Running as kea without privilege escalation, it
+              # holds neither; the pod sysctl lets it bind port 67.
+              capabilities:
+                drop:
+                  [
+                    AUDIT_WRITE,
+                    CHOWN,
+                    DAC_OVERRIDE,
+                    FOWNER,
+                    FSETID,
+                    KILL,
+                    MKNOD,
+                    SETFCAP,
+                    SETGID,
+                    SETPCAP,
+                    SETUID,
+                    SYS_CHROOT,
+                  ]
+            resources:
+              requests:
+                cpu: 10m
+                memory: 64Mi
+              limits:
+                memory: 512Mi
+          ddns:
+            image:
+              repository: docker.cloudsmith.io/isc/docker/kea-dhcp-ddns
+              tag: 3.2.0@sha256:91a0005c307348c6075c38e478c43fda0c9127f736d9626e42b84d3c1907769c
+            command:
+              [
+                "/bin/sh",
+                "/etc/kea/start.sh",
+                "ddns",
+                "/usr/sbin/kea-dhcp-ddns",
+                "-c",
+                "/etc/kea/kea-dhcp-ddns.conf",
+              ]
+            env: *env
+            probes:
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  exec:
+                    command: &probed ["/bin/sh", "/etc/kea/probe.sh", "ddns", "8053"]
+                  periodSeconds: 30
+                  timeoutSeconds: 10
+                  failureThreshold: 4
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  exec:
+                    command: *probed
+                  periodSeconds: 10
+                  timeoutSeconds: 10
+                  failureThreshold: 3
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              # kea-dhcp-ddns carries a net_bind_service file capability; see app.
+              capabilities: { drop: ["ALL"], add: ["NET_BIND_SERVICE"] }
+            resources:
+              requests:
+                cpu: 5m
+                memory: 32Mi
+              limits:
+                memory: 128Mi
+          exporter:
+            image:
+              repository: ghcr.io/mweinelt/kea-exporter
+              tag: v0.7.1@sha256:d7b77020e924e45626fd447a174b9885b3c3cd4cc398dba749fd8596d30e6956
+            env:
+              ADDRESS: 0.0.0.0
+              PORT: &metrics 9547
+              TARGETS: /run/kea-k8s/sockets/kea4-ctrl.sock
+            securityContext:
+              # The image's user; the pod's fsGroup lets it use Kea's socket.
+              runAsUser: 1000
+              runAsGroup: 1000
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 5m
+              limits:
+                memory: 128Mi
+        pod:
+          # Otherwise the pod waits five minutes to move off a failed node.
+          tolerations:
+            - key: node.kubernetes.io/not-ready
+              operator: Exists
+              effect: NoExecute
+              tolerationSeconds: 30
+            - key: node.kubernetes.io/unreachable
+              operator: Exists
+              effect: NoExecute
+              tolerationSeconds: 30
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 100
+        runAsGroup: 101
+        fsGroup: 101
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile: { type: RuntimeDefault }
+        sysctls:
+          - name: net.ipv4.ip_unprivileged_port_start
+            value: "67"
+    service:
+      app:
+        primary: true
+        type: LoadBalancer
+        # Kea answers the relay (giaddr), not the packet's source. Only with
+        # Local does the reply meet the connection-tracking entry the request
+        # created, and leave from this address.
+        externalTrafficPolicy: Local
+        allocateLoadBalancerNodePorts: false
+        annotations:
+          lbipam.cilium.io/ips: ${KEA_ADDRESS}
+        ports:
+          dhcp:
+            port: 67
+            protocol: UDP
+      metrics:
+        ports:
+          metrics:
+            port: *metrics
+    serviceMonitor:
+      app:
+        service:
+          identifier: metrics
+        endpoints:
+          - port: metrics
+    persistence:
+      config:
+        type: configMap
+        name: kea
+        globalMounts:
+          - path: /etc/kea
+            readOnly: true
+      scopes:
+        type: configMap
+        name: kea-scopes
+        advancedMounts:
+          kea:
+            app:
+              - path: /etc/kea-scopes
+                readOnly: true
+      tsig:
+        type: secret
+        name: kea-secret
+        defaultMode: 0440
+        advancedMounts:
+          kea:
+            ddns:
+              - path: /etc/kea-tsig
+                readOnly: true
+      leases:
+        existingClaim: "{{ .Release.Name }}"
+        advancedMounts:
+          kea:
+            app:
+              - path: /var/lib/kea
+      run:
+        type: emptyDir
+        globalMounts:
+          - path: /run/kea-k8s

@@ -4,6 +4,9 @@ apiVersion: externaldns.k8s.io/v1alpha1
 kind: DNSEndpoint
 metadata:
   name: cloudflare-tunnel
+  labels:
+    # Public only: internal clients reach external.woodleigh.vic.edu.au on the gateway's own address
+    dns.woodleighschool.net/scope: public
 spec:
   endpoints:
     - dnsName: external.woodleigh.vic.edu.au

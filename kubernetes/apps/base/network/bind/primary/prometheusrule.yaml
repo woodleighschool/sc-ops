@@ -1,0 +1,19 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/monitoring.coreos.com/prometheusrule_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: bind-primary
+spec:
+  groups:
+    - name: bind-primary.rules
+      rules:
+        - alert: BindPrimaryDown
+          expr: absent(bind_up{job="bind-primary"} == 1)
+          for: 5m
+          annotations:
+            summary: >-
+              The BIND primary is down. DHCP and Kubernetes name updates fail; the
+              resolvers keep answering from their copies of the zones.
+          labels:
+            severity: critical

@@ -1,0 +1,7 @@
+; Seed for 10.in-addr.arpa. See db.woodleighschool.net.
+$TTL 3600
+@               IN  SOA dns-primary.woodleighschool.net. hostmaster.woodleighschool.net. (
+                        1 60 60 1209600 300 )
+                IN  NS  dns-sc.woodleighschool.net.
+53.69.10        IN  PTR dns-sc.woodleighschool.net.
+54.69.10        IN  PTR dns-primary.woodleighschool.net.

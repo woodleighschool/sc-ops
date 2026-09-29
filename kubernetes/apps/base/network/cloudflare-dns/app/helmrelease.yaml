@@ -30,6 +30,8 @@ spec:
       - --crd-source-apiversion=externaldns.k8s.io/v1alpha1
       - --crd-source-kind=DNSEndpoint
       - --gateway-name=envoy-external
+      # DNSEndpoints labelled internal are for BIND only
+      - --label-filter=dns.woodleighschool.net/scope!=internal
       - --zone-id-filter=$(CF_ZONE_ID)
     triggerLoopOnEvent: true
     policy: sync

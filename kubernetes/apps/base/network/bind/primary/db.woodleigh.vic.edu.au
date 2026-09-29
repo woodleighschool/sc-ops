@@ -1,0 +1,5 @@
+; Seed for the internal view of woodleigh.vic.edu.au. See db.woodleighschool.net.
+$TTL 3600
+@               IN  SOA dns-primary.woodleighschool.net. hostmaster.woodleighschool.net. (
+                        1 60 60 1209600 300 )
+                IN  NS  dns-sc.woodleighschool.net.

@@ -1,0 +1,29 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/monitoring.coreos.com/prometheusrule_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: kea
+spec:
+  groups:
+    - name: kea.rules
+      rules:
+        - alert: KeaDown
+          expr: absent(up{job="kea"} == 1)
+          for: 5m
+          annotations:
+            summary: >-
+              Kea is down. New clients get no address; clients with a lease keep it
+              until they fail to renew.
+          labels:
+            severity: critical
+        - alert: KeaSubnetNearlyFull
+          expr: |-
+            kea_dhcp4_addresses_assigned_total{pool=""}
+              / kea_dhcp4_addresses_total{pool=""}
+              > 0.9
+          for: 15m
+          annotations:
+            summary: "More than 90% of {{ $labels.subnet }}'s addresses are leased."
+          labels:
+            severity: warning
