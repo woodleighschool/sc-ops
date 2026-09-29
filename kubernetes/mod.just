@@ -29,7 +29,7 @@ prune-pods cluster:
         kubectl --context "{{ cluster }}" delete pods -A --field-selector status.phase="$phase" --ignore-not-found=true
     done
 
-[doc('Restore a PVC from VolSync')]
+[doc('Restore a PVC from Kopiur')]
 restore cluster ns app previous='0':
     ctx=(--context "{{ cluster }}" -n "{{ ns }}")
     flux "${ctx[@]}" suspend kustomization {{ app }}
@@ -37,33 +37,18 @@ restore cluster ns app previous='0':
     kubectl "${ctx[@]}" get deploy,sts -l app.kubernetes.io/name={{ app }} -o name \
         | xargs -r -I{} kubectl "${ctx[@]}" scale {} --replicas=0
     kubectl "${ctx[@]}" wait pod --for=delete --selector="app.kubernetes.io/name={{ app }}" --timeout=5m
-    kubectl "${ctx[@]}" get replicationdestination {{ app }}-dst -o json \
-        | jq 'del(.status)
-            | .metadata = {name: "{{ app }}-manual", namespace: .metadata.namespace}
-            | .spec.kopia.copyMethod = "Direct"
-            | .spec.kopia.destinationPVC = "{{ app }}"
-            | .spec.kopia.previous = {{ previous }}' \
-        | kubectl --context "{{ cluster }}" apply --server-side -f -
-    kubectl "${ctx[@]}" wait job/volsync-dst-{{ app }}-manual --for=create --timeout=120s
-    kubectl "${ctx[@]}" wait job/volsync-dst-{{ app }}-manual --for=condition=complete --timeout=120m
-    kubectl "${ctx[@]}" delete replicationdestination {{ app }}-manual
+    kopiur restore --from-policy {{ app }} --offset {{ previous }} --to-pvc {{ app }} \
+        --enable-file-deletion --on-missing-snapshot fail --wait --timeout 2h "${ctx[@]}"
     flux "${ctx[@]}" resume kustomization {{ app }}
     flux "${ctx[@]}" resume helmrelease {{ app }}
     flux "${ctx[@]}" reconcile helmrelease {{ app }} --force
     kubectl "${ctx[@]}" wait pod --for=condition=ready --selector="app.kubernetes.io/name={{ app }}" --timeout=5m
 
-[doc('Snapshot VolSync PVCs')]
+[doc('Snapshot every Kopiur policy now')]
 snapshot cluster:
-    kubectl --context "{{ cluster }}" get replicationsources --no-headers -A | while read -r ns name _; do
-        kubectl --context "{{ cluster }}" -n "$ns" patch replicationsources "$name" --type merge -p '{"spec":{"trigger":{"manual":"$(date +%s)"}}}'
+    kubectl --context "{{ cluster }}" get snapshotpolicies --no-headers -A | while read -r ns name _; do
+        kopiur snapshot now --policy "$name" --context "{{ cluster }}" -n "$ns"
     done
-
-[arg('state', pattern='suspend|resume')]
-[doc('Suspend or resume VolSync')]
-volsync cluster state:
-    flux --context "{{ cluster }}" -n volsync-system {{ state }} kustomization volsync
-    flux --context "{{ cluster }}" -n volsync-system {{ state }} helmrelease volsync
-    kubectl --context "{{ cluster }}" -n volsync-system scale deployment volsync --replicas {{ if state != "suspend" { "1" } else { "0" } }}
 
 [arg('resource', pattern='hr|ks|gitrepo|ocirepo|es')]
 [doc('Sync a resource')]

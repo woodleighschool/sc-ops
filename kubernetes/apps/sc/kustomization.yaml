@@ -19,5 +19,4 @@ resources:
   - ./openebs-system
   - ./rook-ceph
   - ./system-upgrade
-  - ./volsync-system
   - ./woodleigh-tools

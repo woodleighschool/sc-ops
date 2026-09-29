@@ -37,12 +37,11 @@
     "kube-system": "kubernetes",
     "network": "connection",
     "monitoring": "event",
-    "kopiur-system": "aws",
     "o11y": "event",
     "openebs-system": "base",
     "rook-ceph": "dump",
-    "system-upgrade": "update",
-    "volsync-system": "aws"
+    "kopiur-system": "aws",
+    "system-upgrade": "update"
   },
   "sops.defaults.ageKeyFile": "age.key",
   "vs-kubernetes": {
