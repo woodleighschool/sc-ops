@@ -1,0 +1,17 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+resources:
+  # BGP to the Aruba CX core and the LoadBalancer address pool
+  - ./networking.yaml
+patches:
+  - # Nodes uplink through an active-backup bond
+    patch: |-
+      apiVersion: helm.toolkit.fluxcd.io/v2
+      kind: HelmRelease
+      metadata:
+        name: cilium
+      spec:
+        values:
+          devices: bond+

@@ -1,28 +1,12 @@
 ---
+# Shared control-plane role. Each cluster's <cluster>/controlplane.yaml.j2 adds
+# its CA keys, etcd subnet and API server SANs.
 machine:
   type: controlplane
-  # ca merges as a unit; crt must be repeated alongside key
-  ca:
-    crt: op://Kubernetes/talos/MACHINE_CA_CRT
-    key: op://Kubernetes/talos/MACHINE_CA_KEY
 cluster:
-  # ca merges as a unit; crt must be repeated alongside key
-  ca:
-    crt: op://Kubernetes/talos/CLUSTER_CA_CRT
-    key: op://Kubernetes/talos/CLUSTER_CA_KEY
-  aggregatorCA:
-    crt: op://Kubernetes/talos/CLUSTER_AGGREGATORCA_CRT
-    key: op://Kubernetes/talos/CLUSTER_AGGREGATORCA_KEY
   etcd:
-    advertisedSubnets:
-      - 10.10.69.0/24
-    ca:
-      crt: op://Kubernetes/talos/CLUSTER_ETCD_CA_CRT
-      key: op://Kubernetes/talos/CLUSTER_ETCD_CA_KEY
     extraArgs:
       listen-metrics-urls: http://0.0.0.0:2381
-  serviceAccount:
-    key: op://Kubernetes/talos/CLUSTER_SERVICEACCOUNT_KEY
 ---
 apiVersion: v1alpha1
 kind: KubeNodeConfig
@@ -33,8 +17,6 @@ apiVersion: v1alpha1
 kind: KubeAPIServerConfig
 certExtraSANs:
   - 127.0.0.1
-  - 10.10.69.100
-  - k8s.woodleighschool.net
 extraArgs:
   enable-aggregator-routing: "true"
   feature-gates: HPAScaleToZero=true
@@ -79,19 +61,6 @@ image: registry.k8s.io/kube-controller-manager:v1.37.1
 apiVersion: v1alpha1
 kind: KubeCoreDNSConfig
 enabled: false
----
-apiVersion: v1alpha1
-kind: KubeEtcdEncryptionConfig
-config:
-  resources:
-    - providers:
-        - secretbox:
-            keys:
-              - name: key2
-                secret: op://Kubernetes/talos/CLUSTER_SECRETBOXENCRYPTIONSECRET
-        - identity: {}
-      resources:
-        - secrets
 ---
 apiVersion: v1alpha1
 kind: KubeProxyConfig

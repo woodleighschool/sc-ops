@@ -26,8 +26,8 @@
     ".private": "archive",
     ".renovate": "robot",
     "bootstrap": "seeders",
-    "bootstrap/helmfile.d": "helm",
-    "flux": "pipe",
+    "bootstrap/helmfile": "helm",
+    "clusters": "cluster",
     "talos": "linux",
     // namespaces
     "cert-manager": "guard",

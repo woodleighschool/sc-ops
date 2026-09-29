@@ -1,0 +1,22 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+# What SC runs. Each namespace directory lists the Flux Kustomizations that
+# select app definitions from ../base and add SC's own configuration.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ./cert-manager
+  - ./databases
+  - ./default
+  - ./external-secrets
+  - ./flux-system
+  - ./garage-system
+  - ./kube-system
+  - ./monitoring
+  - ./network
+  - ./o11y
+  - ./openebs-system
+  - ./rook-ceph
+  - ./system-upgrade
+  - ./volsync-system
+  - ./woodleigh-tools

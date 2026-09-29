@@ -1,8 +1,13 @@
 ---
 # yaml-language-server: $schema=https://json.schemastore.org/helmfile
+# Chart, version and values come from the cluster's own Flux tree, rendered by
+# `just bootstrap render <cluster>` into BOOTSTRAP_RENDER_DIR, so bootstrap
+# installs exactly what Flux will reconcile. A release the cluster does not
+# select is skipped.
 templates:
   default:
     chart: '{{ (fromYaml (tpl (readFile "./templates/release.yaml.gotmpl") .)).chart }}'
     version: '{{ (fromYaml (tpl (readFile "./templates/release.yaml.gotmpl") .)).version }}'
+    installedTemplate: '{{ isFile (printf "%s/%s/%s/release.yaml" (requiredEnv "BOOTSTRAP_RENDER_DIR") .Release.Namespace .Release.Name) }}'
     values:
       - ./templates/values.yaml.gotmpl

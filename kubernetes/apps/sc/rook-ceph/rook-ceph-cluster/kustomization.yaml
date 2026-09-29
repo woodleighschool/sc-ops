@@ -1,0 +1,18 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+patches:
+  - # OSDs: the Samsung SM863a SSD in every node
+    patch: |-
+      apiVersion: helm.toolkit.fluxcd.io/v2
+      kind: HelmRelease
+      metadata:
+        name: rook-ceph-cluster
+      spec:
+        values:
+          cephClusterSpec:
+            storage:
+              devicePathFilter: /dev/disk/by-id/ata-MZ7KM960HMJP0D3_.*
+              useAllDevices: false
+              useAllNodes: true

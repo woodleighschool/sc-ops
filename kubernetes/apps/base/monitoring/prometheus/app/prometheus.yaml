@@ -1,0 +1,61 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/monitoring.coreos.com/prometheus_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: Prometheus
+metadata:
+  name: prometheus
+spec:
+  alerting:
+    alertmanagers:
+      - apiVersion: v2
+        name: alertmanager-operated
+        namespace: o11y
+        port: http-web
+  externalLabels:
+    cluster: sc-ops
+    prometheus: monitoring/prometheus
+  podMonitorSelector:
+    matchLabels:
+      monitoring.woodleighschool.net/scrape: "true"
+  probeSelector:
+    matchLabels:
+      monitoring.woodleighschool.net/scrape: "true"
+  replicas: 1
+  retentionSize: 8GB
+  ruleNamespaceSelector:
+    matchLabels:
+      monitoring.woodleighschool.net/enabled: "true"
+  ruleSelector:
+    matchLabels:
+      monitoring.woodleighschool.net/rule: "true"
+  scrapeConfigNamespaceSelector:
+    matchLabels:
+      monitoring.woodleighschool.net/enabled: "true"
+  scrapeConfigSelector:
+    matchLabels:
+      monitoring.woodleighschool.net/scrape: "true"
+  scrapeInterval: 30s
+  securityContext:
+    fsGroup: 2000
+    runAsGroup: 2000
+    runAsNonRoot: true
+    runAsUser: 1000
+    seccompProfile:
+      type: RuntimeDefault
+  serviceAccountName: prometheus
+  serviceMonitorSelector:
+    matchLabels:
+      monitoring.woodleighschool.net/scrape: "true"
+  storage:
+    volumeClaimTemplate:
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 10Gi
+        storageClassName: ${STORAGECLASS}
+  thanos:
+    objectStorageConfig:
+      key: objstore.yml
+      name: prometheus-object-storage-secret

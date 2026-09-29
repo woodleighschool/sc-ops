@@ -1,0 +1,17 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: o11y
+components:
+  - ../../../components/alerts
+resources:
+  - ./blackbox-exporter.yaml
+  - ./gatus-sidecar.yaml
+  - ./grafana-operator.yaml
+  - ./kube-prometheus-stack.yaml
+  - ./namespace.yaml
+  - ./prometheus-adapter.yaml
+  - ./silence-operator.yaml
+  - ./smartctl-exporter.yaml
+  - ./victoria-logs.yaml

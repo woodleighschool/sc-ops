@@ -1,5 +1,5 @@
 [env]
-FLATE_PATH = '{{config_root}}/kubernetes/flux/cluster'
+FLATE_PATH = '{{config_root}}/kubernetes/clusters/sc'
 KUBECONFIG = "{{config_root}}/kubeconfig"
 OP_ACCOUNT = "woodleigh-school.1password.com"
 MINIJINJA_CONFIG_FILE = "{{config_root}}/.minijinja.toml"

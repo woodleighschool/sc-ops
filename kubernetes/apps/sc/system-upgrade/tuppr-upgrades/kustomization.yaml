@@ -1,0 +1,11 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+# Versions come from base and are shared by every cluster; what must be healthy
+# before a node is upgraded depends on what this cluster runs.
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+patches:
+  - path: ./healthchecks.yaml
+    target:
+      group: tuppr.home-operations.com
+      kind: (TalosUpgrade|KubernetesUpgrade)

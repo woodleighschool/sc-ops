@@ -1,0 +1,117 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/helmfile
+
+# Bootstraps core applications that provide a minimal runtime base for the
+# cluster. These releases are installed first so the cluster has the resources
+# Flux needs before its own reconciliation begins.
+#
+# After this bootstrap phase, Flux is ready to take over management of the
+# application stack and continue reconciling downstream state.
+#
+# CLUSTER selects the kube context; BOOTSTRAP_RENDER_DIR holds that cluster's
+# rendered Flux tree (see default.yaml).
+
+helmDefaults:
+  cleanupOnFail: true
+  forceConflicts: true
+  kubeContext: {{ requiredEnv "CLUSTER" }}
+  wait: true
+  waitForJobs: true
+
+bases:
+  - default.yaml
+
+defaultInherit: default
+
+releases:
+  - name: cilium
+    namespace: kube-system
+    hooks:
+      - # Wait for CRDs to be available
+        command: kubectl
+        args:
+          - --context={{ requiredEnv "CLUSTER" }}
+          - wait
+          - --for=create
+          - crd/ciliumbgpadvertisements.cilium.io
+          - crd/ciliumbgpclusterconfigs.cilium.io
+          - crd/ciliumbgppeerconfigs.cilium.io
+          - crd/ciliumloadbalancerippools.cilium.io
+          - --timeout=2m
+        events:
+          - postsync
+        showlogs: true
+      - # Apply the cluster's LoadBalancer pool, BGP peering and API service
+        command: bash
+        args:
+          - -euo
+          - pipefail
+          - -c
+          - >-
+            yq 'select((.apiVersion | test("^cilium\\.io/")) or .kind == "Service")'
+            "{{ requiredEnv "BOOTSTRAP_RENDER_DIR" }}/kube-system/cilium/manifests.yaml"
+            | kubectl --context={{ requiredEnv "CLUSTER" }} apply --namespace=kube-system --server-side --force-conflicts --filename=-
+        events:
+          - postsync
+        showlogs: true
+
+  - name: coredns
+    namespace: kube-system
+    needs:
+      - kube-system/cilium
+
+  - # Optional: not every cluster runs spegel, so nothing needs it
+    name: spegel
+    namespace: kube-system
+    needs:
+      - kube-system/coredns
+
+  - name: cert-manager
+    namespace: cert-manager
+    needs:
+      - kube-system/coredns
+
+  - name: external-secrets
+    namespace: external-secrets
+    needs:
+      - cert-manager/cert-manager
+
+  - name: onepassword-connect
+    namespace: external-secrets
+    hooks:
+      - # Wait for CRDs to be available
+        command: kubectl
+        args:
+          - --context={{ requiredEnv "CLUSTER" }}
+          - wait
+          - --for=create
+          - crd/clustersecretstores.external-secrets.io
+          - --timeout=2m
+        events:
+          - postsync
+        showlogs: true
+      - # Apply the cluster's ClusterSecretStore (its 1Password vaults)
+        command: bash
+        args:
+          - -euo
+          - pipefail
+          - -c
+          - >-
+            yq 'select(.kind == "ClusterSecretStore")'
+            "{{ requiredEnv "BOOTSTRAP_RENDER_DIR" }}/external-secrets/onepassword-connect/manifests.yaml"
+            | kubectl --context={{ requiredEnv "CLUSTER" }} apply --server-side --force-conflicts --filename=-
+        events:
+          - postsync
+        showlogs: true
+    needs:
+      - external-secrets/external-secrets
+
+  - name: flux-operator
+    namespace: flux-system
+    needs:
+      - external-secrets/onepassword-connect
+
+  - name: flux-instance
+    namespace: flux-system
+    needs:
+      - flux-system/flux-operator

@@ -1,0 +1,58 @@
+---
+# SC: three Dell servers on VLAN 69, each with one ixgbe uplink in an
+# active-backup bond. Secrets come from SC's 1Password vault.
+machine:
+  ca:
+    crt: op://Kubernetes/talos/MACHINE_CA_CRT
+  token: op://Kubernetes/talos/MACHINE_TOKEN
+cluster:
+  ca:
+    crt: op://Kubernetes/talos/CLUSTER_CA_CRT
+  clusterName: sc
+  controlPlane:
+    endpoint: https://10.10.69.100:6443
+  token: op://Kubernetes/talos/CLUSTER_TOKEN
+---
+apiVersion: v1alpha1
+kind: DiscoveryIdentityConfig
+clusterID: op://Kubernetes/talos/CLUSTER_ID
+clusterSecret: op://Kubernetes/talos/CLUSTER_SECRET
+---
+apiVersion: v1alpha1
+kind: BondConfig
+name: bond0
+links:
+  - net0
+bondMode: active-backup
+---
+# ixgbe defaults to 512 RX descriptors, which overflow on Ceph replication bursts.
+# EthernetConfig names the kernel link directly; it does not resolve link aliases.
+apiVersion: v1alpha1
+kind: EthernetConfig
+name: eno1
+rings:
+  rx: 4096
+---
+apiVersion: v1alpha1
+kind: DHCPv4Config
+name: bond0
+---
+apiVersion: v1alpha1
+kind: WatchdogTimerConfig
+device: /dev/watchdog0
+timeout: 5m
+---
+apiVersion: v1alpha1
+kind: KubeNodeConfig
+nodeIP:
+  validSubnets:
+    - 10.10.69.0/24
+labels:
+  topology.kubernetes.io/region: sc
+---
+apiVersion: v1alpha1
+kind: TrustedRootsConfig
+name: trust-woodleigh-vic-edu-au-ca
+certificates: |-
+op://Kubernetes/talos/TRUST_CA_CERT
+# ^ !! Indentation handled in 1Password field !!

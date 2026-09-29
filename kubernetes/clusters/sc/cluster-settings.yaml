@@ -1,0 +1,15 @@
+---
+# Substituted into every app by cluster-apps
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cluster-settings
+  namespace: flux-system
+data:
+  CLUSTER: sc
+  STORAGECLASS: ceph-block
+  STORAGECLASS_LOCAL: openebs-hostpath
+  STORAGECLASS_SHARED: ceph-filesystem
+  SNAPSHOTCLASS: csi-ceph-blockpool
+  BACKUP_BUCKET: sc-ops
+  BACKUP_COPYMETHOD: Snapshot
