@@ -1,0 +1,21 @@
+---
+# IfNotPresent: a bound PVC's dataSourceRef is immutable, so Flux only creates
+# this claim and never updates one that already exists (such as a claim
+# VolSync provisioned before the Kopiur migration).
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ${APP}
+  annotations:
+    kustomize.toolkit.fluxcd.io/ssa: IfNotPresent
+spec:
+  accessModes:
+    - ${KOPIUR_ACCESSMODES:=ReadWriteOnce}
+  dataSourceRef:
+    apiGroup: kopiur.home-operations.com
+    kind: Restore
+    name: ${APP}
+  resources:
+    requests:
+      storage: ${KOPIUR_CAPACITY:=5Gi}
+  storageClassName: ${KOPIUR_STORAGECLASS:=${STORAGECLASS}}

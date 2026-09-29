@@ -1,0 +1,11 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+# Backs up the ${APP} PVC and restores it from the latest snapshot when the PVC
+# is created from scratch. Storage defaults come from cluster-settings.
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+resources:
+  - ./pvc.yaml
+  - ./restore.yaml
+  - ./snapshotpolicy.yaml
+  - ./snapshotschedule.yaml

@@ -1,0 +1,48 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kopiur.home-operations.com/clusterrepository_v1alpha1.json
+# Each cluster writes to its own prefix in its own bucket. identityDefaults.cluster
+# still qualifies snapshot identities (<policy>@<namespace>.<cluster>) so a
+# repository can later be shared or read by another cluster without collisions.
+apiVersion: kopiur.home-operations.com/v1alpha1
+kind: ClusterRepository
+metadata:
+  name: backups
+spec:
+  allowedNamespaces:
+    all: true
+  backend:
+    s3:
+      auth:
+        secretRef:
+          name: kopiur-repository-secret
+          namespace: kopiur-system
+      bucket: ${BACKUP_BUCKET}
+      endpoint: n3.woodleighschool.net
+      prefix: kopiur/
+  encryption:
+    passwordSecretRef:
+      name: kopiur-repository-secret
+      namespace: kopiur-system
+      key: KOPIA_PASSWORD
+  identityDefaults:
+    cluster: ${CLUSTER}
+  maintenance:
+    schedule:
+      quick:
+        cron: 0 * * * *
+        jitter: 10m
+      full:
+        cron: 0 3 * * *
+        jitter: 1h
+  moverDefaults:
+    cache:
+      # Kopia's default 5000 MiB budgets are larger than the 5Gi cache PVC, so
+      # its sweeper never runs and the cache fills the volume. The metadata
+      # budget applies twice: kopia caps the index-blobs cache at the same size.
+      contentCacheSizeMb: 512
+      metadataCacheSizeMb: 1024
+  parameters:
+    epoch:
+      minDuration: 1h
+  scheduleDefaults:
+    timezone: Australia/Melbourne

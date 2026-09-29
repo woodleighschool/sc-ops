@@ -115,6 +115,17 @@
       groupSlug: "mise-tools",
     },
     {
+      // After the mise tools catch-all so the kubectl plugin joins the chart;
+      // kopiur wants the plugin and operator on the same release
+      description: "Kopiur Group",
+      groupName: "kopiur",
+      matchPackageNames: ["/home-operations/kopiur/", "/home-operations/charts/kopiur/"],
+      group: {
+        commitMessageTopic: "{{{groupName}}} group",
+      },
+      minimumGroupSize: 2,
+    },
+    {
       description: "Rook-Ceph Group",
       groupName: "rook-ceph",
       matchDatasources: ["docker"],
