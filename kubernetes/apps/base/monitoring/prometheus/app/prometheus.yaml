@@ -12,7 +12,7 @@ spec:
         namespace: o11y
         port: http-web
   externalLabels:
-    cluster: sc-ops
+    cluster: ${CLUSTER}
     prometheus: monitoring/prometheus
   podMonitorSelector:
     matchLabels:

@@ -51,6 +51,8 @@ spec:
             - name: envoy-secure
               namespace: network
       prometheusSpec:
+        externalLabels:
+          cluster: ${CLUSTER}
         externalUrl: https://prometheus.woodleighschool.net
         podMonitorSelectorNilUsesHelmValues: false
         probeSelectorNilUsesHelmValues: false
