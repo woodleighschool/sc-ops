@@ -37,6 +37,8 @@ spec:
       - --rfc2136-zone=woodleighschool.net
     triggerLoopOnEvent: true
     policy: sync
+    # --create-ptr needs PTR here
+    managedRecordTypes: [A, AAAA, CNAME, PTR]
     sources:
       - crd
       - gateway-httproute
