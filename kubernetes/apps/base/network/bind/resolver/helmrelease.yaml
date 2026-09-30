@@ -32,7 +32,7 @@ spec:
           app:
             image:
               repository: mirror.gcr.io/internetsystemsconsortium/bind9
-              tag: 9.20@sha256:f8506cfcbc8fcb44e40b922fa74b481ba23b50f00482bf6693ff8f120709a778
+              tag: 9.20@sha256:071465f88068854d0ceadd9b985fb1acae4071e80754e545cd811fde57541ad0
             command: ["/bin/sh", "-c"]
             args:
               - |
