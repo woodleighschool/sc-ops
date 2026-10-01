@@ -21,7 +21,7 @@ spec:
           app:
             image:
               repository: docker.cloudsmith.io/isc/docker/kea-dhcp4
-              tag: 3.2.0@sha256:9c67ace6719e846cab3dcbac594530f6b45f3c6aa74be1ca41702bca2cfa3176
+              tag: 3.2.1@sha256:946be1df56856233f75443a61fd49c030daa9b07f183d68d5f9153637bb8c266
             command:
               [
                 "/bin/sh",
@@ -96,7 +96,7 @@ spec:
           ddns:
             image:
               repository: docker.cloudsmith.io/isc/docker/kea-dhcp-ddns
-              tag: 3.2.0@sha256:91a0005c307348c6075c38e478c43fda0c9127f736d9626e42b84d3c1907769c
+              tag: 3.2.1@sha256:afbbfb94f15125334485a22876ae07dc0518ede125d815700723a750809e5894
             command:
               [
                 "/bin/sh",
