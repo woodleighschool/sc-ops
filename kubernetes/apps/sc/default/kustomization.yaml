@@ -9,6 +9,8 @@ components:
 resources:
   - ./freshservice-label.yaml
   - ./home-assistant.yaml
+  - ./jamf-recovery-lock.yaml
+  - ./jamf-user-sync.yaml
   - ./leave-calendar.yaml
   - ./metabasis.yaml
   - ./namespace.yaml

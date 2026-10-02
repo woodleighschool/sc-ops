@@ -3,15 +3,15 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app setrecoverypassword
+  name: jamf-recovery-lock
 spec:
   chartRef:
     kind: OCIRepository
-    name: setrecoverypassword
+    name: jamf-recovery-lock
   interval: 1h
   values:
     controllers:
-      setrecvoerypassword:
+      jamf-recovery-lock:
         type: cronjob
         cronjob:
           schedule: "@daily"
@@ -23,8 +23,8 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/woodleighschool/setrecoverypassword
-              tag: 2.0.4@sha256:9c9d13ce08da85c7f8073d1d68c1eee9b1c0d4c24ebb43113fb370165be3167e
+              repository: ghcr.io/woodleighschool/jamf-recovery-lock
+              tag: 3.0.0@sha256:dc7e9a2ab9e3e48bbdac3efa47a5005c6feb9178f65754c95bd5344fe07c6a72
             env:
               PASSWORD_LENGTH: 10
               LOG_LEVEL: debug

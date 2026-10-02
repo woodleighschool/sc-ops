@@ -3,15 +3,15 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: updateuserinfo
+  name: jamf-user-sync
 spec:
   chartRef:
     kind: OCIRepository
-    name: updateuserinfo
+    name: jamf-user-sync
   interval: 1h
   values:
     controllers:
-      updateuserinfo:
+      jamf-user-sync:
         type: cronjob
         cronjob:
           schedule: "@daily"
@@ -23,12 +23,11 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/woodleighschool/updateuserinfo
-              tag: 2.0.9@sha256:5f605d48ddc354ea03e6738c0187146100717019bc9ac49a7ba48a44ec7e37a8
+              repository: ghcr.io/woodleighschool/jamf-user-sync
+              tag: 3.0.0@sha256:f27212dc9ecc187c632715b73eae5bcbb1e9e6abe7f97cc91aa810b7bfa7e4fe
             env:
               JAMF_HOST: wdm.jamfcloud.com
               LDAP_HOST: wdc01.woodleighschool.net
-              UPDATE_NOW: true
               TZ: Australia/Melbourne
             envFrom:
               - secretRef:

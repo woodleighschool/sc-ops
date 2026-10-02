@@ -19,4 +19,3 @@ resources:
   - ./openebs-system
   - ./rook-ceph
   - ./system-upgrade
-  - ./woodleigh-tools
