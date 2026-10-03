@@ -24,7 +24,7 @@ spec:
           app:
             image:
               repository: ghcr.io/woodleighschool/jamf-user-sync
-              tag: 3.0.0@sha256:f27212dc9ecc187c632715b73eae5bcbb1e9e6abe7f97cc91aa810b7bfa7e4fe
+              tag: 3.0.1@sha256:fa23f542bfe76ee281a040363e7b565446cca17b583500121ff721cdbb52a334
             env:
               JAMF_HOST: wdm.jamfcloud.com
               LDAP_HOST: wdc01.woodleighschool.net
